@@ -1,0 +1,126 @@
+<div *ngIf="visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                    <div class="card-header">
+                    <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
+                        <button class="btn btn-danger btn-block" (click)="Cambiamodal(i)">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
+
+                      </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+<div *ngIf="!visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+<!------------------------------------------------Cabecera de la tabla------------------------------------------------>
+                    <div class="card-header" >
+                      <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="row no-gutters">
+                              <h4 class="title col-12 col-sm-6 col-md-8">Parte Diario de Faltas y Atrasos</h4>
+                              <div class="title col-6 col-md-4">REG 3.2.3-06</div>
+                            </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                                <p class="category">Materia : <a class="contenido">{{Cabecera[0].materia}}</a>
+                                <p class="category">DOCENTE : <a class="contenido">{{nombre}}</a>
+                            </div>
+                            <div class="col-md-4">
+                                  <p class="category">Curso : <a class="contenido">{{Cabecera[0].curso}}</a>
+                                <p class="category">Paralelo : <a class="contenido">{{Cabecera[0].paralelo}}</a>
+                            </div>
+                              <div class="col-md-4">
+                                  <p class="category">Fecha : <a class="contenido">{{fecha}}</a>
+                                <p class="category">Inspectores : <a class="contenido">{{Cabecera[0].inspector}}</a>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+  <!--------------------------  <form #registerForm="ngForm" (ngSubmit)="onSubmiLeccionario()"  >----------------------Comienzo de la tabla ------------------------------------------------>
+
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-danger">
+                                <tr>
+                                    <th>Codigo</th>
+                                    <th>Alumno</th>
+                                    <th>Asistencia</th>
+                                    <th> </th>
+                                    <th>Justificación</th>
+                                    <th>Motivo Justificación</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr *ngFor="let item of alumnos; let in = index">
+                                <!-- <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister()">-->
+
+                               <td> {{item.codigo}}</td>
+                               <td> {{item.nombre_alumno}}</td>
+                                    <td>
+                                          <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"  [disabled]="item.cheked_juti" [(ngModel)]="item.checked" >
+                                              </label>
+                                            </div>
+                                    </td>
+                                    <td>
+                                      <select id="soflow" [disabled]="item.checked" [(ngModel)]="item.motivo_atraso">
+
+                                      <option   *ngFor="let level of faltas" [ngValue]="level.valor">{{level.name}}</option>
+                                      </select>
+                                  </td>
+                                  <td>
+                                          <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" [disabled]="item.checked"  [(ngModel)]="item.cheked_juti">
+                                              </label>
+                                            </div>
+                                    </td>
+                                    <td>
+                                      <textarea id="textarea"  maxlength="100" [disabled]="item.checked" [(ngModel)]="item.descripciopn_juti"></textarea>
+                                    </td>
+                                  <!---  </form>------------>
+                                </tr>
+
+                            </tbody>
+
+                            <div class="row">
+
+                                 <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
+                                  <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
+
+                                  <a class="btn btn-danger btn-block"  (click)="Atras()">
+                                      <i class="material-icons">keyboard_backspace</i>
+                                  </a>
+
+                          </div>
+                        </table>
+                    </div>
+
+  <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

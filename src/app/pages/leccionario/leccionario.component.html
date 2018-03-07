@@ -1,0 +1,108 @@
+<div *ngIf="visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                    <div class="card-header">
+                      <div *ngFor="let i of materias">
+                        <button class="btn btn-danger btn-block" (click)="Cambiamodal()">{{i.materia}}</button>
+
+                      </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="!visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+<!------------------------------------------------Cabecera de la tabla------------------------------------------------>
+                    <div class="card-header" >
+                      <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="row no-gutters">
+                              <h4 class="title col-12 col-sm-6 col-md-8">Leccionario</h4>
+                              <div class="title col-6 col-md-4">REG 2.4.2.1</div>
+                            </div>
+                          <div class="row">
+                            <div class="col-md-4">
+                                <p class="category">Periodo : <a class="contenido">2 - PARCIAL 3</a>
+                                <p class="category">DOCENTE : <a class="contenido">Maldonado Rosa</a>
+                            </div>
+                            <div class="col-md-4">
+                                  <p class="category">Curso : <a class="contenido">Quinto Año de Educacion Basica Media</a>
+                                <p class="category">Paralelo : <a class="contenido">B</a>
+                            </div>
+                              <div class="col-md-4">
+                                  <p class="category">Fecha : <a class="contenido">23/01/2018</a>
+
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+  <!--------------------------  <form #registerForm="ngForm" (ngSubmit)="onSubmiLeccionario()"  >----------------------Comienzo de la tabla ------------------------------------------------>
+
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-danger">
+                                <tr>
+                                  <th>  Asignatura</th>
+                                    <th>Destrezas con criterio de Desempeño</th>
+                                    <th>Tareas</th>
+                                    <th>Observaciones</th>
+                                    <th> Firma</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <tr>
+                                    <td>English</td>
+                                    <td>
+                                      <textarea id="textarea"  maxlength="100"></textarea>
+                                    </td>
+                                    <td>
+                                      <textarea id="textarea"  maxlength="100"></textarea>
+                                    </td>
+                                    <td>
+                                      <textarea id="textarea"  maxlength="100"></textarea>
+                                    </td>
+                                    <td>
+                                          <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" >
+                                              </label>
+                                          </div>
+                                    </td>
+                                  <!---  </form>------------>
+                                </tr>
+
+                            </tbody>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                 <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
+                                  <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
+
+                                  <a class="btn btn-danger"  (click)="Atras()">
+                                      <i class="material-icons">keyboard_backspace</i>
+                                  </a>
+                                </div>
+                          </div>
+                        </table>
+                    </div>
+
+  <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

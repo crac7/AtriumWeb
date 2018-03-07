@@ -1,0 +1,233 @@
+<div *ngIf="visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+
+                    <div class="card-header">
+                      <div *ngFor="let i of cursos">
+                        <button class="btn btn-danger btn-block" (click)="Cambiamodal()">{{i.materia}}</button>
+
+                      </div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div *ngIf="!visible" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+<!------------------------------------------------Cabecera de la tabla------------------------------------------------>
+                    <div class="card-header" >
+                      <div class="row">
+                        <div class="col-sm-12">
+
+                            <div class="row no-gutters">
+                                <div class="title col-md-3">Imagen</div>
+                              <h4 class="title  col-md-6  text-center">Unidad Educativa Particular Bilingue Ecomundo</h4>
+                              <div class="title  col-md-3 text-center">REG 2.4.1-4b <br> Año Elecitvo 2017-2018</div>
+                            </div>
+                          <div class="row">
+                                <h4 class="title col-md-12 text-center">Planificación Semanal</h4>
+                          </div>
+                          <div class="row">
+                            <div class="col-md-3">
+                               <p class="category">DOCENTE : <a class="contenido">Maldonado Rosa</a>
+                                 <p class="category">Nº de unidad de lanificación : <a class="contenido"></a>
+
+                            </div>
+                            <div class="col-md-3">
+                                <p class="category">Asignatura : <a class="contenido">English</a>
+                                  <p class="category">Título de unidad de planificación : <a class="contenido"></a>
+                            </div>
+                              <div class="col-md-2">
+                                  <p class="category">Paralelo : <a class="contenido">B</a>
+
+
+                              </div>
+                              <div class="col-md-4">
+
+                                    <p class="category">Curso : <a class="contenido">SEGUNDO AÑO DE BACHILLERATO MIX - A</a>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    </div>
+  <!--------------------------  <form #registerForm="ngForm" (ngSubmit)="onSubmiLeccionario()"  >----------------------Comienzo de la tabla ------------------------------------------------>
+
+                    <div class="card-content table-responsive">
+                      <div class="row">
+                        <div class="col-md-3">
+                          <p class="category">Fecha de término:  <input class="form-control" type="date" value="2017-08-19" id="example-date-input">
+                          </div>
+                        <div class="col-md-3">
+                          <p class="category">Fecha de término:  <input class="form-control" (click)="fecha()" type="date" value="2017-08-19" id="example-date-input">
+                          </div>
+                          <div class="col-sm-3">
+                            <!-- Button trigger modal -->
+                            <a class="btn btn-success"   (click)="resetForm()" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="material-icons">note_add</i> <span>Añadir</span></a>
+
+
+                             </div>
+                        </div>
+<!---------------------------------------------------------------------------------->
+
+                        <table class="table">
+                            <thead class="text-danger">
+                                <tr>
+                                  <th>DEZTREZAS CON CRITERIOS DE DESEPEÑO</th>
+                                    <th>ACTIVIDADES DE APRENDIZAJE</th>
+                                    <th>RECRUSOS</th>
+                                    <th>EVALUACIÓN</th>
+                                    <th>TAREAS</th>
+
+                                </tr>
+                            </thead>
+
+                            <tbody *ngIf="addtable">
+
+
+
+                           <tr   *ngFor="let item of itemsPlan; let i=index ">
+
+                                          <td>{{item.destreza}}</td>
+                                          <td><strong>Anticipacion:</strong> {{item.anticipacion}}<br>
+                                              <strong>Construcción:</strong> {{item.construcion}} <br>
+                                              <strong>Consolidacion:</strong>{{item.consolidacion}}
+                                          </td>
+                                          <td>{{item.recursos}}</td>
+                                          <td>{{item.evaluacion}}</td>
+                                          <td>{{item.tareas}}</td>
+                                          <td>
+                                            <button class="btn btn-info"
+                                                          (click)="Edit(item,i)"
+                                                          data-toggle="modal" data-target=".bd-example-modal-lg">
+                                                         <i class="fa fa-edit"></i>
+                                                </button>
+                                            <button class="btn btn-danger"
+                                                         (click)="delete(i)">
+                                                         <i class="fa fa-minus"></i>
+                                              </button>
+                                          </td>
+
+                              </tr>
+
+
+                            </tbody>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                 <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
+                                  <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
+
+                                  <a class="btn btn-danger"  (click)="Atras()">
+                                      <i class="material-icons">keyboard_backspace</i>
+                                  </a>
+                                </div>
+                          </div>
+                        </table>
+                    </div>
+
+  <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Planificación Semanal</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
+      <div class="modal-body">
+<!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
+
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                     <label>DEZTREZAS CON CRITERIOS DE DESEPEÑO</label>
+                      <div class="form-group form-black label-floating is-empty">
+
+                          <textarea class="form-control" name="destreza" #destreza="ngModel"  [(ngModel)]="_PlanificacionServices.selectedPlanificacion.destreza" ></textarea>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group">
+                     <label>RECURSOS</label>
+                      <div class="form-group form-black label-floating is-empty">
+
+                          <textarea class="form-control" name="recursos"  #recursos="ngModel"  [(ngModel)]="_PlanificacionServices.selectedPlanificacion.recursos" ></textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group">
+                    <label>ACTIVIDADES DE APRENDIZAJE</label>
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Anticipación</label>
+                          <textarea class="form-control" #anticipacion="ngModel" name="anticipacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.anticipacion" ></textarea>
+                      </div>
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Construcción</label>
+                          <textarea class="form-control"   #construcion="ngModel" name="construcion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.construcion"></textarea>
+                      </div>
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Consolidación</label>
+                          <textarea class="form-control"   #consolidacion="ngModel" name="consolidacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.consolidacion"></textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                     <label>EVALUACIÓN</label>
+                      <div class="form-group form-black label-floating is-empty">
+
+                          <textarea class="form-control"   #evaluacion="ngModel" name="evaluacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.evaluacion"></textarea>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-6">
+                  <div class="form-group">
+                     <label>TAREAS</label>
+                      <div class="form-group form-black label-floating is-empty">
+
+                          <textarea class="form-control"  #tareas="ngModel" name="tareas" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.tareas"></textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+      </div>
+      <!--------------------------footer-------------->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        <button type="submit"  class="btn btn-success" (ngClik)="guardar()">Guardar</button>
+      </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
