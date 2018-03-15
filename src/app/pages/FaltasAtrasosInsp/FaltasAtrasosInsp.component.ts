@@ -6,12 +6,12 @@ import { ModelMateriasDocentes }  from '../../models/modelMaterias'
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
 
 @Component({
-  selector: 'app-table-list',
-  templateUrl: './table-list.component.html',
-  styleUrls: ['./table-list.component.css'],
+  selector: 'app-FaltasAtrasosInspComponent',
+  templateUrl: './FaltasAtrasosInsp.component.html',
+  styleUrls: ['./FaltasAtrasosInsp.component.css'],
   providers :[MateriasDocenteService]
 })
-export class TableListComponent implements OnInit {
+export class FaltasAtrasosInspComponent implements OnInit {
 
   faltasAtraso: Array<any>;
   faltas: Array<any>;
@@ -23,7 +23,6 @@ export class TableListComponent implements OnInit {
   letPeriodo:string;
   user:string;
   AlumnosCurso:Array<any>;
-  bandera:string;
   constructor(private _MateriasDocentesServices: MateriasDocenteService) {
 
 
@@ -37,7 +36,6 @@ export class TableListComponent implements OnInit {
      this.codigoPeriodo= localStorage.getItem('cod_per'),
      this.letPeriodo= localStorage.getItem('let_per');
      this.user=localStorage.getItem('username');
-     this.bandera=localStorage.getItem('bandera');
 
 
   }
@@ -112,26 +110,11 @@ ConsultarAlumnos(unidad:number) : void{
   //console.log( this.AlumnosCurso[0]);
 
    this._MateriasDocentesServices.AlumnosCurso(this.AlumnosCurso[0]);
-   console.log(this._MateriasDocentesServices.AlumnCursosList);
 
 }
 CambiaCheck(p){
-
    console.log(p);
 }
-
-checkAll(ev) {
-  if(this._MateriasDocentesServices.AlumnCursosList[ev].asistencia){
-    this._MateriasDocentesServices.AlumnCursosList[ev].tipo_falta=0;
-  }
-  else{
-    this._MateriasDocentesServices.AlumnCursosList[ev].tipo_falta=1;
-  }
-
-    console.log(ev);
- }
-
-
   Atras()
   {
     this.Cabecera=null;

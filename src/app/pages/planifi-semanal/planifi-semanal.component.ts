@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms'
 import { PlanificacionServices  } from '../../services/planificacion.services';
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
+import * as moment from 'moment';
 @Component({
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
@@ -16,14 +17,25 @@ export class PlanifiSemanalComponent implements OnInit {
   itemsPlan: Array<any>;
   accion:string;
   index:number;
+  nombre:string;
+  fecha:string;
+  codigoPeriodo:string;
+  letPeriodo:string;
+  user:string;
 
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService ) { }
 
   ngOnInit() {
-
     this.resetForm();
     this.ConsultaCurso();
+    this.fecha =moment().format('L');   //
+    this._MateriasDocentesServices.MateriasDocentes();
+    this._MateriasDocentesServices.UnidadesDocentes();
+    this.nombre=localStorage.getItem('nombre');
+    this.codigoPeriodo= localStorage.getItem('cod_per'),
+    this.letPeriodo= localStorage.getItem('let_per');
+    this.user=localStorage.getItem('username');
   }
 
 
@@ -87,9 +99,9 @@ export class PlanifiSemanalComponent implements OnInit {
               }
       }
 
-    fecha(){
+  /*  fecha(){
       console.log("fecha");
-    }
+    }*/
 
 
   }

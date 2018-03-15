@@ -1,4 +1,4 @@
-select#Unidad, select#Unidad-color, select#tipo_falta ,select#tipo_color{
+select#soflow, select#soflow-color {
    -webkit-appearance: button;
    -webkit-border-radius: 2px;
    -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
@@ -15,12 +15,7 @@ select#Unidad, select#Unidad-color, select#tipo_falta ,select#tipo_color{
    padding: 5px 10px;
    text-overflow: ellipsis;
    white-space: nowrap;
-}
-select#tipo_falta{
-  width: 100px;
-}
-select#Unidad{
-  width: 200px;
+   width: 200px;
 }
 textarea{
   border-radius:10px;

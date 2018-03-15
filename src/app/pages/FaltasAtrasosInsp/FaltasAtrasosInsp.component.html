@@ -15,6 +15,15 @@
     </div>
 </div>
 
+
+
+
+
+
+
+
+
+
 <div *ngIf="!visible" class="main-content">
     <div class="container-fluid">
         <div class="row">
@@ -51,13 +60,8 @@
                   <div class="card-content table-responsive">
                       <div class="row">
                         <div class="col-md-3">
-                        <a class="btn btn-success"  (click)="Atras()">
-                            <i class="material-icons">keyboard_backspace</i>Atras
-                        </a>
-                          </div>
-                        <div class="col-md-3">
                           <p class="category">Selecione la Unidad:
-                            <select id="Unidad" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
+                            <select id="soflow" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
 
                             <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                             </select>
@@ -70,81 +74,69 @@
                                     <th>Codigo</th>
                                     <th>Alumno</th>
                                     <th>Asistencia</th>
-                                    <th *ngIf="this.bandera==='P'"> </th>
-                                    <th  *ngIf="this.bandera==='A'"> Abandono</th>
-                                    <th *ngIf="this.bandera==='A'">Atraso</th>
-                                    <th *ngIf="this.bandera==='A'">Retiro</th>
-                                    <th *ngIf="this.bandera==='A'">Falta</th>
-                                    <th *ngIf="this.bandera==='A'">Justificación</th>
-                                    <th *ngIf="this.bandera==='A'"> </th>
-                                    <th *ngIf="this.bandera==='A'">Observación</th>
+                                    <th> </th>
+                                    <th *ngIf="this.bandera=='A'">Justificación</th>
+                                    <th *ngIf="this.bandera=='A'">Motivo Justificación</th>
                                 </tr>
                             </thead>
-<!--------------------Profesor------------------------------------------------------------------->
-                            <tbody *ngIf="this.bandera==='P'">
+
+                            <tbody>
 
                                 <tr *ngFor="let item of this._MateriasDocentesServices.AlumnCursosList; let in = index">
                                 <!-- <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister()">-->
 
                                <td> {{item.cod_alum}}</td>
                                <td> {{item.nombre}}</td>
-                               <td >
+                               <td>
                                           <div class="checkbox">
                                             <label>
-                                                <input type="checkbox"  [disabled]="item.justifica" [(ngModel)]="item.asistencia"    (change)="checkAll(in)">
+                                                <input type="checkbox"  [disabled]="item.justifica" [(ngModel)]="item.asistencia">
                                               </label>
                                             </div>
                                   </td>
                                   <td>
-                                    <select id="tipo_falta" [disabled]="item.asistencia" [(ngModel)]="item.tipo_falta" >
+                                    <select id="soflow" [disabled]="item.asistencia" [(ngModel)]="item.tipo_falta" >
                                         <option   *ngFor="let level of faltas" [ngValue]="level.valor" >{{level.name}}</option>
                                     </select>
 
                                 </td>
+<!-------------------------------------------------------------------------------------------------------------------->
+                                <td *ngIf="this.bandera==='A'">
+                                          <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox"  [disabled]="item.cheked_juti" [(ngModel)]="item.checked" >
+                                              </label>
+                                            </div>
+                                    </td>
+                                    <td *ngIf="this.bandera==='A'">
+                                      <select id="soflow" [disabled]="item.checked" [(ngModel)]="item.motivo_atraso">
+
+                                      <option   *ngFor="let level of faltas" [ngValue]="level.valor">{{level.name}}</option>
+                                      </select>
+                                  </td>
+                                  <td *ngIf="this.bandera==='A'">
+                                          <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" [disabled]="item.checked"  [(ngModel)]="item.cheked_juti">
+                                              </label>
+                                            </div>
+                                    </td>
+                                    <td *ngIf="this.bandera==='A'">
+                                      <textarea id="textarea"  maxlength="100" [disabled]="item.checked" [(ngModel)]="item.descripciopn_juti"></textarea>
+                                    </td>
+                                  <!---  </form>------------>
                                 </tr>
+
                             </tbody>
-<!------------------ Inspector--------------------------------------------------------------->
-<tbody *ngIf="this.bandera==='A'">
 
-    <tr *ngFor="let item of this._MateriasDocentesServices.AlumnCursosList; let in = index">
-    <!-- <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister()">-->
-
-   <td> {{item.cod_alum}}</td>
-   <td> {{item.nombre}}</td>
-   <td> {{item.asistencia}}</td>
-   <td>{{item.abandono}}</td>
-   <td>{{item.atraso}}</td>
-    <td>{{item.retiro}}</td>
-   <td>{{item.falta}}</td>
-
-   <td >
-              <div class="checkbox">
-                <label>
-                    <input type="checkbox"  [(ngModel)]="item.justifica">
-                  </label>
-                </div>
-      </td>
-      <td>
-        <select id="tipo_falta"  [(ngModel)]="item.tipo_falta" [value]="item.tipo_falta">
-            <option   *ngFor="let level of faltas" [ngValue]="level.valor" >{{level.name}}</option>
-        </select>
-
-    </td>
-
-
-
-        <td>
-          <textarea id="textarea"  maxlength="100" [disabled]="item.checked" [(ngModel)]="item.descripciopn_juti"></textarea>
-        </td>
-      <!---  </form>------------>
-    </tr>
-</tbody>
-<!------------------------------------------------------------------------------------------->
                             <div class="row">
-                        <div class="col-md-3">
+
                                  <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
                                   <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
-  </div>
+
+                                  <a class="btn btn-danger btn-block"  (click)="Atras()">
+                                      <i class="material-icons">keyboard_backspace</i>
+                                  </a>
 
                           </div>
                         </table>

@@ -4,8 +4,8 @@
             <div class="col-md-12">
 
                     <div class="card-header">
-                      <div *ngFor="let i of materias">
-                        <button class="btn btn-danger btn-block" (click)="Cambiamodal()">{{i.materia}}</button>
+                      <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
+                        <button class="btn btn-danger btn-block" (click)="Cambiamodal()">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
 
                       </div>
                     </div>

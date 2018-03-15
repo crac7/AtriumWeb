@@ -1,22 +1,31 @@
 import { Component, OnInit } from '@angular/core';
-
+import { MateriasDocenteService } from '../../services/materiasDocentes.services'
+import * as moment from 'moment';
 @Component({
   selector: 'app-leccionario',
   templateUrl: './leccionario.component.html',
-  styleUrls: ['./leccionario.component.scss']
+  styleUrls: ['./leccionario.component.scss'],
+  providers :[MateriasDocenteService]
 })
 export class LeccionarioComponent implements OnInit {
 visible=true;
 materias: Array<any>;
-  constructor() { }
+nombre:string;
+fecha:string;
+codigoPeriodo:string;
+letPeriodo:string;
+user:string;
+  constructor(private _MateriasDocentesServices: MateriasDocenteService) { }
 
   ngOnInit() {
 
-   this.materias=[{materia:"ENGLISH B HIGHER LEVEL / 2DO_BACHILLERATO / MIX / B"},
-                  {materia:"ENGLISH B HIGHER LEVEL / 2DO_BACHILLERATO / MIX / C"},
-                  {materia:"ENGLISH B HIGHER LEVEL / 2DO_BACHILLERATO / MIX / D"},
-                  {materia:"ENGLISH B HIGHER LEVEL / 3RO_BACHILLERATO / MIX / D"},
-                ];
+    this.fecha =moment().format('L');   //
+    this._MateriasDocentesServices.MateriasDocentes();
+    this._MateriasDocentesServices.UnidadesDocentes();
+    this.nombre=localStorage.getItem('nombre');
+    this.codigoPeriodo= localStorage.getItem('cod_per'),
+    this.letPeriodo= localStorage.getItem('let_per');
+    this.user=localStorage.getItem('username');
 
   }
   Cambiamodal(){

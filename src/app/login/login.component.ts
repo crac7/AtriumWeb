@@ -37,11 +37,9 @@ public datos:any;
               alert("Usuario no identificado");
            }
            else{
-             // Crear Elemento localSotrage
+
                   localStorage.setItem('token', token);
                   this.obtieneDatos();
-
-
            }
 
          },
@@ -67,6 +65,7 @@ public datos:any;
                localStorage.setItem('e_mail',  response.e_mail);
                localStorage.setItem('username',  response.username);
                localStorage.setItem('bandera',  response.bandera);
+               console.log(response);
                this.user =new User('','');
                this._router.navigate(['/Faltas-Atrasos']);
 
