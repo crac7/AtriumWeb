@@ -5,7 +5,7 @@
 
                     <div class="card-header">
                       <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
-                        <button class="btn btn-danger btn-block" (click)="Cambiamodal()">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
+                        <button class="btn btn-danger btn-block" (click)="Cambiamodal(i)">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
 
                       </div>
                     </div>
@@ -36,23 +36,26 @@
                                 <h4 class="title col-md-12 text-center">Planificación Semanal</h4>
                           </div>
                           <div class="row">
+                            <div class="col-md-4">
+                               <p class="category">DOCENTE : <a class="contenido">{{nombre}}</a>
+
+                                 <div class="form-group form-black label-floating is-empty">
+                                     <label class="control-label">Título de unidad de planificación</label>
+                                     <input type="text" #titulo="ngModel" name="titulo" [(ngModel)]="titulo_unidad" class="form-control cabecera" >
+                                 </div>
+                            </div>
+
                             <div class="col-md-3">
-                               <p class="category">DOCENTE : <a class="contenido">Maldonado Rosa</a>
-                                 <p class="category">Nº de unidad de lanificación : <a class="contenido"></a>
+                                <p class="category">Asignatura : <a class="contenido">{{materia}}</a>
 
                             </div>
-                            <div class="col-md-3">
-                                <p class="category">Asignatura : <a class="contenido">English</a>
-                                  <p class="category">Título de unidad de planificación : <a class="contenido"></a>
-                            </div>
+
                               <div class="col-md-2">
-                                  <p class="category">Paralelo : <a class="contenido">B</a>
-
-
+                                  <p class="category">Paralelo : <a class="contenido">{{paralelo}}</a>
                               </div>
-                              <div class="col-md-4">
+                              <div class="col-md-3">
+                                    <p class="category">Curso : <a class="contenido">{{curso}}</a>
 
-                                    <p class="category">Curso : <a class="contenido">SEGUNDO AÑO DE BACHILLERATO MIX - A</a>
                               </div>
                           </div>
                         </div>
@@ -63,14 +66,24 @@
                     <div class="card-content table-responsive">
                       <div class="row">
                         <div class="col-md-3">
-                          <p class="category">Fecha de término:  <input class="form-control" type="date" value="2017-08-19" id="example-date-input">
+                          <p class="category">Fecha de Inicio:
+                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="fechain = $event" type="date" name="fechain">
                           </div>
                         <div class="col-md-3">
-                          <p class="category">Fecha de término:  <input class="form-control"  type="date" value="2017-08-19" id="example-date-input">
+                          <p class="category">Fecha de término:
+                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fechafin">
                           </div>
+
+                          <div class="col-6 col-sm-3">
+                              <p class="category">Selecione la Unidad:
+                                <select #Unidad [value]=-1>
+                                <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
+                                </select>
+                          </div>
+
                           <div class="col-sm-3">
                             <!-- Button trigger modal -->
-                            <a class="btn btn-success"   (click)="resetForm()" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="material-icons">note_add</i> <span>Añadir</span></a>
+                            <a class="btn btn-success"   (click)="insertaCabcera(Unidad.value)" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="material-icons">note_add</i> <span>Añadir</span></a>
 
 
                              </div>
@@ -104,12 +117,12 @@
                                           <td>{{item.evaluacion}}</td>
                                           <td>{{item.tareas}}</td>
                                           <td>
-                                            <button class="btn btn-info"
+                                            <button class="btn-info"
                                                           (click)="Edit(item,i)"
                                                           data-toggle="modal" data-target=".bd-example-modal-lg">
                                                          <i class="fa fa-edit"></i>
                                                 </button>
-                                            <button class="btn btn-danger"
+                                            <button class="btn-danger"
                                                          (click)="delete(i)">
                                                          <i class="fa fa-minus"></i>
                                               </button>
@@ -119,6 +132,25 @@
 
 
                             </tbody>
+      <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
+                </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group form-black label-floating is-empty">
+                                        <label class="control-label">Especificación de la necesidad educativa</label>
+                                        <input type="text"  #necesidad="ngModel" name="necesidad" [(ngModel)]="necesidad_educativa" class="form-control" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group form-black label-floating is-empty">
+                                        <label class="control-label">Especificación de la adaptación aplicada</label>
+                                        <input type="text"  #adaptacion="ngModel" name="adaptacion" [(ngModel)]="adaptacion_aplicada" class="form-control" >
+                                    </div>
+                                </div>
+                            </div>
+
+
+
 
                             <div class="row">
                                 <div class="col-md-4">
@@ -130,10 +162,10 @@
                                   </a>
                                 </div>
                           </div>
-                        </table>
+
                     </div>
 
-  <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
+
                 </div>
             </div>
         </div>

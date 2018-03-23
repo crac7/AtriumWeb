@@ -22,16 +22,18 @@ export class MateriasDocenteService{
   AlumnCursosList : ModelAlumnCursos[];
   /****/
   selectedDatosDocentes:ModelDatosDocentes;
+  bandera:string;
     public datosDocentes: any;
   /*public cod_per:number;
   public cod_profesor:number;
   public datosDocentes:any;*/
   constructor(private _http: Http){
+    this.bandera=localStorage.getItem('bandera');
     this.url = Global.url;
   }
 
-  MateriasDocentes(){
-        let json = JSON.stringify(this.GetDatosdocentes());
+  MateriasDocentes(lec:string =null){
+        let json = JSON.stringify(this.GetDatosdocentes(lec));
          console.log(json);
         let params =json;
 
@@ -64,7 +66,7 @@ export class MateriasDocenteService{
       AlumnosCurso(cursoDatos){
             let json = JSON.stringify(cursoDatos);
              console.log(json);
-            let params =cursoDatos;
+            let params =json;
 
             let headers = new Headers({'Content-Type':'application/json',
                                         'Authorization': 'bearer '+this.getToken()});
@@ -80,22 +82,31 @@ export class MateriasDocenteService{
         InsFaltasAtrasos(curso){
 
                    let json = JSON.stringify(curso);
-                   let params =curso;
-                      console.log(curso);
+                   let params =json;
+                      console.log(json);
                       let headers = new Headers({'Content-Type':'application/json',
                                                   'Authorization': 'bearer '+this.getToken()});
                    return this._http.post(this.url+'InsertFaltasAtrasos', params ,{headers: headers})
                             .map(res => res.json());
           }
 
+        DetalleFalta(dataAlumn){
+            let json = JSON.stringify(dataAlumn);
+            let params =json;
+            let headers = new Headers({'Content-Type':'application/json',
+                                       'Authorization':'bearer '+this.getToken()});
+            return this._http.post(this.url+'DetalleFalta', params ,{headers: headers})
+                     .map(res => res.json());
+          }
 
-  GetDatosdocentes(){
+  GetDatosdocentes(lec:string =null){
 
     this.datosDocentes=[{
                     cod_per:     localStorage.getItem('cod_per'),
                     let_per:       localStorage.getItem('let_per'),
                     cod_profesor:  localStorage.getItem('cod_profesor'),
                     nombre:  localStorage.getItem('nombre'),
+                    bandera: this.bandera==='A'&& lec!=null ? 'LP':''
                   }];
                 //  console.log(this.datosDocentes);
        return this.datosDocentes[0];

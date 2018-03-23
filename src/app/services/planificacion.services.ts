@@ -16,16 +16,21 @@ export class PlanificacionServices{
    }
 
 
-   getEmployeeList(){
+   GeneraCodigo(){
+       let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this.getToken()});
+      return this._http.get(this.url+'GeneraCodigo' ,{headers: headers})
+               .map(res => res.json());
+    }
 
-
-    /*let headers = new Headers({'Content-Type':'application/json'});
-      this.http.get(this.url+'Docentes', params ,{headers: headers})
-      .map((data : Response) =>{
-        return data.json() as Planificacion[];
-      }).toPromise().then(x => {
-        this.planificacion = x;
-      })*/
+    InsertCabecera(Cabecera){
+      let json = JSON.stringify(Cabecera);
+      let params =json;
+         console.log(json);
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this.getToken()});
+      return this._http.post(this.url+'InsertaCabeceraPlan', params ,{headers: headers})
+               .map(res => res.json());
     }
 
 ///Accede a local Sotrage y devuele los datos ya procesados

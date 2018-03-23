@@ -34,6 +34,7 @@ textarea{
 }
 checkbox{
     width: 50px;
-
-
     }
+p#categoryDetalle{
+  font-weight: bold;
+}

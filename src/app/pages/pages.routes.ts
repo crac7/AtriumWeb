@@ -23,12 +23,11 @@ const pagesRoutes: Routes =[
           { path: 'icons',          component: IconsComponent },
           { path: 'maps',           component: MapsComponent },
           { path: 'notifications',  component: NotificationsComponent },
-          { path: 'upgrade',        component: UpgradeComponent }
-
-      // {path: '', redirectTo: 'Faltas-Atrasos', pathMatch: 'full'}
+          { path: 'upgrade',        component: UpgradeComponent },
+          //{path: '', redirectTo: 'Faltas-Atrasos', pathMatch: 'full'}
         ],
 
     },
-  //{ path: 'login',        component: LoginComponent },
+  //{path: '', redirectTo: 'Faltas-Atrasos', pathMatch: 'full'}
 ];
 export const PagesRouting = RouterModule.forChild(pagesRoutes);

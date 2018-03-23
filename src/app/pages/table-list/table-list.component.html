@@ -39,7 +39,7 @@
                                 <p class="category">Paralelo : <a class="contenido">{{Cabecera[0].paralelo}}</a>
                             </div>
                               <div class="col-md-4">
-                                  <p class="category">Fecha : <a class="contenido">{{fecha}}</a>
+                                  <p class="category" *ngIf="this.bandera==='P'">Fecha : <a class="contenido">{{fecha}}</a>
                                 <p class="category">Inspectores : <a class="contenido">{{Cabecera[0].inspector}}</a>
                               </div>
                           </div>
@@ -50,33 +50,44 @@
 
                   <div class="card-content table-responsive">
                       <div class="row">
-                        <div class="col-md-3">
+
+                      <div class="col-6 col-sm-2">
                         <a class="btn btn-success"  (click)="Atras()">
                             <i class="material-icons">keyboard_backspace</i>Atras
                         </a>
-                          </div>
-                        <div class="col-md-3">
+                      </div>
+                      <div class="col-6 col-sm-2">
+                        <a class="btn"  (click)="GeneraPDF()">
+                          <i class="material-icons">picture_as_pdf</i>  GeneraPDF
+                        </a>
+                      </div>
+                      <div class="col-6 col-sm-3">
                           <p class="category">Selecione la Unidad:
-                            <select id="Unidad" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
-
+                            <select #selectedCategory id="Unidad" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
                             <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                             </select>
-                        </div>
-                    </div>
+                      </div>
+
+                      <div class="col-6 col-sm-3" *ngIf="this.bandera==='A'">
+                        <p class="category" >Fecha: <br>
+                         <input [ngModel]="fecha | date:'yyyy-MM-dd'" (ngModelChange)="fecha = $event" type="date" name="fecha"/>
+                      </div>
+
+                   </div>
 <!---------------------------------------------------------------------------------->
                         <table class="table">
                             <thead class="text-danger">
                                 <tr>
-                                    <th>Codigo</th>
+
                                     <th>Alumno</th>
                                     <th>Asistencia</th>
-                                    <th *ngIf="this.bandera==='P'"> </th>
+                                    <th *ngIf="this.bandera==='P'"> Tipo</th>
                                     <th  *ngIf="this.bandera==='A'"> Abandono</th>
                                     <th *ngIf="this.bandera==='A'">Atraso</th>
                                     <th *ngIf="this.bandera==='A'">Retiro</th>
                                     <th *ngIf="this.bandera==='A'">Falta</th>
                                     <th *ngIf="this.bandera==='A'">Justificación</th>
-                                    <th *ngIf="this.bandera==='A'"> </th>
+                                    <th *ngIf="this.bandera==='A'">Tipo</th>
                                     <th *ngIf="this.bandera==='A'">Observación</th>
                                 </tr>
                             </thead>
@@ -86,7 +97,7 @@
                                 <tr *ngFor="let item of this._MateriasDocentesServices.AlumnCursosList; let in = index">
                                 <!-- <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister()">-->
 
-                               <td> {{item.cod_alum}}</td>
+
                                <td> {{item.nombre}}</td>
                                <td >
                                           <div class="checkbox">
@@ -109,7 +120,7 @@
     <tr *ngFor="let item of this._MateriasDocentesServices.AlumnCursosList; let in = index">
     <!-- <form #registerForm="ngForm" (ngSubmit)="onSubmitRegister()">-->
 
-   <td> {{item.cod_alum}}</td>
+
    <td> {{item.nombre}}</td>
    <td> {{item.asistencia}}</td>
    <td>{{item.abandono}}</td>
@@ -125,7 +136,7 @@
                 </div>
       </td>
       <td>
-        <select id="tipo_falta"  [(ngModel)]="item.tipo_falta" [value]="item.tipo_falta">
+        <select id="tipo_falta"  [(ngModel)]="item.tipo_falta">
             <option   *ngFor="let level of faltas" [ngValue]="level.valor" >{{level.name}}</option>
         </select>
 
@@ -134,9 +145,15 @@
 
 
         <td>
-          <textarea id="textarea"  maxlength="100" [disabled]="item.checked" [(ngModel)]="item.descripciopn_juti"></textarea>
+          <textarea id="textarea"  maxlength="100" [disabled]="item.checked" [(ngModel)]="item.observacion"></textarea>
         </td>
-      <!---  </form>------------>
+        <td>
+          <button type="button" class="btn-info" data-toggle="modal" data-target="#exampleModal"
+                       (click)="DetalleAlum(item.cod_alum)">
+                      <i class="material-icons">find_in_page</i>
+            </button>
+        </td>
+          <!---  </form>------------>
     </tr>
 </tbody>
 <!------------------------------------------------------------------------------------------->
@@ -155,4 +172,35 @@
             </div>
         </div>
     </div>
+</div>
+
+
+
+<!---------------------------------------------Modal de detalle-------------------------------------------->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Detalles</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+         <div *ngFor="let item of detallesMaterias;">
+                 <p class="categoryDetalle">Materia : <label class="contenido">{{item.materia}}</label>
+                  <p class="categoryDetalle">Docente : <label class="contenido">{{item.profesor}}</label>
+                  <p class="categoryDetalle">Tipo : <label class="contenido">{{item.tipo_falta}}</label>
+           <hr>
+         </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+      </div>
+    </div>
+  </div>
 </div>

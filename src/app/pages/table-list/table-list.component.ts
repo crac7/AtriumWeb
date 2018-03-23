@@ -24,6 +24,11 @@ export class TableListComponent implements OnInit {
   user:string;
   AlumnosCurso:Array<any>;
   bandera:string;
+  codProfesor:string;
+  unidad:number;
+  detallesMaterias:Array<any>;
+  ////
+  prueba:Array<any>;
   constructor(private _MateriasDocentesServices: MateriasDocenteService) {
 
 
@@ -38,7 +43,11 @@ export class TableListComponent implements OnInit {
      this.letPeriodo= localStorage.getItem('let_per');
      this.user=localStorage.getItem('username');
      this.bandera=localStorage.getItem('bandera');
-
+     this.codProfesor=localStorage.getItem('cod_profesor')
+     this.prueba=[  { name: "Falta", valor:1},
+                     { name: "Atraso", valor:2},
+                     { name: "Retirado",valor:3},
+                     { name: "Abandono", valor:4}];
 
   }
 
@@ -97,8 +106,8 @@ export class TableListComponent implements OnInit {
     this.visible=false;
   }
 ConsultarAlumnos(unidad:number) : void{
-
-
+ this.unidad=unidad;
+  // console.log(this.fecha);
    this.AlumnosCurso=[{
                       cod_per: 2017,///this.codigoPeriodo,<---------------------------------canmbiar
                       let_per: this.letPeriodo,
@@ -107,7 +116,7 @@ ConsultarAlumnos(unidad:number) : void{
                       cod_materia: this.Cabecera[0].codMateria,
                       unidad: unidad,
                       fecha:  this.fecha,
-                      cod_profesor:  localStorage.getItem('cod_profesor'),
+                      cod_profesor:  this.codProfesor,
                     }]
   //console.log( this.AlumnosCurso[0]);
 
@@ -115,10 +124,43 @@ ConsultarAlumnos(unidad:number) : void{
    console.log(this._MateriasDocentesServices.AlumnCursosList);
 
 }
-CambiaCheck(p){
+/*CambiaCheck(p){
 
    console.log(p);
-}
+}*/
+
+DetalleAlum(codAlumno){
+
+console.log(this.Cabecera[0]);
+  const detalle = {
+        cod_per:   this.codigoPeriodo,
+        let_per: this.letPeriodo,
+        cod_alum: codAlumno,
+        cod_curso: this.Cabecera[0].codCurso[0],
+        cod_paralelo:  this.Cabecera[0].codParalelo,
+        cod_materia: this.Cabecera[0].codMateria,
+        unidad:   this.unidad,
+        fecha: this.fecha,
+       cod_profesor:  this.codProfesor
+    }
+ console.log(detalle);
+
+  this._MateriasDocentesServices.DetalleFalta(detalle)
+            .subscribe(response => {
+             console.log(response);
+                  this.detallesMaterias = response;
+                ////llenar arreglo
+            },
+            error=>{
+                var erroMessage= <any> error;
+                 if(erroMessage !=null){
+                   var body =JSON.parse(error);
+                  // this.aletErrorRegister=body.error;
+                    console.log(error);
+                 }
+            })
+  }
+
 
 checkAll(ev) {
   if(this._MateriasDocentesServices.AlumnCursosList[ev].asistencia){
@@ -132,13 +174,17 @@ checkAll(ev) {
  }
 
 
+
   Atras()
   {
     this.Cabecera=null;
     this.visible=true;
     this._MateriasDocentesServices.AlumnCursosList=[];
-
+     this.fecha =moment().format('L');   //
   }
 
+  GeneraPDF(){
+    console.log("funciona");
+  }
 
 }
