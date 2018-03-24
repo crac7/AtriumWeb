@@ -40,8 +40,11 @@
                                <p class="category">DOCENTE : <a class="contenido">{{nombre}}</a>
 
                                  <div class="form-group form-black label-floating is-empty">
-                                     <label class="control-label">Título de unidad de planificación</label>
-                                     <input type="text" #titulo="ngModel" name="titulo" [(ngModel)]="titulo_unidad" class="form-control cabecera" >
+                                   <!-- vista como Administrador--->
+                                     <a *ngIf="bandera==='A'" class="contenido">{{planificacionCabeceraModel.t_unidad}}</a>
+                                     <!-- vista como Profesor--->
+                                     <label *ngIf="bandera==='P'" class="control-label">Título de unidad de planificación</label>
+                                     <input *ngIf="bandera==='P'" type="text" #titulo="ngModel" name="titulo" [(ngModel)]="planificacionCabeceraModel.t_unidad" class="form-control cabecera" >
                                  </div>
                             </div>
 
@@ -67,30 +70,30 @@
                       <div class="row">
                         <div class="col-md-3">
                           <p class="category">Fecha de Inicio:
-                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="fechain = $event" type="date" name="fechain">
+                             <input class="form-control"  [ngModel]="planificacionCabeceraModel.fecha_ini | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_ini = $event" type="date" name="fecha_ini">
                           </div>
                         <div class="col-md-3">
                           <p class="category">Fecha de término:
-                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fechafin">
+                            <input class="form-control"  [ngModel]="planificacionCabeceraModel.fecha_fin | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_fin = $event" type="date" name="fecha_fin">
                           </div>
 
                           <div class="col-6 col-sm-3">
                               <p class="category">Selecione la Unidad:
-                                <select #Unidad [value]=-1>
-                                <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
+                                <select #Unidad  [(ngModel)]="planificacionCabeceraModel.unidad" [value]=-1>
+                                <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [ngValue]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                                 </select>
                           </div>
 
                           <div class="col-sm-3">
                             <!-- Button trigger modal -->
-                            <a class="btn btn-success"   (click)="insertaCabcera(Unidad.value)" data-toggle="modal" data-target=".bd-example-modal-lg"><i class="material-icons">note_add</i> <span>Añadir</span></a>
-
+                            <a *ngIf="bandera==='P'" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
+                              <a *ngIf="bandera==='A'" class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
 
                              </div>
                         </div>
 <!---------------------------------------------------------------------------------->
 
-                        <table class="table">
+                        <table  *ngIf="bandera==='P'"  class="table">
                             <thead class="text-danger">
                                 <tr>
                                   <th>DEZTREZAS CON CRITERIOS DE DESEPEÑO</th>
@@ -108,21 +111,22 @@
 
                            <tr   *ngFor="let item of itemsPlan; let i=index ">
 
-                                          <td>{{item.destreza}}</td>
-                                          <td><strong>Anticipacion:</strong> {{item.anticipacion}}<br>
-                                              <strong>Construcción:</strong> {{item.construcion}} <br>
-                                              <strong>Consolidacion:</strong>{{item.consolidacion}}
+                                          <td>{{item.destrezas}}</td>
+                                          <td><strong>Anticipacion:</strong> {{item.act1}}<br>
+                                              <strong>Construcción:</strong> {{item.act2}} <br>
+                                              <strong>Consolidacion:</strong>{{item.act3}}
                                           </td>
                                           <td>{{item.recursos}}</td>
                                           <td>{{item.evaluacion}}</td>
                                           <td>{{item.tareas}}</td>
                                           <td>
-                                            <button class="btn-info"
+                                           <!----------- vista como Profesor----------------->
+                                            <button  class="btn-info"
                                                           (click)="Edit(item,i)"
                                                           data-toggle="modal" data-target=".bd-example-modal-lg">
                                                          <i class="fa fa-edit"></i>
                                                 </button>
-                                            <button class="btn-danger"
+                                            <button *ngIf="bandera==='P'" class="btn-danger"
                                                          (click)="delete(i)">
                                                          <i class="fa fa-minus"></i>
                                               </button>
@@ -132,39 +136,152 @@
 
 
                             </tbody>
+                      </table>
       <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
-                </table>
+
+
+      <table  *ngIf="bandera==='A'"  class="table">
+          <thead class="text-danger">
+              <tr>
+                <th>Titulo</th>
+                  <th>Fecha Inicio</th>
+                  <th>Fecha Fin</th>
+                  <th> Revisado</th>
+                    <th> Aprobado</th>
+                  <th>Observacion</th>
+                    <th>Genera PDF</th>
+
+              </tr>
+          </thead>
+
+          <tbody >
+
+
+
+         <tr  *ngFor="let item of tablaAministrador; let i=index "  >
+
+                        <td>{{item.t_unidad}} </td>
+                        <td>{{item.fecha_ini}}</td>
+                        <td>{{item.fecha_fin}}</td>
+                        <td>
+                          <div class="checkbox">
+                            <label>
+                                <input type="checkbox"  [(ngModel)]="item.revisado"  >
+                              </label>
+                            </div>
+                        </td>
+                        <td>
+                          <div class="checkbox">
+                            <label>
+                                <input type="checkbox" [(ngModel)]="item.aprobado"  >
+                              </label>
+                            </div>
+                        </td>
+                        <td>
+
+                          <button  class="btn-info"
+                                            (click)="EditAdmin(item,i)"
+                                         data-toggle="modal" data-target=".Admin-modal-lg" >
+                                       <i class="fa fa-edit"></i>
+                              </button>
+                          </td>
+                        <td>
+                              <a class="btn"  (click)="GeneraPDF()">
+                                <i class="material-icons">picture_as_pdf</i>
+                              </a>
+                        </td>
+
+            </tr>
+
+
+          </tbody>
+    </table>
+
+
+<!------------------------------------------------------------------------------------------------->
                             <div class="row">
-                                <div class="col-md-6">
+    <!-----------------------------------------------Vista como Administrador-------------------------------->
+                            <!--  <div  *ngIf="bandera==='A'">
+                                <div class="col-md-12">
+                                   <p class="category">Especificación de la necesidad educativa :
+                                     <a class="contenido">{{planificacionCabeceraModel.t_unidad}}</a>
+                                </div>
+                                <div class="col-md-12">
+                                   <p class="category">Especificación de la adaptación aplicada :
+                                     <a class="contenido">{{planificacionCabeceraModel.adaptacion_aplicada}}</a>
+                                </div>
+                                <div  class="col-md-12">
+                                    <div class="form-group form-black label-floating is-empty">
+                                        <label class="control-label">Observaciones</label>
+                                        <input type="text"  #observaciones="ngModel" name="observaciones" [(ngModel)]="planificacionCabeceraModel.observaciones" class="form-control" >
+                                    </div>
+                                </div>
+
+                              </div>-->
+
+        <!-----------------------------------------Vista como P^rofesor------------------------------------------->
+                              <div  *ngIf="bandera==='P'">
+                                <div   class="col-md-6">
                                     <div class="form-group form-black label-floating is-empty">
                                         <label class="control-label">Especificación de la necesidad educativa</label>
-                                        <input type="text"  #necesidad="ngModel" name="necesidad" [(ngModel)]="necesidad_educativa" class="form-control" >
+                                        <input  type="text"  #necesidad="ngModel" name="necesidad" [(ngModel)]="planificacionCabeceraModel.necesidad_educativa" class="form-control" >
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div  class="col-md-6">
                                     <div class="form-group form-black label-floating is-empty">
                                         <label class="control-label">Especificación de la adaptación aplicada</label>
-                                        <input type="text"  #adaptacion="ngModel" name="adaptacion" [(ngModel)]="adaptacion_aplicada" class="form-control" >
+                                        <input type="text"  #adaptacion="ngModel" name="adaptacion" [(ngModel)]="planificacionCabeceraModel.adaptacion_aplicada" class="form-control" >
                                     </div>
                                 </div>
+                                <div class="col-md-12">
+                                   <p class="category">Observaciones :
+                                     <a class="contenido">{{planificacionCabeceraModel.observaciones}}</a>
+                                </div>
+
+
+
+
+                                <div class="col-md-6">
+                                        <label class="control-label">Revisado:</label>
+                                         <a class="contenido">{{planificacionCabeceraModel.usuario_revisor}}</a>
+                                         <div class="checkbox">
+                                           <label>
+                                               <input type="checkbox" [disabled]="bandera==='P'">
+                                             </label>
+                                           </div>
+                                </div>
+                                <div class="col-md-6">
+                                        <label class="control-label">Aprobado:</label>
+                                         <a class="contenido">{{planificacionCabeceraModel.usuario_revisor}}</a>
+                                         <div class="checkbox">
+                                           <label>
+                                               <input type="checkbox" [disabled]="bandera==='P'">
+                                             </label>
+                                           </div>
+                                </div>
+                              </div>
                             </div>
 
 
 
 
-                            <div class="row">
-                                <div class="col-md-4">
-                                 <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
-                                  <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
 
-                                  <a class="btn btn-danger"  (click)="Atras()">
-                                      <i class="material-icons">keyboard_backspace</i>
-                                  </a>
-                                </div>
-                          </div>
 
                     </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                          <div class="row">
+                              <div class="col-md-12">
+                                <a class="btn btn-danger"  (click)="Atras()">
+                                     <i class="material-icons">keyboard_backspace</i>
+                                 </a>
+                               <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
 
+                              </div>
+                        </div>
+
+                         </div>
+                    </div>
 
                 </div>
             </div>
@@ -174,28 +291,42 @@
 
 
 
-<!-- Modal -->
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
+<!----------------------------------------------------- Modal Profesores ------------------------------------>
+
+
+
+<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+  <div   class="modal-dialog modal-lg" role="document">
+    <div  class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Planificación Semanal</h5>
+        <h5  class="modal-title" id="exampleModalLongTitle">Planificación Semanal</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
 
-      <form #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
-      <div class="modal-body">
-<!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
+  <form  #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
+  <div  class="modal-body">
+  <div *ngIf="!bloquedoModal">
+    <div  class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+               <h5>Debes selecionar la unidad ;) !  </h5>
+            </div>
+        </div>
 
-          <div class="row">
+    </div>
+
+  </div>
+<!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
+ <div *ngIf="bloquedoModal">
+          <div  class="row">
               <div class="col-md-6">
                   <div class="form-group">
                      <label>DEZTREZAS CON CRITERIOS DE DESEPEÑO</label>
                       <div class="form-group form-black label-floating is-empty">
 
-                          <textarea class="form-control" name="destreza" #destreza="ngModel"  [(ngModel)]="_PlanificacionServices.selectedPlanificacion.destreza" ></textarea>
+                          <textarea class="form-control" name="destrezas" #destrezas="ngModel"  [(ngModel)]="planificacionDetalleModel.destrezas" ></textarea>
                       </div>
                   </div>
               </div>
@@ -204,7 +335,7 @@
                      <label>RECURSOS</label>
                       <div class="form-group form-black label-floating is-empty">
 
-                          <textarea class="form-control" name="recursos"  #recursos="ngModel"  [(ngModel)]="_PlanificacionServices.selectedPlanificacion.recursos" ></textarea>
+                          <textarea class="form-control" name="recursos"  #recursos="ngModel"  [(ngModel)]="planificacionDetalleModel.recursos" ></textarea>
                       </div>
                   </div>
               </div>
@@ -216,15 +347,15 @@
                     <label>ACTIVIDADES DE APRENDIZAJE</label>
                       <div class="form-group form-black label-floating is-empty">
                           <label class="control-label">Anticipación</label>
-                          <textarea class="form-control" #anticipacion="ngModel" name="anticipacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.anticipacion" ></textarea>
+                          <textarea class="form-control" #anticipacion="ngModel" name="anticipacion" [(ngModel)]="planificacionDetalleModel.act1" ></textarea>
                       </div>
                       <div class="form-group form-black label-floating is-empty">
                           <label class="control-label">Construcción</label>
-                          <textarea class="form-control"   #construcion="ngModel" name="construcion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.construcion"></textarea>
+                          <textarea class="form-control"   #construcion="ngModel" name="construcion" [(ngModel)]="planificacionDetalleModel.act2"></textarea>
                       </div>
                       <div class="form-group form-black label-floating is-empty">
                           <label class="control-label">Consolidación</label>
-                          <textarea class="form-control"   #consolidacion="ngModel" name="consolidacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.consolidacion"></textarea>
+                          <textarea class="form-control"   #consolidacion="ngModel" name="consolidacion" [(ngModel)]="planificacionDetalleModel.act3"></textarea>
                       </div>
                   </div>
               </div>
@@ -236,7 +367,7 @@
                      <label>EVALUACIÓN</label>
                       <div class="form-group form-black label-floating is-empty">
 
-                          <textarea class="form-control"   #evaluacion="ngModel" name="evaluacion" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.evaluacion"></textarea>
+                          <textarea class="form-control"   #evaluacion="ngModel" name="evaluacion" [(ngModel)]="planificacionDetalleModel.evaluacion"></textarea>
                       </div>
                   </div>
               </div>
@@ -245,17 +376,62 @@
                      <label>TAREAS</label>
                       <div class="form-group form-black label-floating is-empty">
 
-                          <textarea class="form-control"  #tareas="ngModel" name="tareas" [(ngModel)]="_PlanificacionServices.selectedPlanificacion.tareas"></textarea>
+                          <textarea class="form-control"  #tareas="ngModel" name="tareas" [(ngModel)]="planificacionDetalleModel.tareas"></textarea>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      </div>
+      <!--------------------------footer-------------------------------------------------------->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
+        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="guardar()">Guardar</button>
+      </div>
+
+    </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!----------------------------------------------------- Modal Inspector ------------------------------------>
+
+
+
+<div class="modal fade Admin-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+  <div   class="modal-dialog modal-lg" role="document">
+    <div  class="modal-content">
+      <div class="modal-header">
+        <h5  class="modal-title" id="exampleModalLongTitle">Detalles Observacion</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+  <form  #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
+  <div  class="modal-body">
+
+<!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
+
+                <div class="row">
+              <div class="col-md-12">
+                  <div class="form-group">
+                      <div class="form-group form-black label-floating is-empty">
+                          <label class="control-label">Observacion</label>
+                          <textarea class="form-control" #anticipacion="ngModel" name="anticipacion" [(ngModel)]="planificacionDetalleModel.observaciones" ></textarea>
                       </div>
                   </div>
               </div>
           </div>
 
+
       </div>
-      <!--------------------------footer-------------->
+      <!--------------------------footer-------------------------------------------------------->
       <div class="modal-footer">
-        <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-        <button type="submit"  class="btn btn-success" (ngClik)="guardar()">Guardar</button>
+        <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
+        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="guardar()">Guardar</button>
       </div>
 
     </form>

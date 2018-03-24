@@ -34,7 +34,7 @@ export class MateriasDocenteService{
 
   MateriasDocentes(lec:string =null){
         let json = JSON.stringify(this.GetDatosdocentes(lec));
-         console.log(json);
+
         let params =json;
 
         let headers = new Headers({'Content-Type':'application/json',
@@ -49,7 +49,7 @@ export class MateriasDocenteService{
     }
     UnidadesDocentes(){
           let json = JSON.stringify(this.GetDatosdocentes());
-        //   console.log(json);
+
           let params =json;
 
           let headers = new Headers({'Content-Type':'application/json',
@@ -65,7 +65,7 @@ export class MateriasDocenteService{
 
       AlumnosCurso(cursoDatos){
             let json = JSON.stringify(cursoDatos);
-             console.log(json);
+      
             let params =json;
 
             let headers = new Headers({'Content-Type':'application/json',

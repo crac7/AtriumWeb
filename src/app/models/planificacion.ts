@@ -1,20 +1,16 @@
 export class Planificacion{
-        destreza: string;
-        anticipacion: string;
-        construcion: string;
-        consolidacion: string;
-        recursos: string;
-        evaluacion: string;
-        tareas: string;
-
- /*constructor(
-     public destreza: string,
-     public anticipacion: string,
-     public construcion: string,
-     public consolidacion: string,
-     public recursos: string,
-     public evaluacion: string,
-     public tareas: string
- ){}*/
+     constructor(
+                 public cod_plan:number,
+                 public cod_deta: number,
+                 public destrezas: string,
+                 public act1: string,
+                 public act2: string,
+                 public act3: string,
+                 public recursos: string,
+                 public evaluacion: string,
+                 public tareas: string,
+                 public usuario: string,
+                 public estado:string
+                  ){}
 
 }

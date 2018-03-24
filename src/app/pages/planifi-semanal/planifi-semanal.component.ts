@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-//import { Planificacion  } from '../../models/planificacion';
+import { Component,Renderer2, ViewChild ,ElementRef  , OnInit } from '@angular/core';
+import { PlanificacionCabeceraModel  } from '../../models/planificacion.cabecera.models';
 import { NgForm } from '@angular/forms'
 import { PlanificacionServices  } from '../../services/planificacion.services';
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
 import * as moment from 'moment';
+import { Planificacion  } from '../../models/planificacion';
+
 @Component({
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
@@ -11,71 +13,74 @@ import * as moment from 'moment';
    providers :[PlanificacionServices,MateriasDocenteService]
 })
 export class PlanifiSemanalComponent implements OnInit {
+  @ViewChild("guardarModal") guardarModal: ElementRef;
+    @ViewChild("modal") modal: ElementRef;
+  public planificacionCabeceraModel: PlanificacionCabeceraModel;
+  public planificacionDetalleModel:Planificacion;
   visible=true;
   addtable=false;
+  bloquedoModal=false;
 
   bandera:string;
   itemsPlan: Array<any>;
+  tablaAministrador: Array<any>;
   accion:string;
   index:number;
+  indexAdmin:number;
   nombre:string;
   fechain:string;
   fechafin:string;
   codigoPeriodo:string;
   letPeriodo:string;
   user:string;
-  codPlan:number;
   materia:string;
   paralelo:string;
   curso:string;
-  cod_curso:number;
-  cod_paralelo:number;
-  cod_materia:number;
-  cod_profesor:string;
-  titulo_unidad:string;
-  nUnidaPlan:string;
-  necesidad_educativa:string;
-  adaptacion_aplicada:string;
-  observaciones:string;
-  revisado:boolean;
-  fecha_revisado:string;
-  usuario_revisor:string;
-  aprobado:boolean;
-  fecha_aprobado:string;
-  usuario_aprueba:string;
+  errorCabecera: Array<any>;
 
   constructor(public _PlanificacionServices: PlanificacionServices,
-              private _MateriasDocentesServices: MateriasDocenteService ) { }
+              private _MateriasDocentesServices: MateriasDocenteService,
+              private renderer: Renderer2 )
+              {
+    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',0,'','',0,'','');
+    this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
+              }
 
   ngOnInit() {
     this.resetForm();
     this.ConsultaCurso();
-    this.fechain =moment().format('L');   //
-    this.fechafin =moment().format('L');   //
+
+    /////////
     this._MateriasDocentesServices.MateriasDocentes();
     this._MateriasDocentesServices.UnidadesDocentes();
     this.nombre=localStorage.getItem('nombre');
-    this.codigoPeriodo = localStorage.getItem('cod_per'),
-    this.cod_profesor =  localStorage.getItem('cod_profesor');
-    this.letPeriodo= localStorage.getItem('let_per');
-    this.user=localStorage.getItem('username');
     this.bandera =localStorage.getItem('bandera');
-
+    //////////model///////////
+     this.IniciaCabcera();
   }
-
+  IniciaCabcera(){
+    this.planificacionCabeceraModel.cod_per =localStorage.getItem('cod_per');
+    this.planificacionCabeceraModel.let_per = localStorage.getItem('let_per');
+    this.planificacionCabeceraModel.usuario= localStorage.getItem('username');
+    this.planificacionCabeceraModel.cod_profesor = localStorage.getItem('cod_profesor');
+    this.planificacionCabeceraModel.fecha_ini =moment().format('L');
+    this.planificacionCabeceraModel.fecha_fin =moment().format('L');
+    this.planificacionCabeceraModel.cod_emp=1;
+  }
 
   Cambiamodal(i){
     this.visible=false;
     this.materia=i.Dm;
     this.paralelo=i.Dp;
     this.curso=i.Dca;
-    this.cod_curso=i.cod_curso;
-    this.cod_paralelo= i.cod_paralelo;
-    this.cod_materia= i.cod_materia;
+    this.planificacionCabeceraModel.cod_curso=i.cod_curso[0];
+    this.planificacionCabeceraModel.cod_paralelo= i.cod_paralelo;
+    this.planificacionCabeceraModel.cod_mat= i.cod_materia;
 
     this._PlanificacionServices.GeneraCodigo().subscribe(
          response=>{
-             this.codPlan=response.cod_plan;
+            this.planificacionCabeceraModel.cod_plan=response.cod_plan;
+
          },
          error=>{
                   console.log(error);
@@ -87,103 +92,101 @@ export class PlanifiSemanalComponent implements OnInit {
 
   Atras()
   {
+    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',0,'','',0,'','');
+     this.IniciaCabcera();
     this.visible=true;
+    this.itemsPlan =[];
+      this.bloquedoModal=false;
   }
 
   ConsultaCurso(){
      this.itemsPlan =[];
   }
+    ConsultaAdmin(){
+       this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel).subscribe(
+                  response=>{  this.tablaAministrador=response; console.log(response)},
+                  error=>{ console.log(error);});
 
+    }
 
   delete(i){
-     this.itemsPlan.splice(i, 1);
+     this.planificacionDetalleModel.estado="E";
+     this._PlanificacionServices.InsertDetalle(this.planificacionDetalleModel).subscribe(
+                response=>{ this.itemsPlan.splice(i, 1);},
+                error=>{ console.log(error);});
+
   }
 
 
+EditAdmin(Itemplan,i) {
+    this.tablaAministrador[i]=Itemplan;
+    this.indexAdmin=i;
+      }
+
   Edit(Itemplan,i) {
       this.accion="u";
-      this._PlanificacionServices.selectedPlanificacion =Itemplan;
+      this.planificacionDetalleModel =Itemplan;
       this.index=i;
       console.log(this.index);
     }
 
   guardar(form: NgForm){
-    console.log(form.value);
-    this.addtable=true;
+        this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
+          this.addtable=true;
+            this._PlanificacionServices.InsertDetalle(this.planificacionDetalleModel).subscribe(
+                       response=>{
+                                   if(this.accion==="u")
+                                   {
+                                     this.itemsPlan[this.index] = this.planificacionDetalleModel;
+                                      this.resetForm();
+                                   }
+                                   else{
+                                       this.itemsPlan.push(response[0]);
+                                       this.resetForm();
+                                   }
 
-    if(this.accion==="u")
-    {
-      this.itemsPlan[this.index] = form.value;
-    }
-    else{
-        this.itemsPlan.push(form.value);
-    }
-
-    this.resetForm();
+                       },
+                       error=>{
+                                console.log(error);
+                          }
+                    );
   }
 
 
 
-    insertaCabcera(unidad:number, enviado:number=0){
-    //  alert(this.titulo_unidad + this.nUnidaPlan + this.fechain +this.fechafin);
-    //  console.log(Cabecera);
-      const Cabecera = {
-            cod_plan:  this.codPlan,
-            cod_emp:    1,
-            cod_per: this.codigoPeriodo,
-            let_per:   this.letPeriodo,
-            cod_curso:  this.cod_curso,
-            cod_paralelo: this.cod_paralelo,
-            cod_mat:      this.cod_materia,
-            cod_profesor:  this.cod_profesor,
-            unidad: unidad,
-            t_unidad: this.titulo_unidad,
-            fecha_ini: this.fechain,
-            fecha_fin:this.fechafin,
-            usuario: this.user,
-            enviado: enviado,
-            necesidad_educativa: this.necesidad_educativa,
-            adaptacion_aplicada: this.adaptacion_aplicada,
-            observaciones: '',
-            revisado: 0,
-            fecha_revisado: '',
-            usuario_revisor: '',
-            aprobado: 0,
-            fecha_aprobado: '',
-            usuario_aprueba: ''
-         }
-           console.log(Cabecera);
-        this._PlanificacionServices.InsertCabecera(Cabecera).subscribe(
-                   response=>{
-                         console.log(response);
-                   },
-                   error=>{
-                            console.log(error);
-                      }
-                );
-
-         this.resetForm();
+    insertaCabcera(){
+        if(this.planificacionCabeceraModel.unidad===0)
+        {
+          this.renderer.setAttribute(this.guardarModal.nativeElement, "disabled", "true");
+        }
+        else
+          {
+            this.bloquedoModal=true;
+            this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");
+            this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
+                       response=>{},
+                       error=>{
+                              console.log(error);
+                          }
+                    );
+            }
+     this.resetForm();
 
     }
+
+
+
   resetForm(form?: NgForm) {
               this.accion=null;
               this.index=null;
               if (form != null)
                 form.reset();
-              this._PlanificacionServices.selectedPlanificacion = {
-                destreza: '',
-                anticipacion: '',
-                construcion: '',
-                consolidacion: '',
-                recursos:'',
-                evaluacion: '',
-                tareas: ''
-              }
+
+      this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
+
       }
 
-  /*  fecha(){
-      console.log("fecha");
-    }*/
+
 
 
   }
