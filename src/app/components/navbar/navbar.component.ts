@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import {UserService}from '../../services/user.service';
+
 import {Router} from '@angular/router';
 @Component({
   selector: 'app-navbar',
@@ -15,14 +16,17 @@ export class NavbarComponent implements OnInit {
     private toggleButton: any;
     private sidebarVisible: boolean;
  public token;
-    constructor(location: Location,  private element: ElementRef ,private _userService:UserService,
+     username:string ;
+    constructor(location: Location,  private element: ElementRef ,
+              private _userService:UserService,
               private _router: Router) {
       this.location = location;
           this.sidebarVisible = false;
     }
 
     ngOnInit(){
-       this.token =this._userService.getToken();
+    //   this.token =this._userService.getToken();
+        this.username=  localStorage.getItem('username');
       this.listTitles = ROUTES.filter(listTitle => listTitle);
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
@@ -69,10 +73,14 @@ export class NavbarComponent implements OnInit {
       return titlee;
     }
     logout(){
+    this._userService.logout();
+    this.token=null;
+  }
+    /*logout(){
         console.log("fuciona");
         localStorage.removeItem('token');
         localStorage.clear();
         this.token=null;
         this._router.navigate(['login']);
-      }
+      }*/
 }

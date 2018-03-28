@@ -14,4 +14,6 @@ export class DetallePlanAdmin{
                  cod_mat      : number;
                  cod_profesor  : number;
                  unidad : number;
+                usuario_revisor: string ;
+                fecha_revisado: string;
 }

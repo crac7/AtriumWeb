@@ -139,10 +139,14 @@ EditAdmin(Itemplan,i) {
     this.indexAdmin=i;
   }
 GuardarModalAdmin(){
+this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
 this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
+this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
 console.log(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]);
 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
-           response=>{},
+           response=>{
+
+           },
            error=>{
                   console.log(error);
               }

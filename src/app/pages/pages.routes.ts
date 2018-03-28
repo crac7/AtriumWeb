@@ -1,5 +1,7 @@
 import { Routes, RouterModule } from '@angular/router';
 
+import {LoginGuardGuard} from '../services/login-guard.guard';
+
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
@@ -12,7 +14,9 @@ import { UpgradeComponent } from './upgrade/upgrade.component';//leccionario.com
 import { LeccionarioComponent } from './leccionario/leccionario.component';
 import { PlanifiSemanalComponent } from './planifi-semanal/planifi-semanal.component';
 const pagesRoutes: Routes =[
-    { path: '',      component: PagesComponent,
+    { path: '',
+      component: PagesComponent,
+       canActivate: [LoginGuardGuard],
         children: [
           { path: 'dashboard',      component: DashboardComponent },
           { path: 'user-profile',   component: UserProfileComponent },

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
+import {Router} from '@angular/router';
+import {UserService}from '../../services/user.service';
 declare const $: any;
 declare interface RouteInfo {
     path: string;
@@ -12,12 +13,12 @@ export const ROUTES: RouteInfo[] = [
     { path: '/Faltas-Atrasos', title: 'Faltas y Atrasos',  icon:'content_paste', class: '' },
     { path: '/Lecionario', title: 'Lecionario',  icon:'assignment', class: '' },
     { path: '/Planificacion', title: 'Planificacion',  icon:'assignment', class: '' },
-    { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
+    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
+  /*  { path: '/user-profile', title: 'User Profile',  icon:'person', class: '' },
     { path: '/dashboard', title: 'Dashboard',  icon: 'dashboard', class: '' },
     { path: '/typography', title: 'Typography',  icon:'library_books', class: '' },
-    { path: '/icons', title: 'Icons',  icon:'bubble_chart', class: '' },
     { path: '/maps', title: 'Maps',  icon:'location_on', class: '' },
-    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' }
+    { path: '/notifications', title: 'Notifications',  icon:'notifications', class: '' }*/
 
 ];
 
@@ -28,10 +29,11 @@ export const ROUTES: RouteInfo[] = [
 })
 export class SidebarComponent implements OnInit {
   menuItems: any[];
-
-  constructor() { }
+username:string;
+  constructor(  private _router: Router, private _userService:UserService) { }
 
   ngOnInit() {
+        this.username=  localStorage.getItem('username');
     this.menuItems = ROUTES.filter(menuItem => menuItem);
   }
   isMobileMenu() {
@@ -40,6 +42,9 @@ export class SidebarComponent implements OnInit {
       }
       return true;
   };
+  logout(){
+  this._userService.logout();
 
-  
+}
+
 }

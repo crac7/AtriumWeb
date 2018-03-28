@@ -12,7 +12,7 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
 
-                <li class="dropdown">
+                <!-----------<li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="material-icons">notifications</i>
                         <span class="notification">10</span>
@@ -25,13 +25,17 @@
                         <li><a href="#">Another Notification</a></li>
                         <li><a href="javascript:void()" (click)="logout()">salir</a></li>
                     </ul>
-                </li>
-                <li>
+                </li>-------------->
+                <li class="dropdown">
                     <a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
                        <i class="material-icons">person</i>
-                       <p class="hidden-lg hidden-md">Profile</p>
+                       <p >{{username}}</p>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="javascript:void()" (click)="logout()">salir</a></li>
+                    </ul>
                 </li>
+
             </ul>
 
 

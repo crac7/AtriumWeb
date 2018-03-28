@@ -23,8 +23,8 @@ import { LeccionarioComponent } from './leccionario/leccionario.component';
 import { PlanifiSemanalComponent } from './planifi-semanal/planifi-semanal.component';
 //import { Component } from './.component';
 //import { ListaFaltasComponent } from './inspector/lista-faltas/lista-faltas.component';
-
-
+import {LoginGuardGuard} from '../services/login-guard.guard';
+import {UserService}from '../services/user.service';
 
 @NgModule({
   imports: [
@@ -66,6 +66,10 @@ import { PlanifiSemanalComponent } from './planifi-semanal/planifi-semanal.compo
    LeccionarioComponent,
    PlanifiSemanalComponent,
  //Component,
- ]
+ ],
+  providers: [
+LoginGuardGuard,
+UserService
+  ]
 })
 export class PagesModule { }

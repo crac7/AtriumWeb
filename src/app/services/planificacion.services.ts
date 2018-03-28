@@ -38,7 +38,7 @@ export class PlanificacionServices{
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this.getToken()});
       return this._http.post(this.url+'InsertaCabeceraPlan', params ,{headers: headers})
-               .map(res => res.json());
+               .map(res =>  res.json());
     }
 
     InsertDetalle(detalle){
@@ -77,7 +77,7 @@ export class PlanificacionServices{
                             cod_plan=res.json();
                             if(Object.keys(cod_plan[0]).length>1 )
                             {
-                                //console.log(cod_plan[0]);  
+                                //console.log(cod_plan[0]);
                                  return cod_plan[0];
                                 }
                         }

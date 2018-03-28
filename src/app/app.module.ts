@@ -11,7 +11,6 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { PruebaComponent } from './prueba/prueba.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,
