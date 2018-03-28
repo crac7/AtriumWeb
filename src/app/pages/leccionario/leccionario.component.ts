@@ -20,7 +20,7 @@ user:string;
   ngOnInit() {
 
     this.fecha =moment().format('L');   //
-    this._MateriasDocentesServices.MateriasDocentes('LP');
+    this._MateriasDocentesServices.MateriasDocentes('L');
     this._MateriasDocentesServices.UnidadesDocentes();
     this.nombre=localStorage.getItem('nombre');
     this.codigoPeriodo= localStorage.getItem('cod_per'),

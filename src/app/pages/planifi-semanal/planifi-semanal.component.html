@@ -43,8 +43,8 @@
                                    <!-- vista como Administrador--->
                                      <a *ngIf="bandera==='A'" class="contenido">{{planificacionCabeceraModel.t_unidad}}</a>
                                      <!-- vista como Profesor--->
-                                     <label *ngIf="bandera==='P'" class="control-label">Título de unidad de planificación</label>
-                                     <input *ngIf="bandera==='P'" type="text" #titulo="ngModel" name="titulo" [(ngModel)]="planificacionCabeceraModel.t_unidad" class="form-control cabecera" >
+                                     <label *ngIf="bandera==='P'" class="control-label" [class.active]="planificacionCabeceraModel.t_unidad">Título de unidad de planificación</label>
+                                     <input *ngIf="bandera==='P'" type="text" #titulo="ngModel" name="titulo" [(ngModel)]="planificacionCabeceraModel.t_unidad"  class="form-control cabecera"  >
                                  </div>
                             </div>
 
@@ -79,7 +79,7 @@
 
                           <div class="col-6 col-sm-3">
                               <p class="category">Selecione la Unidad:
-                                <select #Unidad  [(ngModel)]="planificacionCabeceraModel.unidad" [value]=-1>
+                                <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="planificacionCabeceraModel.unidad" (change)="ConsultaAdmin()"  >
                                 <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [ngValue]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                                 </select>
                           </div>
@@ -87,10 +87,12 @@
                           <div class="col-sm-3">
                             <!-- Button trigger modal -->
                             <a *ngIf="bandera==='P'" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
-                              <a *ngIf="bandera==='A'" class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
+                              <a  class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
 
                              </div>
                         </div>
+
+
 <!---------------------------------------------------------------------------------->
 
                         <table  *ngIf="bandera==='P'"  class="table">
@@ -105,11 +107,11 @@
                                 </tr>
                             </thead>
 
-                            <tbody *ngIf="addtable">
+                            <tbody >
 
 
 
-                           <tr   *ngFor="let item of itemsPlan; let i=index ">
+                           <tr   *ngFor="let item of _PlanificacionServices.ListPlanificacion; let i=index ">
 
                                           <td>{{item.destrezas}}</td>
                                           <td><strong>Anticipacion:</strong> {{item.act1}}<br>
@@ -158,7 +160,7 @@
 
 
 
-         <tr  *ngFor="let item of tablaAministrador; let i=index "  >
+         <tr  *ngFor="let item of _PlanificacionServices.ListDetallePlanAdmin; let i=index "  >
 
                         <td>{{item.t_unidad}} </td>
                         <td>{{item.fecha_ini}}</td>
@@ -275,8 +277,10 @@
                                 <a class="btn btn-danger"  (click)="Atras()">
                                      <i class="material-icons">keyboard_backspace</i>
                                  </a>
-                               <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
-
+                               <input type="submit" #guardaTodo value="Guardar"   (click)="GuardaTodo(bandera)" class="btn btn-success" disabled >
+                               <a *ngIf="bandera==='P'" class="btn btn-success"  (click)="Enviar()">
+                                    <i class="material-icons">email</i>
+                                </a>
                               </div>
                         </div>
 
@@ -410,7 +414,7 @@
         </button>
       </div>
 
-  <form  #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
+
   <div  class="modal-body">
 
 <!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
@@ -420,7 +424,7 @@
                   <div class="form-group">
                       <div class="form-group form-black label-floating is-empty">
                           <label class="control-label">Observacion</label>
-                          <textarea class="form-control" #anticipacion="ngModel" name="anticipacion" [(ngModel)]="planificacionDetalleModel.observaciones" ></textarea>
+                          <textarea class="form-control" #observacion="ngModel"  name="observacion" [(ngModel)]="ObservacionAdmin"></textarea>
                       </div>
                   </div>
               </div>
@@ -431,10 +435,10 @@
       <!--------------------------footer-------------------------------------------------------->
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
-        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="guardar()">Guardar</button>
+        <button type="submit" #guardarModal class="btn btn-success" (click)="GuardarModalAdmin()">Guardar</button>
       </div>
 
-    </form>
+
 
     </div>
   </div>

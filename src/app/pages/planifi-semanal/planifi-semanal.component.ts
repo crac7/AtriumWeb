@@ -14,15 +14,16 @@ import { Planificacion  } from '../../models/planificacion';
 })
 export class PlanifiSemanalComponent implements OnInit {
   @ViewChild("guardarModal") guardarModal: ElementRef;
+  @ViewChild("guardaTodo") guardaTodo: ElementRef;
     @ViewChild("modal") modal: ElementRef;
   public planificacionCabeceraModel: PlanificacionCabeceraModel;
   public planificacionDetalleModel:Planificacion;
   visible=true;
   addtable=false;
   bloquedoModal=false;
-
+ObservacionAdmin:string;
   bandera:string;
-  itemsPlan: Array<any>;
+    itemsPlan: Array<any>;
   tablaAministrador: Array<any>;
   accion:string;
   index:number;
@@ -48,10 +49,11 @@ export class PlanifiSemanalComponent implements OnInit {
 
   ngOnInit() {
     this.resetForm();
-    this.ConsultaCurso();
+
+
 
     /////////
-    this._MateriasDocentesServices.MateriasDocentes();
+    this._MateriasDocentesServices.MateriasDocentes('P');
     this._MateriasDocentesServices.UnidadesDocentes();
     this.nombre=localStorage.getItem('nombre');
     this.bandera =localStorage.getItem('bandera');
@@ -69,44 +71,55 @@ export class PlanifiSemanalComponent implements OnInit {
   }
 
   Cambiamodal(i){
+  // console.log(i);
     this.visible=false;
     this.materia=i.Dm;
     this.paralelo=i.Dp;
     this.curso=i.Dca;
-    this.planificacionCabeceraModel.cod_curso=i.cod_curso[0];
+    this.planificacionCabeceraModel.cod_curso= (this.bandera==='A')?i.cod_curso[0]:i.cod_curso;
     this.planificacionCabeceraModel.cod_paralelo= i.cod_paralelo;
     this.planificacionCabeceraModel.cod_mat= i.cod_materia;
 
-    this._PlanificacionServices.GeneraCodigo().subscribe(
-         response=>{
-            this.planificacionCabeceraModel.cod_plan=response.cod_plan;
 
-         },
-         error=>{
-                  console.log(error);
-            }
-      );
 
   }
 
 
   Atras()
   {
+     this._PlanificacionServices.ListDetallePlanAdmin=[];
     this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',0,'','',0,'','');
      this.IniciaCabcera();
+       this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     this.visible=true;
-    this.itemsPlan =[];
+
+    this._PlanificacionServices.ListPlanificacion =[];
       this.bloquedoModal=false;
+      this.resetForm();
   }
 
-  ConsultaCurso(){
-     this.itemsPlan =[];
-  }
+
     ConsultaAdmin(){
-       this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel).subscribe(
-                  response=>{  this.tablaAministrador=response; console.log(response)},
-                  error=>{ console.log(error);});
+  //    this.renderer.setAttribute(this.guardaTodo.nativeElement, "disabled", "true");//Desabilita
+       if(this.bandera==='A'){
+          this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel);
+       }
+       else
+          {
+           let cod_plan;
+            this._PlanificacionServices.ConsultaPlanDocente(this.planificacionCabeceraModel)
+                          .subscribe(response=>{
+                        //    console.log(response);
+                            cod_plan=response;
+                            if(cod_plan!=null){
+                              this.planificacionCabeceraModel=cod_plan;
+                              this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
+                            }
 
+                          });
+
+          }
+        this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");///Habilita boton de guardas
     }
 
   delete(i){
@@ -119,62 +132,120 @@ export class PlanifiSemanalComponent implements OnInit {
 
 
 EditAdmin(Itemplan,i) {
-    this.tablaAministrador[i]=Itemplan;
+
+  this.ObservacionAdmin=Itemplan.observacion;
+   //this._PlanificacionServices.ListDetallePlanAdmin[i].observaciones=Itemplan;
+
     this.indexAdmin=i;
-      }
+  }
+GuardarModalAdmin(){
+this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
+console.log(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]);
+this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
+           response=>{},
+           error=>{
+                  console.log(error);
+              }
+        );
+this.ObservacionAdmin="";
+}
+GeneraPDF(){
+
+  this._PlanificacionServices.GeneraPDFAdmin().subscribe(
+        (res) => {
+          //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
+
+        var fileURL = URL.createObjectURL(res);
+        window.open(fileURL); //if you want to open it in new tab
+
+        }
+    );
+}
 
   Edit(Itemplan,i) {
-      this.accion="u";
+    this.bloquedoModal=true;///Habilita modal
+    this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");///Habilita boton de guardas
+      this.accion="u";/// u de update
       this.planificacionDetalleModel =Itemplan;
       this.index=i;
-      console.log(this.index);
     }
+    guardar(form: NgForm){
 
-  guardar(form: NgForm){
         this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
-          this.addtable=true;
-            this._PlanificacionServices.InsertDetalle(this.planificacionDetalleModel).subscribe(
-                       response=>{
-                                   if(this.accion==="u")
-                                   {
-                                     this.itemsPlan[this.index] = this.planificacionDetalleModel;
-                                      this.resetForm();
-                                   }
-                                   else{
-                                       this.itemsPlan.push(response[0]);
-                                       this.resetForm();
-                                   }
 
-                       },
-                       error=>{
-                                console.log(error);
-                          }
-                    );
-  }
+         this.GuardarDetalle();
 
+
+      }
+
+    GenerarCodigo(){
+      this._PlanificacionServices.ListPlanificacion=[] ;
+          this._PlanificacionServices.GeneraCodigo().subscribe(
+               response=>{
+                 console.log(response);
+                  this.planificacionCabeceraModel.cod_plan=response;
+                  this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
+                  this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
+                             response=>{},
+                             error=>{
+                                    console.log(error);
+                                }
+                          );
+                 });
+        }
+
+    GuardarDetalle(){
+      this._PlanificacionServices.InsertDetalle(this.planificacionDetalleModel).subscribe(
+                     response=>{
+                                 if(this.accion==="u")
+                                 {
+                                   this._PlanificacionServices.ListPlanificacion[this.index] =response[0] ;
+
+                                    this.resetForm();
+                                 }
+                                 else{
+                                     this._PlanificacionServices.ListPlanificacion.push(response[0]);
+                                     this.resetForm();
+                                 }
+
+                     },
+                     error=>{
+                              console.log(error);
+                        }
+                  );
+    }
 
 
     insertaCabcera(){
+      console.log(this.planificacionCabeceraModel.unidad);
         if(this.planificacionCabeceraModel.unidad===0)
         {
-          this.renderer.setAttribute(this.guardarModal.nativeElement, "disabled", "true");
+          this.renderer.setAttribute(this.guardarModal.nativeElement, "disabled", "true");//Desabilita
         }
         else
           {
             this.bloquedoModal=true;
-            this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");
-            this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
-                       response=>{},
-                       error=>{
-                              console.log(error);
-                          }
-                    );
-            }
+            this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");///Habilita boton de guardas
+            if(this.planificacionCabeceraModel.cod_plan===0)
+                           this.GenerarCodigo();
+             else{
+               this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
+                          response=>{},
+                          error=>{
+                                 console.log(error);
+                             }
+                       );
+
+             }
+          }
+
      this.resetForm();
 
     }
 
-
+GuardaTodo(){
+  this.insertaCabcera();
+}
 
   resetForm(form?: NgForm) {
               this.accion=null;

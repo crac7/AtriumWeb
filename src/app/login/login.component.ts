@@ -22,12 +22,12 @@ public datos:any;
     ngOnInit(){
 
       this.token =this._userService.getToken();
-          console.log(this.token);
-            console.log("login");
+
+        
     }
 
     public onSubmit(){
-       console.log(this.user)
+
      this._userService.signup(this.user).subscribe(
          response=>{
            let token = response.token;
@@ -65,7 +65,7 @@ public datos:any;
                localStorage.setItem('e_mail',  response.e_mail);
                localStorage.setItem('username',  response.username);
                localStorage.setItem('bandera',  response.bandera);
-               console.log(response);
+
                this.user =new User('','');
                this._router.navigate(['/Faltas-Atrasos']);
 
