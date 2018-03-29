@@ -70,11 +70,11 @@
                       <div class="row">
                         <div class="col-md-3">
                           <p class="category">Fecha de Inicio:
-                             <input class="form-control"  [ngModel]="planificacionCabeceraModel.fecha_ini | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_ini = $event" type="date" name="fecha_ini">
+                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_ini = $event" type="date" name="fecha_ini">
                           </div>
                         <div class="col-md-3">
                           <p class="category">Fecha de término:
-                            <input class="form-control"  [ngModel]="planificacionCabeceraModel.fecha_fin | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_fin = $event" type="date" name="fecha_fin">
+                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_fin = $event" type="date" name="fecha_fin">
                           </div>
 
                           <div class="col-6 col-sm-3">
@@ -129,7 +129,7 @@
                                                          <i class="fa fa-edit"></i>
                                                 </button>
                                             <button *ngIf="bandera==='P'" class="btn-danger"
-                                                         (click)="delete(i)">
+                                                         (click)="delete(item.cod_deta,i)">
                                                          <i class="fa fa-minus"></i>
                                               </button>
                                           </td>

@@ -23,5 +23,7 @@ export class PlanificacionCabeceraModel{
             public  aprobado: number,
             public  fecha_aprobado: string,
             public  usuario_aprueba: string
-            ){}
+            ){
+              
+            }
     }

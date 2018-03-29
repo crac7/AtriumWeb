@@ -12,7 +12,7 @@ export class DetallePlanAdmin{
                  cod_curso   : number;
                  cod_paralelo  : number;
                  cod_mat      : number;
-                 cod_profesor  : number;
+                 cod_profesor  : string;
                  unidad : number;
                 usuario_revisor: string ;
                 fecha_revisado: string;
