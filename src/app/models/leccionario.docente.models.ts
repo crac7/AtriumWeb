@@ -17,7 +17,6 @@ export class ModelLeccionarioDocente{
     observaciones  :string,
     cod_hora    : number,
     des_hora  : string,
-
     cod_profesor: number,
     estado : string,
     observaciones_coordinador:string,

@@ -71,7 +71,7 @@ export class PlanificacionServices{
                                      'Authorization': 'bearer '+this.getToken()});
       return this._http.post(this.url+'DetallePlanAdmin', params ,{headers: headers})
                .map(res =>{
-                    console.log(res.json().length);
+                  //  console.log(res.json().length);
                       if(res.json().length>0)
                       {
                             cod_plan=res.json();

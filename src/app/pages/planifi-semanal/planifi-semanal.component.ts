@@ -45,7 +45,7 @@ ObservacionAdmin:string;
               private _MateriasDocentesServices: MateriasDocenteService,
               private renderer: Renderer2 )
               {
-    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',0,'','',0,'','');
+      this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
     this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     //this.DetallePlanAdminModel=
               }
@@ -93,7 +93,7 @@ ObservacionAdmin:string;
   Atras()
   {
      this._PlanificacionServices.ListDetallePlanAdmin=[];
-    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',0,'','',0,'','');
+    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
      this.IniciaCabcera();
        this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     this.visible=true;
@@ -108,6 +108,7 @@ ObservacionAdmin:string;
   //    this.renderer.setAttribute(this.guardaTodo.nativeElement, "disabled", "true");//Desabilita
   this.planificacionCabeceraModel.fecha_ini =this.fechain;
   this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+  //console.log(this.planificacionCabeceraModel.fecha_fin);
        if(this.bandera==='A'){
           this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel);
        }
@@ -117,14 +118,27 @@ ObservacionAdmin:string;
            let cod_plan;
             this._PlanificacionServices.ConsultaPlanDocente(this.planificacionCabeceraModel)
                           .subscribe(response=>{
-                        //    console.log(response);
+
                             cod_plan=response;
                             if(cod_plan!=null){
                           //
-                               console.log(cod_plan.fecha_fin);
+                              console.log(cod_plan);
                               //console.log(moment(cod_plan.fecha_fin).format('L'));
                               this.planificacionCabeceraModel=cod_plan;
                               this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
+                            }
+                            else
+                            {
+                               this.planificacionCabeceraModel.t_unidad="";
+
+                               this.planificacionCabeceraModel.necesidad_educativa="";
+                               this.planificacionCabeceraModel.adaptacion_aplicada="";
+                               this.planificacionCabeceraModel.observaciones="";
+                               this.planificacionCabeceraModel.usuario_revisor="";
+                               this.planificacionCabeceraModel.usuario_revisor="";
+                              this.planificacionCabeceraModel.revisado=false;
+                               this.planificacionCabeceraModel.aprobado=false;
+
                             }
 
                           });

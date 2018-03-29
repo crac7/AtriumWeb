@@ -40,7 +40,7 @@ export class LeccionarioServices {
         })
     }
 
-    ConsultaLeccionario(datos){
+    ConsultaLeccionario(datos, accion){
       const ConLeccionarioDo = {
             cod_emp:1,
             cod_per: localStorage.getItem('cod_per'),
@@ -57,12 +57,19 @@ export class LeccionarioServices {
       let headers = new Headers({'Content-Type':'application/json',
                                   'Authorization': 'bearer '+this._usuarioService.token});
 
-      this._http.post(this.url+'ConsultaLeccionario', params ,{headers: headers})
-            .map((data : Response) =>{
-            return data.json() as ModelLeccionarioDocente[];
-            }).toPromise().then(x => {
-            this.LeccionarioDocenteList = x;
-      })
+      if(accion==="C"){
+        console.log(accion);
+        this._http.post(this.url+'ConsultaLeccionario', params ,{headers: headers})
+           .map((data : Response) =>{
+           return data.json() as ModelLeccionarioDocente[];
+           }).toPromise().then(x => {
+           this.LeccionarioDocenteList = x;
+          })
+      }
+      else {
+            return this._http.post(this.url+'LeccionarioConsultaAgregar', params ,{headers: headers})
+                            .map(res => console.log(res.json()));
+         }
     }
 
     InsertaLeccionario(lecionario){
@@ -72,6 +79,15 @@ export class LeccionarioServices {
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this._usuarioService.token});
       return this._http.post(this.url+'InsertaLeccionario', params ,{headers: headers})
+               .map(res =>  res.json());
+    }//
+    InsertaLeccionarioArreglo(lecionario){
+      let json = JSON.stringify(lecionario);
+      let params =json;
+
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this._usuarioService.token});
+      return this._http.post(this.url+'InsertaLeccionarioArreglo', params ,{headers: headers})
                .map(res =>  res.json());
     }
 }

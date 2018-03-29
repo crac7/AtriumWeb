@@ -17,13 +17,13 @@ export class PlanificacionCabeceraModel{
             public  necesidad_educativa: string,
             public  adaptacion_aplicada: string,
             public  observaciones: string,
-            public  revisado: number,
+            public  revisado: boolean,
             public  fecha_revisado: string,
             public  usuario_revisor: string,
-            public  aprobado: number,
+            public  aprobado: boolean,
             public  fecha_aprobado: string,
             public  usuario_aprueba: string
             ){
-              
+
             }
     }

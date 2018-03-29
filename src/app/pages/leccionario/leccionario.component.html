@@ -62,7 +62,7 @@
 
                         <div class="col-6 col-sm-3">
                             <p class="category">Selecione la Unidad:
-                              <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="unidad" (change)="ConsultaLecionario()"  >
+                              <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="unidad" (change)="ConsultaLecionario('C')"  >
                               <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [ngValue]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                               </select>
                         </div>
@@ -71,7 +71,11 @@
                           <i class="material-icons">picture_as_pdf</i>  GeneraPDF
                         </a>
                       </div>
+                      <div class="col-sm-3">
+                        <!-- Button trigger modal -->
+                        <a *ngIf="bandera==='P'" class="btn btn-success"   (click)="ConsultaLecionario('A')" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
 
+                         </div>
 
 
                    </div>
@@ -104,14 +108,14 @@
                                     <td>
                                           <div class="checkbox">
                                             <label>
-                                                <input type="checkbox"  [(ngModel)]="item.firmado">
+                                                <input type="checkbox"  [(ngModel)]="item.firmado" [disabled]="item.firmado">
                                               </label>
                                           </div>
                                     </td>
                                     <td>
                                     <button  class="btn-info"
                                                (click)="Edit(item,i)"
-                                                  data-toggle="modal" data-target=".bd-example-modal-lg">
+                                                  data-toggle="modal" data-target=".bd-example-modal-lg"  [disabled]="item.firmado">
                                                  <i class="fa fa-edit"></i>
                                         </button>
                                         </td>
@@ -122,7 +126,7 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                 <input type="submit" value="Guardar"   (click)="onSubmiLeccionario()" class="btn btn-success" >
+                                 <input type="submit" value="Guardar"   (click)="GuardaTodo()" class="btn btn-success" >
                                   <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
 
                                   <a class="btn btn-danger"  (click)="Atras()">
@@ -156,7 +160,7 @@
         </button>
       </div>
 
-  <form  #registerForm="ngForm" (ngSubmit)="guardar(registerForm)">
+  <form  #registerForm="ngForm" (ngSubmit)="GuardarLeccionario(registerForm)">
   <div  class="modal-body">
 
 <!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
@@ -218,7 +222,7 @@
       <!--------------------------footer-------------------------------------------------------->
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
-        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="guardar()">Guardar</button>
+        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="GuardarLeccionario()">Guardar</button>
       </div>
 
     </form>

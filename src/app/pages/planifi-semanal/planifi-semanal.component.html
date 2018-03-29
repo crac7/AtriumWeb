@@ -70,11 +70,11 @@
                       <div class="row">
                         <div class="col-md-3">
                           <p class="category">Fecha de Inicio:
-                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_ini = $event" type="date" name="fecha_ini">
+                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="fechain = $event" type="date" name="fecha_ini">
                           </div>
                         <div class="col-md-3">
                           <p class="category">Fecha de término:
-                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="planificacionCabeceraModel.fecha_fin = $event" type="date" name="fecha_fin">
+                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fecha_fin">
                           </div>
 
                           <div class="col-6 col-sm-3">
@@ -86,7 +86,7 @@
 
                           <div class="col-sm-3">
                             <!-- Button trigger modal -->
-                            <a *ngIf="bandera==='P'" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
+                            <a *ngIf="bandera==='P' && planificacionCabeceraModel.enviado===0" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
                               <a  class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
 
                              </div>
@@ -183,7 +183,7 @@
 
                           <button  class="btn-info"
                                             (click)="EditAdmin(item,i)"
-                                         data-toggle="modal" data-target=".Admin-modal-lg" >
+                                         data-toggle="modal" data-target=".Admin-modal-lg">
                                        <i class="fa fa-edit"></i>
                               </button>
                           </td>
@@ -248,7 +248,7 @@
                                          <a class="contenido">{{planificacionCabeceraModel.usuario_revisor}}</a>
                                          <div class="checkbox">
                                            <label>
-                                               <input type="checkbox" [disabled]="bandera==='P'">
+                                               <input type="checkbox" [disabled]="bandera==='P'" [(ngModel)]="planificacionCabeceraModel.revisado">
                                              </label>
                                            </div>
                                 </div>
@@ -257,7 +257,7 @@
                                          <a class="contenido">{{planificacionCabeceraModel.usuario_revisor}}</a>
                                          <div class="checkbox">
                                            <label>
-                                               <input type="checkbox" [disabled]="bandera==='P'">
+                                               <input type="checkbox" [disabled]="bandera==='P'" [(ngModel)]="planificacionCabeceraModel.aprobado">
                                              </label>
                                            </div>
                                 </div>
