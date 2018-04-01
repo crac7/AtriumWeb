@@ -68,13 +68,13 @@
 
                     <div class="card-content table-responsive">
                       <div class="row">
-                        <div class="col-md-3">
+                        <div *ngIf="bandera==='P'" class="col-md-3">
                           <p class="category">Fecha de Inicio:
-                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="fechain = $event" type="date" name="fecha_ini">
+                             <input class="form-control"  [ngModel]="fechain | date:'yyyy-MM-dd'" (ngModelChange)="fechain = $event" (change)="fecha()" type="date" name="fecha_ini">
                           </div>
-                        <div class="col-md-3">
+                        <div *ngIf="bandera==='P'" class="col-md-3">
                           <p class="category">Fecha de término:
-                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fecha_fin">
+                            <input class="form-control"  [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" (change)="fecha()" type="date" name="fecha_fin">
                           </div>
 
                           <div class="col-6 col-sm-3">
@@ -202,26 +202,8 @@
 
 <!------------------------------------------------------------------------------------------------->
                             <div class="row">
-    <!-----------------------------------------------Vista como Administrador-------------------------------->
-                            <!--  <div  *ngIf="bandera==='A'">
-                                <div class="col-md-12">
-                                   <p class="category">Especificación de la necesidad educativa :
-                                     <a class="contenido">{{planificacionCabeceraModel.t_unidad}}</a>
-                                </div>
-                                <div class="col-md-12">
-                                   <p class="category">Especificación de la adaptación aplicada :
-                                     <a class="contenido">{{planificacionCabeceraModel.adaptacion_aplicada}}</a>
-                                </div>
-                                <div  class="col-md-12">
-                                    <div class="form-group form-black label-floating is-empty">
-                                        <label class="control-label">Observaciones</label>
-                                        <input type="text"  #observaciones="ngModel" name="observaciones" [(ngModel)]="planificacionCabeceraModel.observaciones" class="form-control" >
-                                    </div>
-                                </div>
 
-                              </div>-->
-
-        <!-----------------------------------------Vista como P^rofesor------------------------------------------->
+<!-----------------------------------------Vista como Profesor------------------------------------------->
                               <div  *ngIf="bandera==='P'">
                                 <div   class="col-md-6">
                                     <div class="form-group form-black label-floating is-empty">

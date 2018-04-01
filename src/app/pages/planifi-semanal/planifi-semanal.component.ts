@@ -1,4 +1,5 @@
 import { Component,Renderer2, ViewChild ,ElementRef  , OnInit } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { PlanificacionCabeceraModel  } from '../../models/planificacion.cabecera.models';
 import { NgForm } from '@angular/forms'
 import { PlanificacionServices  } from '../../services/planificacion.services';
@@ -11,7 +12,7 @@ import { Planificacion  } from '../../models/planificacion';
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
   styleUrls: ['./planifi-semanal.component.scss'],
-   providers :[PlanificacionServices,MateriasDocenteService]
+   providers :[PlanificacionServices,MateriasDocenteService, DatePipe]
 })
 export class PlanifiSemanalComponent implements OnInit {
   @ViewChild("guardarModal") guardarModal: ElementRef;
@@ -43,7 +44,8 @@ ObservacionAdmin:string;
 
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
-              private renderer: Renderer2 )
+              private renderer: Renderer2,
+            private datePipe: DatePipe )
               {
       this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
     this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
@@ -63,20 +65,26 @@ ObservacionAdmin:string;
     //////////model///////////
      this.IniciaCabcera();
   }
+  fecha(){
+
+    this.fechain  =this.datePipe.transform(this.fechain, 'yyyy-MM-dd');
+    this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
+
+  }
   IniciaCabcera(){
     this.planificacionCabeceraModel.cod_per =localStorage.getItem('cod_per');
     this.planificacionCabeceraModel.let_per = localStorage.getItem('let_per');
     this.planificacionCabeceraModel.usuario= localStorage.getItem('username');
     this.planificacionCabeceraModel.cod_profesor = localStorage.getItem('cod_profesor');
-    this.fechain  =moment().format('L');
-    this.fechafin =moment().format('L');
+    this.fechain  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     /*this.planificacionCabeceraModel.fecha_ini =moment().format('L');
       this.planificacionCabeceraModel.fecha_fin =moment().format('L');*/
     this.planificacionCabeceraModel.cod_emp=1;
   }
 
   Cambiamodal(i){
-  // console.log(i);
+
     this.visible=false;
     this.materia=i.Dm;
     this.paralelo=i.Dp;
@@ -108,43 +116,46 @@ ObservacionAdmin:string;
   //    this.renderer.setAttribute(this.guardaTodo.nativeElement, "disabled", "true");//Desabilita
   this.planificacionCabeceraModel.fecha_ini =this.fechain;
   this.planificacionCabeceraModel.fecha_fin =this.fechafin;
-  //console.log(this.planificacionCabeceraModel.fecha_fin);
+
        if(this.bandera==='A'){
           this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel);
+
+          //falta validacion cuando alla datos en la tabla que muestra admin
+          this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");///Habilita boton de guardas
        }
        else
           {
-              this._PlanificacionServices.ListPlanificacion =[];
-           let cod_plan;
+          this._PlanificacionServices.ListPlanificacion =[];///Limpia la tabla de los detalles
+           let cabecera;
             this._PlanificacionServices.ConsultaPlanDocente(this.planificacionCabeceraModel)
                           .subscribe(response=>{
 
-                            cod_plan=response;
-                            if(cod_plan!=null){
-                          //
-                              console.log(cod_plan);
-                              //console.log(moment(cod_plan.fecha_fin).format('L'));
-                              this.planificacionCabeceraModel=cod_plan;
+                            cabecera=response;
+                            if(cabecera!=null){
+                                    console.log(  this.planificacionCabeceraModel.fecha_ini);
+                              //LLeno la cabera del plan
+                              this.planificacionCabeceraModel=cabecera;///
                               this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
                             }
                             else
                             {
                                this.planificacionCabeceraModel.t_unidad="";
-
                                this.planificacionCabeceraModel.necesidad_educativa="";
                                this.planificacionCabeceraModel.adaptacion_aplicada="";
                                this.planificacionCabeceraModel.observaciones="";
                                this.planificacionCabeceraModel.usuario_revisor="";
                                this.planificacionCabeceraModel.usuario_revisor="";
-                              this.planificacionCabeceraModel.revisado=false;
+                               this.planificacionCabeceraModel.revisado=false;
                                this.planificacionCabeceraModel.aprobado=false;
 
                             }
 
                           });
-
+                          ///Habilita boton de guardas
+             this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");
           }
-        this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");///Habilita boton de guardas
+
+
     }
 
   delete(cod_deta,i){
@@ -161,7 +172,7 @@ ObservacionAdmin:string;
 
 
 EditAdmin(Itemplan,i) {
-
+console.log(Itemplan.observaciones);
   this.ObservacionAdmin=Itemplan.observaciones;
    //this._PlanificacionServices.ListDetallePlanAdmin[i].observaciones=Itemplan;
 
@@ -169,14 +180,16 @@ EditAdmin(Itemplan,i) {
   }
 GuardarModalAdmin(){
 
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_ini=this.fechain;
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_fin=this.fechafin;
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].cod_profesor =localStorage.getItem('cod_profesor')
-this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
-this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
-this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
 
 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
            response=>{
-
+                  if (response.ok) alert("Cambios Guardados correctamente")
            },
            error=>{
                   console.log(error);
@@ -185,8 +198,11 @@ this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetal
 
 }
 GeneraPDF(){
+  this.planificacionCabeceraModel.fecha_ini =this.fechain;
+  this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+ console.log(this.planificacionCabeceraModel);
 
-  this._PlanificacionServices.GeneraPDFAdmin().subscribe(
+  this._PlanificacionServices.GeneraPDFAdmin(this.planificacionCabeceraModel).subscribe(
         (res) => {
           //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
 
@@ -214,20 +230,15 @@ GeneraPDF(){
       }
 
     GenerarCodigo(){
-      this._PlanificacionServices.ListPlanificacion=[] ;
+
           this._PlanificacionServices.GeneraCodigo().subscribe(
                response=>{
-                 console.log(response);
+
                   this.planificacionCabeceraModel.cod_plan=response;
                   this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
-                  this.planificacionCabeceraModel.fecha_ini =this.fechain;
-                  this.planificacionCabeceraModel.fecha_fin =this.fechafin;
                   this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
                              response=>{},
-                             error=>{
-                                    console.log(error);
-                                }
-                          );
+                             error=>{console.log(`Error al inserta cabecera ${error}`);});
                  });
         }
 
@@ -237,12 +248,13 @@ GeneraPDF(){
                                  if(this.accion==="u")
                                  {
                                    this._PlanificacionServices.ListPlanificacion[this.index] =response[0] ;
-
                                     this.resetForm();
+                                    alert("Detalle de Planificación Actulizado :)");
                                  }
                                  else{
                                      this._PlanificacionServices.ListPlanificacion.push(response[0]);
                                      this.resetForm();
+                                     alert("Detalle de Planificación Guardado :)");
                                  }
 
                      },
@@ -253,29 +265,28 @@ GeneraPDF(){
     }
 
 
-    insertaCabcera(){
-    //  console.log(this.planificacionCabeceraModel.unidad);
+    insertaCabcera(GuardTo=false){
+     //console.log(this.planificacionCabeceraModel);
         if(this.planificacionCabeceraModel.unidad===0)
         {
           this.renderer.setAttribute(this.guardarModal.nativeElement, "disabled", "true");//Desabilita
         }
         else
-          {
-            this.bloquedoModal=true;
-            this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");///Habilita boton de guardas
-            if(this.planificacionCabeceraModel.cod_plan===0)
-                           this.GenerarCodigo();
-             else{
-               this.planificacionCabeceraModel.fecha_ini =this.fechain;
-               this.planificacionCabeceraModel.fecha_fin =this.fechafin;
-               this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
-                          response=>{},
-                          error=>{
-                                 console.log(error);
-                             }
-                       );
+        {
+          this.planificacionCabeceraModel.fecha_ini =this.fechain;
+          this.planificacionCabeceraModel.fecha_fin =this.fechafin;
 
-             }
+                ///habilita la pnatalla para ingresar los detalles
+                this.bloquedoModal=true;
+                ///Habilita boton de guardas
+                this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");
+                if(this.planificacionCabeceraModel.cod_plan===0) this.GenerarCodigo();
+                else{
+                   this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
+                              response=>{if(response.ok && GuardTo) alert("Cabecera de Planificacion guarda")},
+                               error=>{console.log(`Error al inserta cabecera ${error}`);});
+
+                    }
           }
 
      this.resetForm();
@@ -294,9 +305,11 @@ GeneraPDF(){
                     elemen.fecha_revisado=moment().format('L');
                     //console.log(elemen);
                 })
-
+              
                 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
-                           response=>{},
+                           response=>{
+                                 if (response.ok) alert("Cambios Guardados correctamente")
+                           },
                            error=>{
                                   console.log(error);
                               }
@@ -306,7 +319,7 @@ GeneraPDF(){
             }
             else
             {
-              this.insertaCabcera();
+              this.insertaCabcera(true);
             }
       }
 

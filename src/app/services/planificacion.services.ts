@@ -100,20 +100,17 @@ export class PlanificacionServices{
                                 })
       }
 
-    GeneraPDFAdmin(){
+    GeneraPDFAdmin(datos){
+    
 
-
-         let headers = new Headers({'Content-Type':'application/pdf',
+         let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this.getToken()});
-  /*    return this._http.get(this.url+'/rpt/FaltasAtrasos' ,{headers: headers})
-               .map((res) => {
-            return new Blob([res.blob()], { type: 'application/pdf' })
-        })*/
 
-    return this._http.get(this.url+'rpt/FaltasAtrasos', {headers: headers, responseType: ResponseContentType.Blob }).map(
-                (res) => {
-                    return new Blob([res.blob()], { type: 'application/pdf' })
-                });
+    return this._http.post(this.url+'rpt/PlanificacionSemanal',datos ,{headers: headers, responseType: ResponseContentType.Blob })
+                      .map(
+                            (res) => {
+                                return new Blob([res.blob()], { type: 'application/pdf' })
+                        });
     }
 ///Accede a local Sotrage y devuele los datos ya procesados
     getToken(){

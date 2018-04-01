@@ -56,31 +56,75 @@
                     <div class="card-content table-responsive">
                       <div class="row">
                         <div class="col-sm-3">
-                          <p class="category" >Fecha: <br>
+                          <p  class="category" >Fecha Inicio: <br>
                            <input [ngModel]="fecha | date:'yyyy-MM-dd'" (ngModelChange)="fecha = $event" type="date" name="fecha"/>
+                        </div>
+
+                        <div *ngIf="bandera==='A'" class="col-sm-3">
+                          <p class="category" >Fecha Fin: <br>
+                           <input [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fecha"/>
                         </div>
 
                         <div class="col-6 col-sm-3">
                             <p class="category">Selecione la Unidad:
-                              <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="unidad" (change)="ConsultaLecionario('C')"  >
+                              <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="unidad" (change)="ConsultaLecionario(bandera)"  >
                               <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [ngValue]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                               </select>
                         </div>
-                      <div  class="col-md-3">
+                      <div *ngIf="bandera==='P'"  class="col-md-3">
                         <a class="btn"  (click)="GeneraPDF()">
                           <i class="material-icons">picture_as_pdf</i>  GeneraPDF
                         </a>
                       </div>
                       <div class="col-sm-3">
                         <!-- Button trigger modal -->
-                        <a *ngIf="bandera==='P'" class="btn btn-success"   (click)="ConsultaLecionario('A')" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
+                        <a *ngIf="bandera==='P'" class="btn btn-success"   data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
 
                          </div>
 
 
                    </div>
+<!--------*ngIf="bandera==='P'"-------------------------------Vista Docente--------------------------------------------------------------------------------->
+                            <table *ngIf="bandera==='A'" class="table">
+                                               <thead class="text-danger">
+                                                   <tr>
+                                                     <th>  Fecha</th>
+                                                       <th>  PDF</th>
 
-                        <table class="table">
+
+                                                   </tr>
+                                               </thead>
+
+                                               <tbody>
+
+                                                   <tr *ngFor="let item of _LeccionarioServices.LeccionarioInspectorList; let i=index ">
+                                                       <td>{{item.fecha}}</td>
+
+
+                                                       <td>
+                                                       <button  class="btn"
+                                                                  (click)="Edit(item,i)" >
+                                                              <i class="material-icons">picture_as_pdf</i>  GeneraPDF
+                                                           </button>
+                                                           </td>
+                                                     <!---  </form>------------>
+                                                   </tr>
+
+                                               </tbody>
+
+                                               <div class="row">
+                                                   <div class="col-md-4">
+                                                    <input type="submit" value="Guardar"   (click)="GuardaTodo()" class="btn btn-success" >
+                                                     <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
+
+                                                     <a class="btn btn-danger"  (click)="Atras()">
+                                                         <i class="material-icons">keyboard_backspace</i>
+                                                     </a>
+                                                   </div>
+                                             </div>
+                                           </table>
+<!--------*ngIf="bandera==='P'"-----------------------------Vista Profesor--------------------------------------------------------------------------------->
+                        <table class="table" *ngIf="bandera==='P'">
                             <thead class="text-danger">
                                 <tr>
                                   <th>  Hora</th>

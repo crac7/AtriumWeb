@@ -14,6 +14,7 @@ visible=true;
 materias: Array<any>;
 nombre:string;
 fecha:string;
+fechafin:string;
 codigoPeriodo:string;
 letPeriodo:string;
 user:string;
@@ -31,6 +32,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
   ngOnInit() {
   this.MLeccionarioDocente= new ModelLeccionarioDocente(0,0,0,'',0,0,0,0,'','','',false,'','','',0,'', 0,'','','','','','','');
     this.fecha =moment().format('L');   //
+      this.fechafin=moment().format('L');   //
     this._MateriasDocentesServices.MateriasDocentes('L');
     this._MateriasDocentesServices.UnidadesDocentes();
     this._LeccionarioServices.HorariosDocentes();
@@ -58,8 +60,9 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
   }
         ConsultaLecionario(accion){
+            let datos
             this._LeccionarioServices.LeccionarioDocenteList=[];
-                const datos={
+                 datos={
                               cod_curso:this.Cabecera[0].codCurso,
                               cod_paralelo:this.Cabecera[0].codParalelo,
                               cod_mat:this.Cabecera[0].codMateria,
@@ -67,15 +70,11 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                               fecha:this.fecha
                           }
 
-          if(accion="C")  this._LeccionarioServices.ConsultaLeccionario(datos,accion);
-          else
-            {
-               this._LeccionarioServices.ConsultaLeccionario(datos,accion).subscribe(
-                       response=>{
-                        //console.log(response);
-                        alert("Guardo correctamente :)");
-                       },
-                       error=>{ console.log(error);});
+          if(accion==="P"){  this._LeccionarioServices.ConsultaLeccionario(datos);}
+          if(accion==="A"){
+            datos.fecha_fin=this.fechafin;
+            console.log(datos);
+            this._LeccionarioServices.ConsultaLeccionarioInspector(datos);
           }
           console.log(this._LeccionarioServices.LeccionarioDocenteList);
         }

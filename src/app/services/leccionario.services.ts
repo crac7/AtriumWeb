@@ -5,11 +5,15 @@ import {UserService}from './user.service';
 import {Http, Response, Headers } from '@angular/http';
 import {Global } from './global'
 import {ModelLeccionarioDocente}  from '../models/leccionario.docente.models';
+import {ModelLeccionarioInspector}  from '../models/LeccionaInspec.models';
 @Injectable()
 export class LeccionarioServices {
   selectedHorarios : ModelHorarios;
   HorariosList : ModelHorarios[];
   LeccionarioDocenteList :ModelLeccionarioDocente[];
+  LeccionarioInspectorList: ModelLeccionarioInspector[];
+
+  ModelLeccionarioInspector
      public url: string;
   constructor(
     public _usuarioService: UserService,
@@ -40,7 +44,7 @@ export class LeccionarioServices {
         })
     }
 
-    ConsultaLeccionario(datos, accion){
+    ConsultaLeccionario(datos){
       const ConLeccionarioDo = {
             cod_emp:1,
             cod_per: localStorage.getItem('cod_per'),
@@ -57,19 +61,15 @@ export class LeccionarioServices {
       let headers = new Headers({'Content-Type':'application/json',
                                   'Authorization': 'bearer '+this._usuarioService.token});
 
-      if(accion==="C"){
-        console.log(accion);
+
+
         this._http.post(this.url+'ConsultaLeccionario', params ,{headers: headers})
            .map((data : Response) =>{
            return data.json() as ModelLeccionarioDocente[];
            }).toPromise().then(x => {
            this.LeccionarioDocenteList = x;
           })
-      }
-      else {
-            return this._http.post(this.url+'LeccionarioConsultaAgregar', params ,{headers: headers})
-                            .map(res => console.log(res.json()));
-         }
+
     }
 
     InsertaLeccionario(lecionario){
@@ -89,6 +89,33 @@ export class LeccionarioServices {
                                      'Authorization': 'bearer '+this._usuarioService.token});
       return this._http.post(this.url+'InsertaLeccionarioArreglo', params ,{headers: headers})
                .map(res =>  res.json());
+    }
+
+    ConsultaLeccionarioInspector(datos){
+      const ConLeccionarioDo = {
+            cod_emp:1,
+            cod_per: localStorage.getItem('cod_per'),
+            let_per:  localStorage.getItem('let_per'),
+            cod_curso  :datos.cod_curso,
+            cod_paralelo  :datos.cod_paralelo,
+            unidad  :datos.unidad,
+            fecha_ini  :datos.fecha,
+            fecha_fin  :datos.fecha_fin,
+        }
+      let params =JSON.stringify(ConLeccionarioDo);
+
+      let headers = new Headers({'Content-Type':'application/json',
+                                  'Authorization': 'bearer '+this._usuarioService.token});
+
+
+        this._http.post(this.url+'ConsultaLeccionarioInspector', params ,{headers: headers})
+           .map((data : Response) =>{
+           return data.json() as ModelLeccionarioInspector[];
+           }).toPromise().then(x => {
+           this.LeccionarioInspectorList = x;
+          })
+
+
     }
 }
 ///HorarioLecionario
