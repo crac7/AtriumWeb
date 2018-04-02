@@ -7,6 +7,7 @@ import { MateriasDocenteService } from '../../services/materiasDocentes.services
 import * as moment from 'moment';
 import { Planificacion  } from '../../models/planificacion';
 //import {DetallePlanAdmin} from '../models/DetallePlanAdmin.models';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-planifi-semanal',
@@ -45,7 +46,8 @@ ObservacionAdmin:string;
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
               private renderer: Renderer2,
-            private datePipe: DatePipe )
+            private datePipe: DatePipe,
+            )
               {
       this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
     this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
@@ -53,6 +55,7 @@ ObservacionAdmin:string;
               }
 
   ngOnInit() {
+
     this.resetForm();
 
 
@@ -65,6 +68,7 @@ ObservacionAdmin:string;
     //////////model///////////
      this.IniciaCabcera();
   }
+
   fecha(){
 
     this.fechain  =this.datePipe.transform(this.fechain, 'yyyy-MM-dd');

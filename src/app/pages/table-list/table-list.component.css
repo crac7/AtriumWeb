@@ -38,3 +38,10 @@ checkbox{
 p#categoryDetalle{
   font-weight: bold;
 }
+
+div.ex1 {
+
+    width:1100px;
+    height: 620px;
+    overflow: scroll;
+}

@@ -26,6 +26,8 @@ import { PlanifiSemanalComponent } from './planifi-semanal/planifi-semanal.compo
 import {LoginGuardGuard} from '../services/login-guard.guard';
 import {UserService}from '../services/user.service';
 
+import {GoTopButtonModule} from 'ng2-go-top-button';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 @NgModule({
   imports: [
     BrowserModule,
@@ -35,7 +37,9 @@ import {UserService}from '../services/user.service';
     RouterModule,
     ComponentsModule,
     ReactiveFormsModule,
-    PagesRouting
+    PagesRouting,
+    GoTopButtonModule,
+    BrowserAnimationsModule
   ],
  declarations:[
    DashboardComponent,
@@ -65,6 +69,7 @@ import {UserService}from '../services/user.service';
    PagesComponent,
    LeccionarioComponent,
    PlanifiSemanalComponent,
+   GoTopButtonModule
  //Component,
  ],
   providers: [
