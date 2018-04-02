@@ -11,6 +11,7 @@ export class LeccionarioServices {
   selectedHorarios : ModelHorarios;
   HorariosList : ModelHorarios[];
   LeccionarioDocenteList :ModelLeccionarioDocente[];
+  selectedLeccionarioDocenteList : ModelLeccionarioDocente;
   LeccionarioInspectorList: ModelLeccionarioInspector[];
 
   ModelLeccionarioInspector

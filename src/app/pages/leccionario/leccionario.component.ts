@@ -24,7 +24,7 @@ codhorario:string;
 indexEditLecionario:number;
 DatosLecionarioDocen: Array<any>;
 bandera:string;
-
+accionDocente:string;
 public MLeccionarioDocente:ModelLeccionarioDocente;
   constructor(private _MateriasDocentesServices: MateriasDocenteService,
               private _LeccionarioServices:LeccionarioServices) { }
@@ -73,15 +73,33 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
           if(accion==="P"){  this._LeccionarioServices.ConsultaLeccionario(datos);}
           if(accion==="A"){
             datos.fecha_fin=this.fechafin;
-            console.log(datos);
+          //  console.log(datos);
             this._LeccionarioServices.ConsultaLeccionarioInspector(datos);
+
           }
-          console.log(this._LeccionarioServices.LeccionarioDocenteList);
+        //  console.log(this._LeccionarioServices.LeccionarioDocenteList);
         }
-        Edit(Itemplan,i) {
-///this.bloquedoModal=true;///Habilita modal
-          //this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");///Habilita boton de guardas
-          //  this.accion="u";/// u de update
+
+        delete(i){
+        //  this.planificacionDetalleModel.cod_deta =cod_deta;
+          // this._PlanificacionServices.ListPlanificacion[i];
+          if(confirm("¿Esta seguro de eliminar?")){
+          this._LeccionarioServices.LeccionarioDocenteList[i].cod_profesor= parseInt(localStorage.getItem('cod_profesor'));
+           this._LeccionarioServices.LeccionarioDocenteList[i].estado="E";
+          this._LeccionarioServices.InsertaLeccionario(this._LeccionarioServices.LeccionarioDocenteList[i]).subscribe(
+                      response=>{
+                          this._LeccionarioServices.LeccionarioDocenteList.splice(i, 1);
+                      },
+                      error=>{ console.log(error);});
+
+
+            }
+
+
+        }
+
+        Edit(Itemplan,i, accion="u") {
+          this.accionDocente=accion;
           Itemplan.cod_profesor= localStorage.getItem('cod_profesor');
           Itemplan.estado="A";
           Itemplan.observaciones_coordinador="";
@@ -99,8 +117,22 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
         this._LeccionarioServices.InsertaLeccionario(this.MLeccionarioDocente).subscribe(
                    response=>{
-                    //console.log(response);
-                    alert("Guardo correctamente :)");
+                         console.log(response.length);
+                     if(response.length>0)
+                      {  if(this.accionDocente==="u")
+                         {
+                           this._LeccionarioServices.LeccionarioDocenteList[this.indexEditLecionario] =response[0] ;
+
+                            alert("Lecionario Actulizado :)");
+                         }
+                         else{
+                             this._LeccionarioServices.LeccionarioDocenteList.push(response[0]);
+                          ///   this.resetForm();
+                             alert("Lecionario Guardado :)");
+                         }
+
+                      }
+
                    },
                    error=>{ console.log(error);});
     }
@@ -130,6 +162,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
     this.unidad =0;
     this._LeccionarioServices.LeccionarioDocenteList=[];
     this.indexEditLecionario=0;
+
     this.visible=true;
   }
 }

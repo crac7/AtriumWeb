@@ -160,13 +160,15 @@ ObservacionAdmin:string;
 
   delete(cod_deta,i){
   //  this.planificacionDetalleModel.cod_deta =cod_deta;
-    // this._PlanificacionServices.ListPlanificacion[i];
+      if(confirm("¿Esta seguro de eliminar?"))
+      {
      this._PlanificacionServices.ListPlanificacion[i].estado="E";
      this._PlanificacionServices.InsertDetalle(this._PlanificacionServices.ListPlanificacion[i]).subscribe(
                 response=>{
                     this._PlanificacionServices.ListPlanificacion.splice(i, 1);
                 },
                 error=>{ console.log(error);});
+        }
 
   }
 
@@ -305,7 +307,7 @@ GeneraPDF(){
                     elemen.fecha_revisado=moment().format('L');
                     //console.log(elemen);
                 })
-              
+
                 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
                            response=>{
                                  if (response.ok) alert("Cambios Guardados correctamente")

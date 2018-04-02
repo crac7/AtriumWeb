@@ -73,7 +73,7 @@ export class TableListComponent implements OnInit {
      this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
           response=>{
 
-
+                alert("Guardado exitosamente");
           },
           error=>{
 

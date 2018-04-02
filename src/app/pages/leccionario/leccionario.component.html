@@ -76,15 +76,11 @@
                           <i class="material-icons">picture_as_pdf</i>  GeneraPDF
                         </a>
                       </div>
-                      <div class="col-sm-3">
-                        <!-- Button trigger modal -->
-                        <a *ngIf="bandera==='P'" class="btn btn-success"   data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
 
-                         </div>
 
 
                    </div>
-<!--------*ngIf="bandera==='P'"-------------------------------Vista Docente--------------------------------------------------------------------------------->
+<!--------*ngIf="bandera==='P'"-------------------------------Vista Inspector--------------------------------------------------------------------------------->
                             <table *ngIf="bandera==='A'" class="table">
                                                <thead class="text-danger">
                                                    <tr>
@@ -107,6 +103,7 @@
                                                               <i class="material-icons">picture_as_pdf</i>  GeneraPDF
                                                            </button>
                                                            </td>
+
                                                      <!---  </form>------------>
                                                    </tr>
 
@@ -128,7 +125,7 @@
                             <thead class="text-danger">
                                 <tr>
                                   <th>  Hora</th>
-                                    <th>Destrezas con criterio de Desempeño</th>
+                                    <th>Destrezas con criterio de desempeño</th>
                                     <th>Tareas</th>
                                     <th>Observaciones</th>
                                     <th> Firma</th>
@@ -162,7 +159,17 @@
                                                   data-toggle="modal" data-target=".bd-example-modal-lg"  [disabled]="item.firmado">
                                                  <i class="fa fa-edit"></i>
                                         </button>
-                                        </td>
+                                        <button  class="btn-danger"
+                                                     (click)="delete(i)">
+                                                     <i class="fa fa-minus"></i>
+                                          </button>
+                                      </td>
+                                      <td>
+                                            <button  class="btn-success"
+                                                      (click)="Edit(item,i,'I')"
+                                              data-toggle="modal" data-target=".bd-example-modal-lg" >
+                                            <i class="material-icons">note_add</i></button>
+                                      </td>
                                   <!---  </form>------------>
                                 </tr>
 
