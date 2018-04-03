@@ -6,6 +6,7 @@ import {Http, Response, Headers } from '@angular/http';
 import {Global } from './global'
 import {ModelLeccionarioDocente}  from '../models/leccionario.docente.models';
 import {ModelLeccionarioInspector}  from '../models/LeccionaInspec.models';
+import { ResponseContentType } from '@angular/http';
 @Injectable()
 export class LeccionarioServices {
   selectedHorarios : ModelHorarios;
@@ -117,6 +118,18 @@ export class LeccionarioServices {
           })
 
 
+    }
+
+    GeneraPDFLecionario(datos){
+
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this._usuarioService.token});
+
+    return this._http.post(this.url+'rpt/Leccionario',datos ,{headers: headers, responseType: ResponseContentType.Blob })
+                      .map(
+                            (res) => {
+                                return new Blob([res.blob()], { type: 'application/pdf' })
+                        });
     }
 }
 ///HorarioLecionario

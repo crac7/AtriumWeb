@@ -65,7 +65,7 @@ export class MateriasDocenteService{
 
       AlumnosCurso(cursoDatos){
             let json = JSON.stringify(cursoDatos);
-      
+
             let params =json;
 
             let headers = new Headers({'Content-Type':'application/json',
@@ -106,7 +106,7 @@ export class MateriasDocenteService{
                     let_per:       localStorage.getItem('let_per'),
                     cod_profesor:  localStorage.getItem('cod_profesor'),
                     nombre:  localStorage.getItem('nombre'),
-                    bandera: this.bandera==='A'&& lec!=null ? 'LP':''
+                    bandera: this.bandera==='A'&& lec!=null ? lec:''
                   }];
                 //  console.log(this.datosDocentes);
        return this.datosDocentes[0];

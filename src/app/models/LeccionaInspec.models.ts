@@ -1,12 +1,12 @@
 export class ModelLeccionarioInspector{
    constructor(
-    cod_emp : number,
-    cod_per   : number,
-    let_per  :string,
-    cod_curso : number,
-    cod_paralelo: number,
-    unidad    : number,
-    des_unidad  :string,
-    fecha:string
+    public cod_emp : number,
+    public cod_per   : number,
+    public let_per  :string,
+    public cod_curso : number,
+    public cod_paralelo: number,
+    public unidad    : number,
+    public des_unidad  :string,
+    public fecha:string
   ){}
   }

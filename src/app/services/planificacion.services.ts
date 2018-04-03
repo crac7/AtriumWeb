@@ -101,7 +101,7 @@ export class PlanificacionServices{
       }
 
     GeneraPDFAdmin(datos){
-    
+
 
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this.getToken()});
@@ -111,6 +111,16 @@ export class PlanificacionServices{
                             (res) => {
                                 return new Blob([res.blob()], { type: 'application/pdf' })
                         });
+    }
+
+    SendEmail(detalle){
+      let json = JSON.stringify(detalle);
+      let params =json;
+
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this.getToken()});
+      return this._http.post(this.url+'email', params ,{headers: headers})
+               .map(res => res.json());
     }
 ///Accede a local Sotrage y devuele los datos ya procesados
     getToken(){

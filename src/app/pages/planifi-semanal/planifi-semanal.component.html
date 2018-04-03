@@ -29,7 +29,7 @@
                         <div class="col-sm-12">
 
                             <div class="row no-gutters">
-                                <div class="title col-md-3">Imagen</div>
+                                <div class="title col-md-3"></div>
                               <h4 class="title  col-md-6  text-center">Unidad Educativa Particular Bilingue Ecomundo</h4>
                               <div class="title  col-md-3 text-center">REG 2.4.1-4b <br> Año Elecitvo 2017-2018</div>
                             </div>
@@ -99,9 +99,9 @@
                         <table  *ngIf="bandera==='P'"  class="table">
                             <thead class="text-danger">
                                 <tr>
-                                  <th>DEZTREZAS CON CRITERIOS DE DESEPEÑO</th>
+                                  <th>DESTREZAS CON CRITERIOS DE DESEMPEÑO</th>
                                     <th>ACTIVIDADES DE APRENDIZAJE</th>
-                                    <th>RECRUSOS</th>
+                                    <th>RECURSOS</th>
                                     <th>EVALUACIÓN</th>
                                     <th>TAREAS</th>
 
@@ -146,12 +146,12 @@
       <table  *ngIf="bandera==='A'"  class="table">
           <thead class="text-danger">
               <tr>
-                <th>Titulo</th>
+                <th>TÍtulo</th>
                   <th>Fecha Inicio</th>
                   <th>Fecha Fin</th>
                   <th> Revisado</th>
                     <th> Aprobado</th>
-                  <th>Observacion</th>
+                  <th>Observación</th>
                     <th>Genera PDF</th>
 
               </tr>
@@ -189,7 +189,7 @@
                               </button>
                           </td>
                         <td>
-                              <a class="btn"  (click)="GeneraPDF()">
+                              <a class="btn"  (click)="GeneraPDF(i)">
                                 <i class="material-icons">picture_as_pdf</i>
                               </a>
                         </td>
@@ -237,7 +237,7 @@
                                 </div>
                                 <div class="col-md-6">
                                         <label class="control-label">Aprobado:</label>
-                                         <a class="contenido">{{planificacionCabeceraModel.usuario_revisor}}</a>
+                                         <a class="contenido">{{planificacionCabeceraModel.usuario_aprueba}}</a>
                                          <div class="checkbox">
                                            <label>
                                                <input type="checkbox" [disabled]="bandera==='P'" [(ngModel)]="planificacionCabeceraModel.aprobado">
@@ -310,7 +310,7 @@
           <div  class="row">
               <div class="col-md-6">
                   <div class="form-group">
-                     <label>DEZTREZAS CON CRITERIOS DE DESEPEÑO</label>
+                     <label>DESTREZAS CON CRITERIOS DE DESEMPEÑO</label>
                       <div class="form-group form-black label-floating is-empty">
 
                           <textarea class="form-control" name="destrezas" #destrezas="ngModel"  [(ngModel)]="planificacionDetalleModel.destrezas" ></textarea>

@@ -3,11 +3,12 @@ import { MateriasDocenteService } from '../../services/materiasDocentes.services
 import {LeccionarioServices} from '../../services/leccionario.services'
 import * as moment from 'moment';
 import {ModelLeccionarioDocente}  from '../../models/leccionario.docente.models';
+import { DatePipe } from '@angular/common';
 @Component({
   selector: 'app-leccionario',
   templateUrl: './leccionario.component.html',
   styleUrls: ['./leccionario.component.scss'],
-  providers :[MateriasDocenteService, LeccionarioServices]
+  providers :[MateriasDocenteService, LeccionarioServices, DatePipe]
 })
 export class LeccionarioComponent implements OnInit {
 visible=true;
@@ -27,7 +28,8 @@ bandera:string;
 accionDocente:string;
 public MLeccionarioDocente:ModelLeccionarioDocente;
   constructor(private _MateriasDocentesServices: MateriasDocenteService,
-              private _LeccionarioServices:LeccionarioServices) { }
+              private _LeccionarioServices:LeccionarioServices,
+                private datePipe: DatePipe) { }
 
   ngOnInit() {
   this.MLeccionarioDocente= new ModelLeccionarioDocente(0,0,0,'',0,0,0,0,'','','',false,'','','',0,'', 0,'','','','','','','');
@@ -156,6 +158,22 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                  },
                  error=>{ console.log(error);});
  }
+
+ GeneraPDF(i){
+
+//  this._LeccionarioServices.LeccionarioInspectorList[i].fecha =this.datePipe.transform(this._LeccionarioServices.LeccionarioInspectorList[i].fecha, 'yyyy-dd-MM');
+  console.log(this._LeccionarioServices.LeccionarioInspectorList[i]);
+   this._LeccionarioServices.GeneraPDFLecionario(this._LeccionarioServices.LeccionarioInspectorList[i]).subscribe(
+         (res) => {
+           //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
+
+         var fileURL = URL.createObjectURL(res);
+         window.open(fileURL);
+
+         }
+     );
+ }
+
 
   Atras()
   {

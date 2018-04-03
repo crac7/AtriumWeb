@@ -188,8 +188,14 @@ GuardarModalAdmin(){
 
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_ini=this.fechain;
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_fin=this.fechafin;
+  if(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].revisado){
+      this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
+  }
+
+  if(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].aprobado){
+      this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_aprueba =localStorage.getItem('username')
+  }
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].cod_profesor =localStorage.getItem('cod_profesor')
-  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
 
@@ -203,17 +209,16 @@ this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetal
         );
 
 }
-GeneraPDF(){
-  this.planificacionCabeceraModel.fecha_ini =this.fechain;
-  this.planificacionCabeceraModel.fecha_fin =this.fechafin;
- console.log(this.planificacionCabeceraModel);
+GeneraPDF(i){
 
-  this._PlanificacionServices.GeneraPDFAdmin(this.planificacionCabeceraModel).subscribe(
+
+
+  this._PlanificacionServices.GeneraPDFAdmin(this._PlanificacionServices.ListDetallePlanAdmin[i]).subscribe(
         (res) => {
           //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
 
         var fileURL = URL.createObjectURL(res);
-        window.open(fileURL); //if you want to open it in new tab
+        window.open(fileURL);
 
         }
     );
@@ -304,30 +309,49 @@ GeneraPDF(){
         if(this.bandera==="A")
           {    if(this._PlanificacionServices.ListDetallePlanAdmin.length>0)
               {
-                this._PlanificacionServices.ListDetallePlanAdmin.map((elemen)=>{
-                  elemen.cod_profesor =localStorage.getItem('cod_profesor');
-                  elemen.usuario_revisor =localStorage.getItem('username')
-                    elemen.observaciones=this.ObservacionAdmin;
-                    elemen.fecha_revisado=moment().format('L');
-                    //console.log(elemen);
-                })
+                      this._PlanificacionServices.ListDetallePlanAdmin.map((elemen)=>{
+                        if(elemen.revisado){
+                            elemen.usuario_revisor =localStorage.getItem('username')
+                        }
+                        if(elemen.aprobado){
+                            elemen.usuario_aprueba =localStorage.getItem('username')
+                        }
+                        elemen.cod_profesor =localStorage.getItem('cod_profesor');
 
-                this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
-                           response=>{
-                                 if (response.ok) alert("Cambios Guardados correctamente")
-                           },
-                           error=>{
-                                  console.log(error);
-                              }
-                        );
+                          elemen.observaciones=this.ObservacionAdmin;
+                          elemen.fecha_revisado=moment().format('L');
+                          //console.log(elemen);
+                      })
 
-              }
+                      this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
+                                 response=>{
+                                       if (response.ok) alert("Cambios Guardados correctamente")
+                                 },
+                                 error=>{
+                                        console.log(error);
+                                    }
+                              );
+
+                    }
             }
             else
             {
               this.insertaCabcera(true);
             }
       }
+
+      Enviar(){
+
+         this._PlanificacionServices.SendEmail(this.planificacionCabeceraModel).subscribe(
+                    response=>{
+                          console.log(response.message);
+                            alert(response.message);
+                    error=>{
+                           console.log(error);
+                       }
+                 );
+      }
+
 
   resetForm(form?: NgForm) {
               this.accion=null;

@@ -16,4 +16,5 @@ export class DetallePlanAdmin{
                  unidad : number;
                 usuario_revisor: string ;
                 fecha_revisado: string;
+                usuario_aprueba:string;
 }
