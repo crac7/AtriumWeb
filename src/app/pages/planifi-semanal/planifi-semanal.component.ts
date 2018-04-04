@@ -346,8 +346,9 @@ GeneraPDF(i){
                     response=>{
                           console.log(response.message);
                             alert(response.message);
+                          },
                     error=>{
-                           console.log(error);
+                         console.log(error);
                        }
                  );
       }

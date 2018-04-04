@@ -3,7 +3,7 @@ import {Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Global } from './global';
-
+import { ResponseContentType } from '@angular/http';
 import { ModelDatosDocentes }  from '../models/modelDatosDocentes'
 import { ModelMateriasDocentes }  from '../models/modelMaterias';
 import { ModelUnidades }  from '../models/unidades';
@@ -83,7 +83,7 @@ export class MateriasDocenteService{
 
                    let json = JSON.stringify(curso);
                    let params =json;
-                      console.log(json);
+
                       let headers = new Headers({'Content-Type':'application/json',
                                                   'Authorization': 'bearer '+this.getToken()});
                    return this._http.post(this.url+'InsertFaltasAtrasos', params ,{headers: headers})
@@ -112,6 +112,17 @@ export class MateriasDocenteService{
        return this.datosDocentes[0];
   }
 
+  GeneraPDFaltas(datos){
+ 
+   let paramas =JSON.stringify(datos);
+       let headers = new Headers({'Content-Type':'application/json',
+                                   'Authorization': 'bearer '+this.getToken()});
+  return this._http.post(this.url+'rpt/FaltasAtrasos',paramas ,{headers: headers, responseType: ResponseContentType.Blob })
+                    .map(
+                          (res) => {
+                              return new Blob([res.blob()], { type: 'application/pdf' })
+                      });
+  }
 
   getToken(){
      let token = localStorage.getItem('token');
