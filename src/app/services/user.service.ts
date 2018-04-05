@@ -60,7 +60,7 @@ export class UserService{
 
          if(localStorage.getItem('token')){
           this.token =localStorage.getItem('token');
-        //console.log("token verdadero"+this.token);
+      //  console.log("token verdadero"+this.token);
        }else
        {
          this.token=null;

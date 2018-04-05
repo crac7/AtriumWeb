@@ -8,10 +8,12 @@ export class LoginGuardGuard  implements CanActivate {
     public _usuarioService: UserService,
     public router: Router
 
-  ) {}
+  ) {
+
+  }
 
   canActivate(){
-//    console.log("canvativer  "+this._usuarioService.token);
+     this._usuarioService.getToken();
     if ( this._usuarioService.estaLogueado() ) {
         console.log( 'PASO EL GUARD');
         return true;

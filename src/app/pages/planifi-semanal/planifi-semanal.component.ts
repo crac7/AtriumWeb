@@ -18,6 +18,7 @@ import * as $ from 'jquery';
 export class PlanifiSemanalComponent implements OnInit {
   @ViewChild("guardarModal") guardarModal: ElementRef;
   @ViewChild("guardaTodo") guardaTodo: ElementRef;
+    @ViewChild("guardaDuplica") guardaDuplica: ElementRef;
     @ViewChild("modal") modal: ElementRef;
   ///  public DetallePlanAdminModel:  DetallePlanAdmin;
   public planificacionCabeceraModel: PlanificacionCabeceraModel;
@@ -25,9 +26,9 @@ export class PlanifiSemanalComponent implements OnInit {
   visible=true;
   addtable=false;
   bloquedoModal=false;
-ObservacionAdmin:string;
+  ObservacionAdmin:string;
   bandera:string;
-    itemsPlan: Array<any>;
+  itemsPlan: Array<any>;
   tablaAministrador: Array<any>;
   accion:string;
   index:number;
@@ -42,14 +43,14 @@ ObservacionAdmin:string;
   paralelo:string;
   curso:string;
   errorCabecera: Array<any>;
-
+  Paralelos: Array<any>;
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
               private renderer: Renderer2,
             private datePipe: DatePipe,
             )
               {
-      this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
+      this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0);
     this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     //this.DetallePlanAdminModel=
               }
@@ -96,16 +97,43 @@ ObservacionAdmin:string;
     this.planificacionCabeceraModel.cod_curso= (this.bandera==='A')?i.cod_curso[0]:i.cod_curso;
     this.planificacionCabeceraModel.cod_paralelo= i.cod_paralelo;
     this.planificacionCabeceraModel.cod_mat= i.cod_materia;
+///////////////////////////Hacer la consulta al sps de los paralelos y llenarlo////////
+        this._PlanificacionServices.ConsultaParalelo(this.planificacionCabeceraModel).subscribe(
+                         response=>{
+                              this.Paralelos=response;
+                              if(this.Paralelos.length>0){
+                                 this.renderer.removeAttribute(this.guardaDuplica.nativeElement, "disabled");///Habilita boton de guardas
+                              }
 
-
-
+                               },
+                         error=>{
+                              console.log(error);
+                            }
+                      );
   }
 
+      Duplica(){
+       if(this.planificacionCabeceraModel.cod_paralelo_duplicado>0)
+        {
+          this.GuardaTodo()
+          this._PlanificacionServices.InsertDuplica(this.planificacionCabeceraModel).subscribe(
+                           response=>{
+                            alert("Sea Duplicado con Exito");
+                                   },
+                           error=>{
+                                console.log(error);
+                              }
+                        );
+          }
+          else{
+                alert("Debe selecionar un paralelo");
+          }
+      }
 
   Atras()
   {
      this._PlanificacionServices.ListDetallePlanAdmin=[];
-    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','');
+    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0);
      this.IniciaCabcera();
        this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     this.visible=true;
@@ -117,7 +145,7 @@ ObservacionAdmin:string;
 
 
     ConsultaAdmin(){
-  //    this.renderer.setAttribute(this.guardaTodo.nativeElement, "disabled", "true");//Desabilita
+
   this.planificacionCabeceraModel.fecha_ini =this.fechain;
   this.planificacionCabeceraModel.fecha_fin =this.fechafin;
 
@@ -136,9 +164,10 @@ ObservacionAdmin:string;
 
                             cabecera=response;
                             if(cabecera!=null){
-                                    console.log(  this.planificacionCabeceraModel.fecha_ini);
+                                
                               //LLeno la cabera del plan
                               this.planificacionCabeceraModel=cabecera;///
+                                console.log(this.planificacionCabeceraModel);
                               this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
                             }
                             else

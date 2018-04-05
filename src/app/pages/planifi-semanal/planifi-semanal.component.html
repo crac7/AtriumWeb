@@ -29,12 +29,12 @@
                         <div class="col-sm-12">
 
                             <div class="row no-gutters">
-                                <div class="title col-md-3"></div>
-                              <h4 class="title  col-md-6  text-center">Unidad Educativa Particular Bilingue Ecomundo</h4>
+                              <h4 class="title col-md-3">Planificación Semanal</h4>
+                              <h4 class="title  col-md-6  text-center"></h4>
                               <div class="title  col-md-3 text-center">REG 2.4.1-4b <br> Año Elecitvo 2017-2018</div>
                             </div>
                           <div class="row">
-                                <h4 class="title col-md-12 text-center">Planificación Semanal</h4>
+
                           </div>
                           <div class="row">
                             <div class="col-md-4">
@@ -53,10 +53,10 @@
                                 <p class="category">Asignatura : <a class="contenido">{{materia}}</a>
 
                             </div>
+                            <div class="col-md-3">
+                                <p class="category">Pralelo : <a class="contenido">{{paralelo}}</a>
 
-                              <div class="col-md-2">
-                                  <p class="category">Paralelo : <a class="contenido">{{paralelo}}</a>
-                              </div>
+                            </div>
                               <div class="col-md-3">
                                     <p class="category">Curso : <a class="contenido">{{curso}}</a>
 
@@ -79,10 +79,13 @@
                           </div>
 
                           <div class="col-6 col-sm-3">
+
+
                               <p class="category">Selecione la Unidad:
                                 <select #Unidad="ngModel" name="Unidad"  [(ngModel)]="planificacionCabeceraModel.unidad" (change)="ConsultaAdmin()"  >
                                 <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [ngValue]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                                 </select>
+
                           </div>
 
                           <div class="col-sm-3">
@@ -99,7 +102,7 @@
                         <table  *ngIf="bandera==='P'"  class="table">
                             <thead class="text-danger">
                                 <tr>
-                                  <th>DESTREZAS CON CRITERIOS DE DESEMPEÑO</th>
+                                  <th>DESTREZA CON CRITERIOS DE DESEMPEÑO</th>
                                     <th>ACTIVIDADES DE APRENDIZAJE</th>
                                     <th>RECURSOS</th>
                                     <th>EVALUACIÓN</th>
@@ -264,7 +267,17 @@
                                <a *ngIf="bandera==='P'" class="btn btn-success"  (click)="Enviar()">
                                     <i class="material-icons">email</i>
                                 </a>
+
+                               <div *ngIf="bandera==='P'" class="">
+                                 <p class="category">Duplicar en Paralelo :
+                                   <select #Paralelo="ngModel" name="Paralelo"  [(ngModel)]="planificacionCabeceraModel.cod_paralelo_duplicado"  >
+                                   <option *ngFor="let paralelo of Paralelos" [value]="paralelo.cod_paralelo">{{paralelo.des_paralelo}}</option>
+                                   </select>
+                               </div>
+                                <input  *ngIf="bandera==='P'" type="submit" #guardaDuplica value="Duplica"  (click)="Duplica()"   class="btn btn-success" disabled >
+
                               </div>
+
                         </div>
 
                          </div>
@@ -310,7 +323,7 @@
           <div  class="row">
               <div class="col-md-6">
                   <div class="form-group">
-                     <label>DESTREZAS CON CRITERIOS DE DESEMPEÑO</label>
+                     <label>DESTREZA CON CRITERIOS DE DESEMPEÑO</label>
                       <div class="form-group form-black label-floating is-empty">
 
                           <textarea class="form-control" name="destrezas" #destrezas="ngModel"  [(ngModel)]="planificacionDetalleModel.destrezas" ></textarea>

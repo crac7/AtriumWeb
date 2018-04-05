@@ -63,11 +63,14 @@
                             <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
                             </select>
                       </div>
-                      <div class="col-md-3">
-                        <a class="btn"  (click)="GeneraPDF()">
-                          <i class="material-icons">picture_as_pdf</i>  GeneraPDF
-                        </a>
-                      </div>
+
+                      <div class="col-sm-3">
+                            <!-- Button trigger modal -->
+                            <a  class="btn"   data-toggle="modal" data-target="#exampleModalLong" >
+                            <span>GeneraPDF</span>
+                            </a>
+                        </div>
+
 
                       <div class="col-sm-3" *ngIf="this.bandera==='A'">
                         <p class="category" >Fecha: <br>
@@ -201,6 +204,38 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!---------------------------------------- Modal GeneraPDF--------------------------------------------------------->
+<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Genera PDF</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <p class="category" >Fecha Inicio: <br>
+           <input [ngModel]="fecha_ini | date:'yyyy-MM-dd'" (ngModelChange)="fecha_ini = $event" type="date" name="fecha_ini"/>
+
+           <p class="category" >Fecha Fin: <br>
+            <input [ngModel]="fechafin | date:'yyyy-MM-dd'" (ngModelChange)="fechafin = $event" type="date" name="fechafin"/>
+      </div>
+      <div class="modal-footer">
+        <a  class="btn btn-success" class="btn btn-secondary" data-dismiss="modal" >
+          <span>Close</span>
+        </a>
+      <!---  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+        <a  class="btn btn-success"  (click)="GeneraPDF()">
+          <i class="material-icons">picture_as_pdf</i> <span>GeneraPDF</span>
+        </a>
       </div>
     </div>
   </div>

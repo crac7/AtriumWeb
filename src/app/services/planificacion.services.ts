@@ -122,6 +122,26 @@ export class PlanificacionServices{
       return this._http.post(this.url+'email', params ,{headers: headers})
                .map(res => res.json());
     }
+
+    ConsultaParalelo(detalle){
+      let json = JSON.stringify(detalle);
+      let params =json;
+
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this.getToken()});
+      return this._http.post(this.url+'ConsultaParalelo', params ,{headers: headers})
+               .map(res => res.json());
+    }
+
+    InsertDuplica(detalle){
+      let json = JSON.stringify(detalle);
+      let params =json;
+
+         let headers = new Headers({'Content-Type':'application/json',
+                                     'Authorization': 'bearer '+this.getToken()});
+      return this._http.post(this.url+'InsertDuplica', params ,{headers: headers})
+               .map(res => res.json());
+    }
 ///Accede a local Sotrage y devuele los datos ya procesados
     getToken(){
        let token = localStorage.getItem('token');

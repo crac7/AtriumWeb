@@ -26,6 +26,7 @@ export class TableListComponent implements OnInit {
   bandera:string;
   codProfesor:string;
   unidad:number;
+  fecha_ini:string;
   fechafin:string;
   detallesMaterias:Array<any>;
   ////
@@ -36,7 +37,9 @@ export class TableListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.fecha =moment().format('L');   //
+     this.fecha =moment().format('L');   //
+     this.fecha_ini=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+     this.fechafin=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
      this._MateriasDocentesServices.MateriasDocentes();
      this._MateriasDocentesServices.UnidadesDocentes();
@@ -196,18 +199,20 @@ checkAll(ev) {
 
   GeneraPDF(){
   //  this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
-  let    fecha_ini  =this.datePipe.transform(this.fecha, 'yyyy-MM-dd');
+
     this.DatoPDF=[{
                        cod_per: 2017,///this.codigoPeriodo,<---------------------------------canmbiar
                        let_per: this.letPeriodo,
-                       cod_curso: this.Cabecera[0].codCurso[0],
+                       cod_curso:  this.Cabecera[0].codCurso,
                        cod_paralelo: this.Cabecera[0].codParalelo,
                        cod_materia: this.Cabecera[0].codMateria,
                        unidad: this.unidad,
-                       fecha_ini:  fecha_ini,
+                       fecha_ini:  this.fecha_ini,
                        cod_profesor:  this.codProfesor,
-                       fecha_fin: fecha_ini
+                       fecha_fin: this.fechafin
                      }]
+
+                       console.log(this.Cabecera[0].codCurso);
   this._MateriasDocentesServices.GeneraPDFaltas(this.DatoPDF).subscribe(
         (res) => {
           //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver

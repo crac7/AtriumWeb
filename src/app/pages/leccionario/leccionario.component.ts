@@ -111,6 +111,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
           Itemplan.usuario_coordinador="";
           Itemplan.usuario_inspector="";
           this.MLeccionarioDocente=Itemplan;
+      //    this.MLeccionarioDocente=
+      //    console.log(this.MLeccionarioDocent)
           //this.MLeccionarioDocente.cod_profesor=416
             this.indexEditLecionario=i;
           }

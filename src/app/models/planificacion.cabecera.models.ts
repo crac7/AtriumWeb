@@ -22,7 +22,9 @@ export class PlanificacionCabeceraModel{
             public  usuario_revisor: string,
             public  aprobado: boolean,
             public  fecha_aprobado: string,
-            public  usuario_aprueba: string
+            public  usuario_aprueba: string,
+            public cod_paralelo_duplicado:number
+
             ){
 
             }
