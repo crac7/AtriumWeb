@@ -4,10 +4,11 @@ import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 import {Global } from './global';
 import { ResponseContentType } from '@angular/http';
-import { ModelDatosDocentes }  from '../models/modelDatosDocentes'
+
 import { ModelMateriasDocentes }  from '../models/modelMaterias';
 import { ModelUnidades }  from '../models/unidades';
 import {ModelAlumnCursos} from '../models/ModelAlumCursos';
+
 @Injectable()//para utilizar en otra Clases
 export class MateriasDocenteService{
   public url: string;
@@ -21,7 +22,7 @@ export class MateriasDocenteService{
   selectedAlumnCursos :  ModelAlumnCursos;
   AlumnCursosList : ModelAlumnCursos[];
   /****/
-  selectedDatosDocentes:ModelDatosDocentes;
+
   bandera:string;
     public datosDocentes: any;
   /*public cod_per:number;
@@ -113,7 +114,7 @@ export class MateriasDocenteService{
   }
 
   GeneraPDFaltas(datos){
- 
+
    let paramas =JSON.stringify(datos);
        let headers = new Headers({'Content-Type':'application/json',
                                    'Authorization': 'bearer '+this.getToken()});
