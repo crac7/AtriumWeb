@@ -51,31 +51,32 @@
                   <div class="card-content table-responsive">
                       <div class="row">
 
-                      <div class="col-md-3">
+                      <div class="col-sm-3">
                         <a class="btn btn-success"  (click)="Atras()">
                             <i class="material-icons">keyboard_backspace</i>Atras
                         </a>
                       </div>
 
-                      <div class="col-6 col-sm-3">
-                          <p class="category">Selecione la Unidad:
-                            <select #Unidad id="Unidad" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
-                            <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
-                            </select>
-                      </div>
-
-                      <div class="col-sm-3">
-                            <!-- Button trigger modal -->
-                            <a  class="btn"   data-toggle="modal" data-target="#exampleModalLong" >
-                            <span>GeneraPDF</span>
-                            </a>
-                        </div>
-
-
                       <div class="col-sm-3" *ngIf="this.bandera==='A'">
                         <p class="category" >Fecha: <br>
                          <input [ngModel]="fecha | date:'yyyy-MM-dd'" (ngModelChange)="fecha = $event" type="date" name="fecha"/>
                       </div>
+
+                      <div class="col-sm-3">
+                          <p class="category">Selecione la Unidad:
+                            <select #Unidad id="Unidad" (change)="ConsultarAlumnos($event.target.value)" [value]=-1>
+                            <option *ngFor="let unidad of _MateriasDocentesServices.UnidadesList" [value]="unidad.cod_unidad">{{unidad.des_unidad}}</option>
+                            </select>
+
+                            <!-- Button trigger modal -->
+                            <a  class="btn"   data-toggle="modal" data-target="#exampleModalLong" >
+                            <span>GeneraPDF</span>
+                            </a>
+                      </div>
+
+
+
+
 
                    </div>
 <!---------------------------------------------------------------------------------->
