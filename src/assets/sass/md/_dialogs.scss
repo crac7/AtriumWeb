@@ -10,15 +10,12 @@
   border: none;
   // Modal header
   // Top section of the modal w/ title and dismiss
-
- .modal-header {
-  /*  border-bottom: none;
+  .modal-header {
+    border-bottom: none;
     padding-top:    24px;
     padding-right:  24px;
     padding-bottom: 0;
-    padding-left:   24px;*/
-    color:#3faf49;
-
+    padding-left:   24px;
   }
   // Modal body
   // Where all modal content resides (sibling of .modal-header and .modal-footer)
@@ -29,14 +26,13 @@
     padding-left:   24px;
   }
   // Footer (for actions)
-
   .modal-footer {
-    /*border-top: none;
+    border-top: none;
     padding: 7px;
 
     &.text-center{
         text-align: center;
-    }*/
+    }
 
     button {
       margin: 0;
@@ -54,13 +50,15 @@
       margin-bottom: 16px;
     }
   }
-
-
+  .modal-body + .modal-footer {
+    padding-top: 0;
+  }
 }
 .modal-backdrop {
-
   background: rgba(0,0,0,0.3);
+    z-index: -1;/* esto hara que no se bloque la pantalla den menores resoluciones*/
 }
+
 
 .modal{
     .modal-dialog{

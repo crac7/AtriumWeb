@@ -15,8 +15,11 @@ export class NavbarComponent implements OnInit {
     location: Location;
     private toggleButton: any;
     private sidebarVisible: boolean;
- public token;
-     username:string ;
+    public token;
+    email:string;
+    nombre:string;
+    username:string ;
+
     constructor(location: Location,  private element: ElementRef ,
               private _userService:UserService,
               private _router: Router) {
@@ -25,8 +28,10 @@ export class NavbarComponent implements OnInit {
     }
 
     ngOnInit(){
-    //   this.token =this._userService.getToken();
-        this.username=  localStorage.getItem('username');
+
+      this.username=  localStorage.getItem('username');
+      this.email   =  localStorage.getItem('e_mail');
+      this.nombre  =  localStorage.getItem('nombre');
       this.listTitles = ROUTES.filter(listTitle => listTitle);
       const navbar: HTMLElement = this.element.nativeElement;
       this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];

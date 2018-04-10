@@ -5,6 +5,7 @@ import { DatePipe } from '@angular/common';
 import { ModelMateriasDocentes }  from '../../models/modelMaterias'
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
 
+
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -31,6 +32,7 @@ export class TableListComponent implements OnInit {
   detallesMaterias:Array<any>;
   ////
   prueba:Array<any>;
+
   constructor(private _MateriasDocentesServices: MateriasDocenteService,  private datePipe: DatePipe,) {
 
 

@@ -28,6 +28,8 @@ import {UserService}from '../services/user.service';
 
 import {GoTopButtonModule} from 'ng2-go-top-button';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+////PipeTransform
+ import {SearchFilterPipe} from '../SearchFilterPipe'
 @NgModule({
   imports: [
     BrowserModule,
@@ -53,6 +55,7 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
    PagesComponent,
    LeccionarioComponent,
    PlanifiSemanalComponent,
+SearchFilterPipe
   // Component,
   // ListaFaltasComponent,
 
@@ -69,7 +72,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
    PagesComponent,
    LeccionarioComponent,
    PlanifiSemanalComponent,
-   GoTopButtonModule
+   GoTopButtonModule,
+SearchFilterPipe
  //Component,
  ],
   providers: [

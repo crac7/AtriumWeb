@@ -92,7 +92,7 @@
 
                           <div class="col-sm-3">
                             <!-- Button trigger modal -->
-                            <a *ngIf="bandera==='P' && planificacionCabeceraModel.enviado===0" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target=".bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
+                            <a *ngIf="bandera==='P' && planificacionCabeceraModel.enviado===0" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target="#bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
                               <a  class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
 
                              </div>
@@ -131,7 +131,7 @@
                                            <!----------- vista como Profesor----------------->
                                             <button  class="btn-info"
                                                           (click)="Edit(item,i)"
-                                                          data-toggle="modal" data-target=".bd-example-modal-lg">
+                                                          data-toggle="modal" data-target="#bd-example-modal-lg">
                                                          <i class="fa fa-edit"></i>
                                                 </button>
                                             <button *ngIf="bandera==='P'" class="btn-danger"
@@ -189,7 +189,7 @@
 
                           <button  class="btn-info"
                                             (click)="EditAdmin(item,i)"
-                                         data-toggle="modal" data-target=".Admin-modal-lg">
+                                         data-toggle="modal" data-target="#Admin-modal-lg">
                                        <i class="fa fa-edit"></i>
                               </button>
                           </td>
@@ -297,7 +297,7 @@
 
 
 
-<div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+<div class="modal fade" id="bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="bd-example-modal-lg" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
   <div   class="modal-dialog modal-lg" role="document">
     <div  class="modal-content">
       <div class="modal-header">
@@ -402,8 +402,8 @@
 
 
 
-<div class="modal  Admin-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
-  <div   class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="Admin-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true"  data-backdrop="static" data-keyboard="false">
+  <div   class="modal-dialog" role="document">
     <div  class="modal-content">
       <div class="modal-header">
         <h5  class="modal-title" id="exampleModalLongTitle">Detalles Observacion</h5>
