@@ -179,7 +179,7 @@
 
                             <div class="row">
                                 <div class="col-md-4">
-                                 <input type="submit" value="Guardar"   (click)="GuardaTodo()" class="btn btn-success" >
+                                 <input  type="submit" value="Guardar"   (click)="GuardaTodo()" class="btn btn-success" >
                                   <!---<input type="button" value="Atras"   (click)="Atras()" class="btn btn-success" >--->
 
                                   <a class="btn btn-danger"  (click)="Atras()">
@@ -213,7 +213,7 @@
         </button>
       </div>
 
-  <form  #registerForm="ngForm" (ngSubmit)="GuardarLeccionario(registerForm)">
+  <form  #registerForm="ngForm" (ngSubmit)="GuardarLeccionario(accionDocente)">
   <div  class="modal-body">
 
 <!------------------------#employeeForm="ngForm" (ngSubmit)="onSubmit(employeeForm)"------------------------------------------------------------------>
@@ -222,7 +222,7 @@
    <div class="col-6 col-sm-3">
        <p class="category">Selecione Un Horario:
          <select #hora="ngModel" name="hora"  [(ngModel)]="MLeccionarioDocente.cod_hora"  >
-         <option *ngFor="let horario of _LeccionarioServices.HorariosList" [ngValue]="horario.cod_horario">{{horario.descripcion}}</option>
+         <option *ngFor="let horario of _LeccionarioServices.HorariosList" [value]="horario.cod_horario">{{horario.descripcion}}</option>
          </select>
    </div>
     </div>
@@ -259,7 +259,7 @@
                       </div>
                   </div>
               </div>
-                <div class="col-md-6">
+             <div class="col-md-6">
                     <div class="form-group">
                      <label>Firma</label>
                      <div class="checkbox">
@@ -275,7 +275,7 @@
       <!--------------------------footer-------------------------------------------------------->
       <div class="modal-footer">
         <button type="button" class="btn btn-info" data-dismiss="modal">Cerrar</button>
-        <button type="submit" #guardarModal class="btn btn-success" (ngClik)="GuardarLeccionario()">Guardar</button>
+        <button  type="submit" #guardarModal class="btn btn-success" (ngClik)="GuardarLeccionario(accionDocente)">Guardar</button>
       </div>
 
     </form>

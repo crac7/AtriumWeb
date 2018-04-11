@@ -26,6 +26,7 @@ indexEditLecionario:number;
 DatosLecionarioDocen: Array<any>;
 bandera:string;
 accionDocente:string;
+descriphora:string;
 public MLeccionarioDocente:ModelLeccionarioDocente;
   constructor(private _MateriasDocentesServices: MateriasDocenteService,
               private _LeccionarioServices:LeccionarioServices,
@@ -41,7 +42,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
     this.nombre=localStorage.getItem('nombre');
     this.codigoPeriodo= localStorage.getItem('cod_per'),
     this.letPeriodo= localStorage.getItem('let_per');
-    this.user=localStorage.getItem('username');
+    this.user=localStorage.getItem('username').trim();
     this.indexEditLecionario=0;
     this.bandera =localStorage.getItem('bandera');
   }
@@ -116,21 +117,32 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
           //this.MLeccionarioDocente.cod_profesor=416
             this.indexEditLecionario=i;
           }
-    GuardarLeccionario(){
-
-
+    GuardarLeccionario(modal:string="N"){
+      console.log(modal);
+      this._LeccionarioServices.HorariosList.map((elemen)=>{
+           if(this.MLeccionarioDocente.cod_hora==elemen.cod_horario){
+              //  console.log(elemen.descripcion);
+              this.MLeccionarioDocente.des_hora=elemen.descripcion;
+           }
+      })
+      this.MLeccionarioDocente.usuario=this.user;
+      if(modal==="I") this.MLeccionarioDocente.cod_leccionario=0;
+    /*  this.MLeccionarioDocente.usuario.map((elemen)=>{
+           if(elemen.usuario!=null)  this.MLeccionarioDocente.usuario=this.user;
+      })*/
+      //  this.MLeccionarioDocente.cod_hora=this.descriphora;
         this._LeccionarioServices.InsertaLeccionario(this.MLeccionarioDocente).subscribe(
                    response=>{
-                         console.log(response.length);
+                         console.log(this.MLeccionarioDocente);
                      if(response.length>0)
                       {  if(this.accionDocente==="u")
                          {
-                           this._LeccionarioServices.LeccionarioDocenteList[this.indexEditLecionario] =response[0] ;
+                         this.ConsultaLecionario(this.bandera);
 
                             alert("Lecionario Actulizado :)");
                          }
                          else{
-                             this._LeccionarioServices.LeccionarioDocenteList.push(response[0]);
+                             this.ConsultaLecionario(this.bandera);
                           ///   this.resetForm();
                              alert("Lecionario Guardado :)");
                          }
