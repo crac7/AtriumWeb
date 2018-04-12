@@ -4,7 +4,8 @@ import * as moment from 'moment';
 import { DatePipe } from '@angular/common';
 import { ModelMateriasDocentes }  from '../../models/modelMaterias'
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
-
+import { saveAs } from 'file-saver/FileSaver';
+import * as swal from 'sweetalert';
 
 @Component({
   selector: 'app-table-list',
@@ -59,16 +60,20 @@ export class TableListComponent implements OnInit {
   }
 
       onSubmiLeccionario(){
-       let Tipofalta=0;
+       let Tipofalta=0 , nombres=[];
             if(this.bandera ==="A")
             {
                this._MateriasDocentesServices.AlumnCursosList.map((elemen)=>{
                     if(elemen.tipo_falta==0){
-                      alert(`Debe selecionar un tipo de falta al alumno: ${elemen.nombre}`)
+
+                    //  alert(`Debe selecionar un tipo de falta al alumno: ${elemen.nombre}`)
+                        nombres.push(elemen.nombre)
                       Tipofalta++;
                     }
                })
+               console.log(nombres);
                if(Tipofalta===0) this.GuardaFaltas();
+               else    swal("Asistencia -.-", `Debe selecionar un tipo de falta a los siguientes alumnos: ${nombres}`, "warning")//
             }
           else{
               this.GuardaFaltas();
@@ -78,7 +83,7 @@ export class TableListComponent implements OnInit {
         GuardaFaltas(){
           this.faltasAtraso=this._MateriasDocentesServices.AlumnCursosList
           for (let i in this.faltasAtraso) {
-             this.faltasAtraso[i].cod_per =  2017;
+             this.faltasAtraso[i].cod_per =  this.codigoPeriodo;
              this.faltasAtraso[i].let_per =  this.letPeriodo;
              this.faltasAtraso[i].cod_curso =  this.Cabecera[0].codCurso;
              this.faltasAtraso[i].cod_paralelo =  this.Cabecera[0].codParalelo;
@@ -94,7 +99,8 @@ export class TableListComponent implements OnInit {
 
           this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
                response=>{
-                     alert("Guardado exitosamente");
+                     //alert("Guardado exitosamente");
+                     swal("Asistencia", "Guardado exitosamente!", "success");//warning
                },
                error=>{
                         console.log(error);
@@ -128,7 +134,7 @@ ConsultarAlumnos(unidad:number) : void{
  this.unidad=unidad;
   console.log(this.fecha);
    this.AlumnosCurso=[{
-                      cod_per: 2017,///this.codigoPeriodo,<---------------------------------canmbiar
+                      cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
                       let_per: this.letPeriodo,
                       cod_curso: this.Cabecera[0].codCurso,
                       cod_paralelo: this.Cabecera[0].codParalelo,
@@ -203,7 +209,7 @@ checkAll(ev) {
   //  this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
 
     this.DatoPDF=[{
-                       cod_per: 2017,///this.codigoPeriodo,<---------------------------------canmbiar
+                       cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
                        let_per: this.letPeriodo,
                        cod_curso:  this.Cabecera[0].codCurso,
                        cod_paralelo: this.Cabecera[0].codParalelo,
@@ -214,13 +220,13 @@ checkAll(ev) {
                        fecha_fin: this.fechafin
                      }]
 
-                       console.log(this.Cabecera[0].codCurso);
+                      console.log(this.Cabecera);
   this._MateriasDocentesServices.GeneraPDFaltas(this.DatoPDF).subscribe(
         (res) => {
-          //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
+            saveAs(res, `Asist_${this.Cabecera[0].curso}_${this.Cabecera[0].paralelo}.pdf`); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
 
-        var fileURL = URL.createObjectURL(res);
-        window.open(fileURL);
+    /*    var fileURL = URL.createObjectURL(res);
+        window.open(fileURL);*/
 
         }
     );

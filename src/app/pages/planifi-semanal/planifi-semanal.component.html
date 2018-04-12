@@ -94,7 +94,9 @@
                             <!-- Button trigger modal -->
                             <a *ngIf="bandera==='P' && planificacionCabeceraModel.enviado===0" class="btn btn-success"   (click)="insertaCabcera()" data-toggle="modal" data-target="#bd-example-modal-lg" ><i class="material-icons">note_add</i> <span>Añadir</span></a>
                               <a  class="btn btn-success"   (click)="ConsultaAdmin()"><i class="material-icons">search</i> <span>Consulta</span></a>
-
+                              <a *ngIf="bandera==='P'" class="btn"  (click)="GeneraPDF('a')">
+                                <i class="material-icons">picture_as_pdf</i>
+                              </a>
                              </div>
                         </div>
 
@@ -147,7 +149,7 @@
                       </table>
       <!----------------------</form>--------------------------Fin de la tabla ------------------------------------------------>
 
-
+ <!-------------------------------------------Vista como Inspector-------------------------------------------------------------->
       <table  *ngIf="bandera==='A'"  class="table">
           <thead class="text-danger">
               <tr>
@@ -197,6 +199,11 @@
                               <a class="btn"  (click)="GeneraPDF(i)">
                                 <i class="material-icons">picture_as_pdf</i>
                               </a>
+                        </td>
+                        <td>
+                        <a  class="btn btn-success"  (click)="Enviar(i)">
+                             <i class="material-icons">email</i>
+                         </a>
                         </td>
 
             </tr>

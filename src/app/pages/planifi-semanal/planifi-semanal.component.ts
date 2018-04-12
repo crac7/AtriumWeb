@@ -8,7 +8,7 @@ import * as moment from 'moment';
 import { Planificacion  } from '../../models/planificacion';
 //import {DetallePlanAdmin} from '../models/DetallePlanAdmin.models';
 import * as $ from 'jquery';
-
+import { saveAs } from 'file-saver/FileSaver';
 @Component({
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
@@ -118,7 +118,8 @@ export class PlanifiSemanalComponent implements OnInit {
           this.GuardaTodo()
           this._PlanificacionServices.InsertDuplica(this.planificacionCabeceraModel).subscribe(
                            response=>{
-                            alert("Sea Duplicado con Exito");
+                                swal("Planificación", "Sea Duplicado con Exito!", "success");//warning
+
                                    },
                            error=>{
                                 console.log(error);
@@ -126,7 +127,7 @@ export class PlanifiSemanalComponent implements OnInit {
                         );
           }
           else{
-                alert("Debe selecionar un paralelo");
+              swal("Planificación -.-", `Debe selecionar un paralelo`, "warning")//
           }
       }
 
@@ -164,7 +165,7 @@ export class PlanifiSemanalComponent implements OnInit {
 
                             cabecera=response;
                             if(cabecera!=null){
-                                
+
                               //LLeno la cabera del plan
                               this.planificacionCabeceraModel=cabecera;///
                                 console.log(this.planificacionCabeceraModel);
@@ -192,16 +193,26 @@ export class PlanifiSemanalComponent implements OnInit {
     }
 
   delete(cod_deta,i){
-  //  this.planificacionDetalleModel.cod_deta =cod_deta;
-      if(confirm("¿Esta seguro de eliminar?"))
-      {
-     this._PlanificacionServices.ListPlanificacion[i].estado="E";
-     this._PlanificacionServices.InsertDetalle(this._PlanificacionServices.ListPlanificacion[i]).subscribe(
-                response=>{
-                    this._PlanificacionServices.ListPlanificacion.splice(i, 1);
-                },
-                error=>{ console.log(error);});
-        }
+  
+  swal({
+    title: "¿Esta seguro de eliminar?",
+    text: "Al hacer click en Ok se eliminara de detalle de la Planificación ¿Esta seguo?",
+    icon: "warning",
+    dangerMode: true,
+  })
+  .then(willDelete => {
+    if (willDelete) {
+
+      this._PlanificacionServices.ListPlanificacion[i].estado="E";
+      this._PlanificacionServices.InsertDetalle(this._PlanificacionServices.ListPlanificacion[i]).subscribe(
+                 response=>{
+                     this._PlanificacionServices.ListPlanificacion.splice(i, 1);
+                     swal("Deleted!", "El detalle de Planificación se ah eliminado con exito!", "success");
+                 },
+                 error=>{ console.log(error);});
+    }
+  });
+
 
   }
 
@@ -230,7 +241,7 @@ GuardarModalAdmin(){
 
 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
            response=>{
-                  if (response.ok) alert("Cambios Guardados correctamente")
+                  if (response.ok) swal("Planificación", "Cambios Guardados con Exito!", "success");//warning
            },
            error=>{
                   console.log(error);
@@ -239,15 +250,21 @@ this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetal
 
 }
 GeneraPDF(i){
+  if(this.bandera==="P"){
+    this.planificacionCabeceraModel.fecha_ini =this.fechain;
+    this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+  }
 
-
-
-  this._PlanificacionServices.GeneraPDFAdmin(this._PlanificacionServices.ListDetallePlanAdmin[i]).subscribe(
+let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i].usuario:this.planificacionCabeceraModel.usuario;
+console.log(ususario);
+  this._PlanificacionServices.GeneraPDFAdmin(
+      (this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i]:this.planificacionCabeceraModel
+      ).subscribe(
         (res) => {
-          //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
+            saveAs(res, `Plan_${ususario}.pdf`); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
 
-        var fileURL = URL.createObjectURL(res);
-        window.open(fileURL);
+      /*  var fileURL = URL.createObjectURL(res);
+        window.open(fileURL);*/
 
         }
     );
@@ -289,12 +306,13 @@ GeneraPDF(i){
                                  {
                                    this._PlanificacionServices.ListPlanificacion[this.index] =response[0] ;
                                     this.resetForm();
-                                    alert("Detalle de Planificación Actulizado :)");
+                                     swal("Planificación", "Detalle de Planificación Actulizado :)!", "success");//warning
                                  }
                                  else{
                                      this._PlanificacionServices.ListPlanificacion.push(response[0]);
                                      this.resetForm();
-                                     alert("Detalle de Planificación Guardado :)");
+                                        swal("Planificación", "Detalle de Planificación Guardado :)!", "success");//warning
+
                                  }
 
                      },
@@ -323,7 +341,7 @@ GeneraPDF(i){
                 if(this.planificacionCabeceraModel.cod_plan===0) this.GenerarCodigo();
                 else{
                    this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
-                              response=>{if(response.ok && GuardTo) alert("Cabecera de Planificacion guarda")},
+                              response=>{if(response.ok && GuardTo) swal("Planificación", "Cabecera de Planificacion guarda :)!", "success");},
                                error=>{console.log(`Error al inserta cabecera ${error}`);});
 
                     }
@@ -354,7 +372,7 @@ GeneraPDF(i){
 
                       this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
                                  response=>{
-                                       if (response.ok) alert("Cambios Guardados correctamente")
+                                       if (response.ok) swal("Planificación", "Cambios Guardados correctamente :)!", "success")
                                  },
                                  error=>{
                                         console.log(error);
@@ -369,12 +387,19 @@ GeneraPDF(i){
             }
       }
 
-      Enviar(){
+      Enviar(i=0){
 
-         this._PlanificacionServices.SendEmail(this.planificacionCabeceraModel).subscribe(
+        if(this.bandera==="P"){
+          this.planificacionCabeceraModel.fecha_ini =this.fechain;
+          this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+        }
+         this._PlanificacionServices.SendEmail(
+                    (this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i]:this.planificacionCabeceraModel
+                ).subscribe(
                     response=>{
                           console.log(response.message);
-                            alert(response.message);
+                          swal("Planificación", response.message, "success")
+
                           },
                     error=>{
                          console.log(error);

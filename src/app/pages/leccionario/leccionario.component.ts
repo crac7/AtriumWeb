@@ -4,6 +4,8 @@ import {LeccionarioServices} from '../../services/leccionario.services'
 import * as moment from 'moment';
 import {ModelLeccionarioDocente}  from '../../models/leccionario.docente.models';
 import { DatePipe } from '@angular/common';
+import { saveAs } from 'file-saver/FileSaver';
+import * as swal from 'sweetalert';
 @Component({
   selector: 'app-leccionario',
   templateUrl: './leccionario.component.html',
@@ -84,21 +86,23 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
         }
 
         delete(i){
-        //  this.planificacionDetalleModel.cod_deta =cod_deta;
-          // this._PlanificacionServices.ListPlanificacion[i];
-          if(confirm("¿Esta seguro de eliminar?")){
-          this._LeccionarioServices.LeccionarioDocenteList[i].cod_profesor= parseInt(localStorage.getItem('cod_profesor'));
-           this._LeccionarioServices.LeccionarioDocenteList[i].estado="E";
-          this._LeccionarioServices.InsertaLeccionario(this._LeccionarioServices.LeccionarioDocenteList[i]).subscribe(
-                      response=>{
-                          this._LeccionarioServices.LeccionarioDocenteList.splice(i, 1);
-                      },
-                      error=>{ console.log(error);});
-
-
+          swal({
+            title: "¿Esta seguro de eliminar?",
+            text: "Al hacer click en Ok se eliminara la hora selecionada ¿Esta seguo?",
+            icon: "warning",
+            dangerMode: true,
+          })
+          .then(willDelete => {
+            if (willDelete) {
+                this._LeccionarioServices.LeccionarioDocenteList[i].cod_profesor= parseInt(localStorage.getItem('cod_profesor'));
+                 this._LeccionarioServices.LeccionarioDocenteList[i].estado="E";
+                this._LeccionarioServices.InsertaLeccionario(this._LeccionarioServices.LeccionarioDocenteList[i]).subscribe(
+                            response=>{
+                                this._LeccionarioServices.LeccionarioDocenteList.splice(i, 1);
+                            },
+                            error=>{ console.log(error);});
             }
-
-
+          });
         }
 
         Edit(Itemplan,i, accion="u") {
@@ -139,12 +143,12 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                          {
                          this.ConsultaLecionario(this.bandera);
 
-                            alert("Lecionario Actulizado :)");
+                               swal("Leccionario!", "Lecionario Actulizado :) con exito!", "success");
                          }
                          else{
                              this.ConsultaLecionario(this.bandera);
-                          ///   this.resetForm();
-                             alert("Lecionario Guardado :)");
+                           swal("Leccionario!", "Lecionario Guardado :) con exito!", "success");
+
                          }
 
                       }
@@ -168,7 +172,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
       this._LeccionarioServices.InsertaLeccionarioArreglo(this.DatosLecionarioDocen).subscribe(
                  response=>{
                     console.log(this.DatosLecionarioDocen);
-                  alert("Guardo correctamente :)");
+                       swal("Leccionario!", "Guardo correctamente :) con exito!", "success");
+
                  },
                  error=>{ console.log(error);});
  }
@@ -179,10 +184,10 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
   console.log(this._LeccionarioServices.LeccionarioInspectorList[i]);
    this._LeccionarioServices.GeneraPDFLecionario(this._LeccionarioServices.LeccionarioInspectorList[i]).subscribe(
          (res) => {
-           //  saveAs(res, "myPDF.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
+           saveAs(res, "Leccionario.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
 
-         var fileURL = URL.createObjectURL(res);
-         window.open(fileURL);
+        /* var fileURL = URL.createObjectURL(res);
+         window.open(fileURL);*/
 
          }
      );
