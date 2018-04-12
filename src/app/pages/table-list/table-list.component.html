@@ -5,7 +5,7 @@
             <div class="col-md-12">
 
                     <div class="card-header ex1">
-                    
+
                     <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
                         <button class="btn btn-danger btn-block" (click)="Cambiamodal(i)">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
 
@@ -131,7 +131,8 @@
 
 
    <td> {{item.nombre}}</td>
-   <td> {{item.asistencia}}</td>
+   <td *ngIf="item.asistencia===true"> 1</td>
+   <td *ngIf="item.asistencia > 1"> {{item.asistencia}}</td>
    <td>{{item.abandono}}</td>
    <td>{{item.atraso}}</td>
     <td>{{item.retiro}}</td>
