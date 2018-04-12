@@ -5,8 +5,9 @@ import { DatePipe } from '@angular/common';
 import { ModelMateriasDocentes }  from '../../models/modelMaterias'
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
 import { saveAs } from 'file-saver/FileSaver';
-import * as swal from 'sweetalert';
-
+import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';
+//import  swal from 'sweetalert';
 @Component({
   selector: 'app-table-list',
   templateUrl: './table-list.component.html',
@@ -31,6 +32,7 @@ export class TableListComponent implements OnInit {
   fecha_ini:string;
   fechafin:string;
   detallesMaterias:Array<any>;
+   swal: SweetAlert = _swal as any;
   ////
   prueba:Array<any>;
 
@@ -73,7 +75,7 @@ export class TableListComponent implements OnInit {
                })
                console.log(nombres);
                if(Tipofalta===0) this.GuardaFaltas();
-               else    swal("Asistencia -.-", `Debe selecionar un tipo de falta a los siguientes alumnos: ${nombres}`, "warning")//
+               else    swal(`Debe selecionar un tipo de falta a los siguientes alumnos: ${nombres}`,"", "warning")//
             }
           else{
               this.GuardaFaltas();
@@ -100,7 +102,8 @@ export class TableListComponent implements OnInit {
           this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
                response=>{
                      //alert("Guardado exitosamente");
-                     swal("Asistencia", "Guardado exitosamente!", "success");//warning
+
+                      swal("Asistencias", "Guardado exitosamente!", "success");
                },
                error=>{
                         console.log(error);

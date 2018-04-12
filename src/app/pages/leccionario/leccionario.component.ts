@@ -5,7 +5,8 @@ import * as moment from 'moment';
 import {ModelLeccionarioDocente}  from '../../models/leccionario.docente.models';
 import { DatePipe } from '@angular/common';
 import { saveAs } from 'file-saver/FileSaver';
-import * as swal from 'sweetalert';
+import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';
 @Component({
   selector: 'app-leccionario',
   templateUrl: './leccionario.component.html',
@@ -29,6 +30,7 @@ DatosLecionarioDocen: Array<any>;
 bandera:string;
 accionDocente:string;
 descriphora:string;
+ swal: SweetAlert = _swal as any;
 public MLeccionarioDocente:ModelLeccionarioDocente;
   constructor(private _MateriasDocentesServices: MateriasDocenteService,
               private _LeccionarioServices:LeccionarioServices,
@@ -88,9 +90,12 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
         delete(i){
           swal({
             title: "¿Esta seguro de eliminar?",
-            text: "Al hacer click en Ok se eliminara la hora selecionada ¿Esta seguo?",
+            text: "Al hacer click en Ok se eliminara de detalle de la Planificación ¿Esta seguo?",
             icon: "warning",
-            dangerMode: true,
+            buttons: {
+                 cancel: true,
+                 confirm: true,
+               }
           })
           .then(willDelete => {
             if (willDelete) {

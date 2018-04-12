@@ -9,6 +9,8 @@ import { Planificacion  } from '../../models/planificacion';
 //import {DetallePlanAdmin} from '../models/DetallePlanAdmin.models';
 import * as $ from 'jquery';
 import { saveAs } from 'file-saver/FileSaver';
+import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';
 @Component({
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
@@ -44,6 +46,7 @@ export class PlanifiSemanalComponent implements OnInit {
   curso:string;
   errorCabecera: Array<any>;
   Paralelos: Array<any>;
+   swal: SweetAlert = _swal as any;
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
               private renderer: Renderer2,
@@ -193,12 +196,15 @@ export class PlanifiSemanalComponent implements OnInit {
     }
 
   delete(cod_deta,i){
-  
+  //  this.planificacionDetalleModel.cod_deta =cod_deta;
   swal({
     title: "¿Esta seguro de eliminar?",
     text: "Al hacer click en Ok se eliminara de detalle de la Planificación ¿Esta seguo?",
     icon: "warning",
-    dangerMode: true,
+    buttons: {
+         cancel: true,
+         confirm: true,
+       }
   })
   .then(willDelete => {
     if (willDelete) {
@@ -207,7 +213,7 @@ export class PlanifiSemanalComponent implements OnInit {
       this._PlanificacionServices.InsertDetalle(this._PlanificacionServices.ListPlanificacion[i]).subscribe(
                  response=>{
                      this._PlanificacionServices.ListPlanificacion.splice(i, 1);
-                     swal("Deleted!", "El detalle de Planificación se ah eliminado con exito!", "success");
+                     swal("Eliminado!", "El detalle de Planificación se ah eliminado con exito!", "success");
                  },
                  error=>{ console.log(error);});
     }
