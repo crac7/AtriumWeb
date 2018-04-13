@@ -20,7 +20,7 @@ const pagesRoutes: Routes =[
         children: [
           { path: 'dashboard',      component: DashboardComponent },
           { path: 'user-profile',   component: UserProfileComponent },
-          { path: 'Faltas-Atrasos',  component: TableListComponent },
+          { path: 'Asistencias',  component: TableListComponent },
           { path: 'Lecionario',      component: LeccionarioComponent },
           { path: 'Planificacion',   component: PlanifiSemanalComponent },
           { path: 'typography',     component: TypographyComponent },

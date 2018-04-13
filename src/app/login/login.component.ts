@@ -31,8 +31,8 @@ public datos:any;
      this._userService.signup(this.user).subscribe(
          ok=>{console.log("ok"+ok)
          this.user =new User('','');
-         
-         this._router.navigate(['/Faltas-Atrasos']);
+
+         this._router.navigate(['/Asistencias']);
        }
 
       );
