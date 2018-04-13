@@ -90,7 +90,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
         delete(i){
           swal({
             title: "¿Esta seguro de eliminar?",
-            text: "Al hacer click en Ok se eliminara de detalle de la Planificación ¿Esta seguo?",
+            text: "Al hacer click en Ok se eliminara ¿Esta seguo?",
             icon: "warning",
             buttons: {
                  cancel: true,
