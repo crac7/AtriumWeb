@@ -1,3 +1,3 @@
 export var Global ={
-   url:'http://localhost:80/api/'
+   url:'http://apiatrium.ecomundo.edu.ec/api/'
 };
