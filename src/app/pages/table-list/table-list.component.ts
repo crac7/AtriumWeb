@@ -174,7 +174,7 @@ console.log(this.Cabecera[0]);
             .subscribe(response => {
 
                   this.detallesMaterias = response;
-                ////llenar arreglo
+              
             },
             error=>{
                 var erroMessage= <any> error;
