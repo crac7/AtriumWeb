@@ -58,6 +58,7 @@ export class PlanificacionServices{
                                      'Authorization': 'bearer '+this.getToken()});
        this._http.post(this.url+'DetallePlanAdmin', params ,{headers: headers})
                         .map((data : Response) =>{
+                          console.log(data)
                         return data.json() as DetallePlanAdmin[];
                         }).toPromise().then(x => {
                         this.ListDetallePlanAdmin = x;

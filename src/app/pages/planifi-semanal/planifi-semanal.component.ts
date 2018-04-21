@@ -373,9 +373,9 @@ console.log(ususario);
 
                           elemen.observaciones=this.ObservacionAdmin;
                           elemen.fecha_revisado=moment().format('L');
-                          //console.log(elemen);
-                      })
 
+                      })
+                        console.log(  this._PlanificacionServices.ListDetallePlanAdmin);
                       this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
                                  response=>{
                                        if (response.ok) swal("Planificación", "Cambios Guardados correctamente :)!", "success")
