@@ -83,6 +83,7 @@ export class TableListComponent implements OnInit {
       }
 
         GuardaFaltas(){
+
           this.faltasAtraso=this._MateriasDocentesServices.AlumnCursosList
           for (let i in this.faltasAtraso) {
              this.faltasAtraso[i].cod_per =  this.codigoPeriodo;
@@ -96,7 +97,10 @@ export class TableListComponent implements OnInit {
              this.faltasAtraso[i].usuario=this.user.trim();
              this.faltasAtraso[i].justifica= (this.faltasAtraso[i].justifica)? 1:0 ;
              this.faltasAtraso[i].asistencia= (this.faltasAtraso[i].asistencia)? 1:0 ;
+             if(this.faltasAtraso[i].tipo_falta==5)
+            {  this.faltasAtraso[i].tipo_falta=0;}
           }
+        ///  console.log(this.faltasAtraso);
 
 
           this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
