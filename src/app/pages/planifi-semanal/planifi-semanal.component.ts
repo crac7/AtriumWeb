@@ -46,6 +46,7 @@ export class PlanifiSemanalComponent implements OnInit {
   curso:string;
   errorCabecera: Array<any>;
   Paralelos: Array<any>;
+  todosPlanes: Array<any>;
    swal: SweetAlert = _swal as any;
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
@@ -149,51 +150,72 @@ export class PlanifiSemanalComponent implements OnInit {
 
 
     ConsultaAdmin(){
+      if(this.planificacionCabeceraModel.unidad===0)
+      {
+       swal(`No ha seleccionado la unida -.-`,"", "warning")//
+      }
+      else
+     {
+       this.planificacionCabeceraModel.fecha_ini =this.fechain;
+        this.planificacionCabeceraModel.fecha_fin =this.fechafin;
 
-  this.planificacionCabeceraModel.fecha_ini =this.fechain;
-  this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+         if(this.bandera==='A'){
+            this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel);
 
-       if(this.bandera==='A'){
-          this._PlanificacionServices.ConsultaPlanAdmin(this.planificacionCabeceraModel);
+            //falta validacion cuando alla datos en la tabla que muestra admin
+            this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");///Habilita boton de guardas
+         }
+         else
+            {
+            this._PlanificacionServices.ListPlanificacion =[];///Limpia la tabla de los detalles
+             let cabecera;
+              this._PlanificacionServices.ConsultaPlanDocente(this.planificacionCabeceraModel)
+                            .subscribe(response=>{
 
-          //falta validacion cuando alla datos en la tabla que muestra admin
-          this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");///Habilita boton de guardas
-       }
-       else
-          {
-          this._PlanificacionServices.ListPlanificacion =[];///Limpia la tabla de los detalles
-           let cabecera;
-            this._PlanificacionServices.ConsultaPlanDocente(this.planificacionCabeceraModel)
-                          .subscribe(response=>{
+                              cabecera=response;
+                              if(cabecera!=null){
 
-                            cabecera=response;
-                            if(cabecera!=null){
+                                //LLeno la cabera del plan
+                                this.planificacionCabeceraModel=cabecera;///
 
-                              //LLeno la cabera del plan
-                              this.planificacionCabeceraModel=cabecera;///
-                                console.log(this.planificacionCabeceraModel);
-                              this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
-                            }
-                            else
-                            {
-                               this.planificacionCabeceraModel.t_unidad="";
-                               this.planificacionCabeceraModel.necesidad_educativa="";
-                               this.planificacionCabeceraModel.adaptacion_aplicada="";
-                               this.planificacionCabeceraModel.observaciones="";
-                               this.planificacionCabeceraModel.usuario_revisor="";
-                               this.planificacionCabeceraModel.usuario_revisor="";
-                               this.planificacionCabeceraModel.revisado=false;
-                               this.planificacionCabeceraModel.aprobado=false;
+                                this._PlanificacionServices.ConsultaPlanDocenteDetalle(this.planificacionCabeceraModel.cod_plan);
+                              }
+                              else
+                              {
+                                 this.planificacionCabeceraModel.t_unidad="";
+                                 this.planificacionCabeceraModel.necesidad_educativa="";
+                                 this.planificacionCabeceraModel.adaptacion_aplicada="";
+                                 this.planificacionCabeceraModel.observaciones="";
+                                 this.planificacionCabeceraModel.usuario_revisor="";
+                                 this.planificacionCabeceraModel.usuario_revisor="";
+                                 this.planificacionCabeceraModel.revisado=false;
+                                 this.planificacionCabeceraModel.aprobado=false;
 
-                            }
+                              }
 
-                          });
-                          ///Habilita boton de guardas
-             this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");
-          }
+                            });
+                            ///Habilita boton de guardas
+               this.renderer.removeAttribute(this.guardaTodo.nativeElement, "disabled");
+            }
 
-
+        }
     }
+
+
+      ConsultaTodosPlan(){
+        if(this.planificacionCabeceraModel.unidad!=0)
+        {
+          this.planificacionCabeceraModel.fecha_ini =this.fechain;
+          this.planificacionCabeceraModel.fecha_fin =this.fechafin;
+          this._PlanificacionServices.ConsultaPlanTodos(this.planificacionCabeceraModel)
+                        .subscribe(response=>{
+                        this.todosPlanes=response});
+        }
+
+      }
+
+
+
 
   delete(cod_deta,i){
   //  this.planificacionDetalleModel.cod_deta =cod_deta;
@@ -375,7 +397,7 @@ console.log(ususario);
                           elemen.fecha_revisado=moment().format('L');
 
                       })
-                        console.log(  this._PlanificacionServices.ListDetallePlanAdmin);
+
                       this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
                                  response=>{
                                        if (response.ok) swal("Planificación", "Cambios Guardados correctamente :)!", "success")
@@ -423,6 +445,31 @@ console.log(ususario);
       this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
 
       }
+
+        DeletePlan(){
+
+      //  console.log(this._PlanificacionServices.ListDetallePlanAdmin);
+        swal({
+          title: "¿Esta seguro de eliminar?",
+          text: "Al hacer click en Ok se eliminara ¿Esta seguo?",
+          icon: "warning",
+          buttons: {
+               cancel: true,
+               confirm: true,
+             }
+        })
+        .then(willDelete => {
+          if (willDelete) {
+                console.log(this.planificacionCabeceraModel);
+              this._PlanificacionServices.deletePlan(this.planificacionCabeceraModel).subscribe(
+                          response=>{
+                          
+                            this.ConsultaAdmin();
+                          },
+                          error=>{ console.log(error);});
+          }
+        });
+        }
 
 
 
