@@ -43,6 +43,7 @@ export class MateriasDocenteService{
 
         this._http.post(this.url+'Docentesmaterias', params ,{headers: headers})
               .map((data : Response) =>{
+
               return data.json() as ModelMateriasDocentes[];
               }).toPromise().then(x => {
               this.MateriasDocentesList = x;
@@ -80,6 +81,19 @@ export class MateriasDocenteService{
             })
         }
 
+        ConsultaRegistrado(cursoDatos){
+              let json = JSON.stringify(cursoDatos);
+
+              let params =json;
+
+              let headers = new Headers({'Content-Type':'application/json',
+                                          'Authorization': 'bearer '+this.getToken()});
+
+              return this._http.post(this.url+'AlumnosCurso', params ,{headers: headers})
+                       .map(res => res.json());
+          }
+
+          
         InsFaltasAtrasos(curso){
 
                    let json = JSON.stringify(curso);

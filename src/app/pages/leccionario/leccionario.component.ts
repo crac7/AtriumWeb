@@ -38,8 +38,11 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
   ngOnInit() {
   this.MLeccionarioDocente= new ModelLeccionarioDocente(0,0,0,'',0,0,0,0,'','','',false,'','','',0,'', 0,'','','','','','','');
-    this.fecha =moment().format('L');   //
-      this.fechafin=moment().format('L');   //
+
+
+      this.fecha  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+      this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+
     this._MateriasDocentesServices.MateriasDocentes('L');
     this._MateriasDocentesServices.UnidadesDocentes();
     this._LeccionarioServices.HorariosDocentes();
@@ -64,6 +67,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                      inspector:i.inspector,
                 }];
     this.visible=false;
+    this.fecha  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
   }
         ConsultaLecionario(accion){
@@ -177,7 +182,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
       this._LeccionarioServices.InsertaLeccionarioArreglo(this.DatosLecionarioDocen).subscribe(
                  response=>{
-                    console.log(this.DatosLecionarioDocen);
+              //      console.log(this.DatosLecionarioDocen);
                        swal("Leccionario!", "Guardo correctamente :) con exito!", "success");
 
                  },
@@ -205,7 +210,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
     this.unidad =0;
     this._LeccionarioServices.LeccionarioDocenteList=[];
     this.indexEditLecionario=0;
-
+    this.fecha  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.visible=true;
   }
 }

@@ -28,11 +28,12 @@ export class TableListComponent implements OnInit {
   AlumnosCurso:Array<any>;
   bandera:string;
   codProfesor:string;
-  unidad:number;
+  unidad:number=0;
   fecha_ini:string;
   fechafin:string;
   detallesMaterias:Array<any>;
    swal: SweetAlert = _swal as any;
+   estado:string;
   ////
   prueba:Array<any>;
 
@@ -42,7 +43,7 @@ export class TableListComponent implements OnInit {
   }
 
   ngOnInit() {
-     this.fecha =moment().format('L');   //
+     this.fecha =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
      this.fecha_ini=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
      this.fechafin=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
@@ -59,28 +60,9 @@ export class TableListComponent implements OnInit {
                      { name: "Retirado",valor:3},
                      { name: "Abandono", valor:4}];
 
+      this.estado="SIN CONSULTAR";
+
   }
-
-      onSubmiLeccionario(){
-       let Tipofalta=0 , nombres=[];
-            if(this.bandera ==="A")
-            {
-               this._MateriasDocentesServices.AlumnCursosList.map((elemen)=>{
-                    if(elemen.tipo_falta==0){
-
-                    //  alert(`Debe selecionar un tipo de falta al alumno: ${elemen.nombre}`)
-                        nombres.push(elemen.nombre)
-                      Tipofalta++;
-                    }
-               })
-               console.log(nombres);
-               if(Tipofalta===0) this.GuardaFaltas();
-               else    swal(`Debe selecionar un tipo de falta a los siguientes alumnos: ${nombres}`,"", "warning")//
-            }
-          else{
-              this.GuardaFaltas();
-          }
-      }
 
         GuardaFaltas(){
 
@@ -100,13 +82,13 @@ export class TableListComponent implements OnInit {
              if(this.faltasAtraso[i].tipo_falta==5)
             {  this.faltasAtraso[i].tipo_falta=0;}
           }
-        ///  console.log(this.faltasAtraso);
+
 
 
           this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
                response=>{
                      //alert("Guardado exitosamente");
-
+                     this.ConsultarAlumnos();
                       swal("Asistencias", "Guardado exitosamente!", "success");
                },
                error=>{
@@ -116,6 +98,7 @@ export class TableListComponent implements OnInit {
         }
 
   Cambiamodal(i){
+    this.unidad=0;
     if(this.bandera ==="A"){
           this.faltas =[  { name: "Falta", valor:1},
                           { name: "Atraso", valor:2},
@@ -147,30 +130,38 @@ export class TableListComponent implements OnInit {
 
     this.visible=false;
   }
-ConsultarAlumnos(unidad:number) : void{
- this.unidad=unidad;
-  console.log(this.fecha);
+ConsultarAlumnos() : void{
+
    this.AlumnosCurso=[{
                       cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
                       let_per: this.letPeriodo,
                       cod_curso: this.Cabecera[0].codCurso,
                       cod_paralelo: this.Cabecera[0].codParalelo,
                       cod_materia: this.Cabecera[0].codMateria,
-                      unidad: unidad,
+                      unidad: this.unidad,
                       fecha:  this.fecha,
                       cod_profesor:  this.codProfesor
                     }]
 
 
-   this._MateriasDocentesServices.AlumnosCurso(this.AlumnosCurso[0]);
+     this._MateriasDocentesServices.AlumnosCurso(this.AlumnosCurso[0]);
+            // console.log(this._MateriasDocentesServices.AlumnCursosList);
 
+      this._MateriasDocentesServices.ConsultaRegistrado(this.AlumnosCurso[0]).subscribe(response => {
+            this.estado=response[0].registro;
+          },
+          error=>{
+                 var body =JSON.parse(error);
+
+                  console.log(error);
+          })
 
 }
 
 
 DetalleAlum(codAlumno){
 
-console.log(this.Cabecera[0]);
+
   const detalle = {
         cod_per:   this.codigoPeriodo,
         let_per: this.letPeriodo,
@@ -219,7 +210,11 @@ checkAll(ev) {
     this.Cabecera=null;
     this.visible=true;
     this._MateriasDocentesServices.AlumnCursosList=[];
-     this.fecha =moment().format('L');   //
+    this.fecha =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fecha_ini=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fechafin=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+       this.unidad=0;
+       this.estado="SIN CONSULTAR";
   }
 
   GeneraPDF(){
@@ -237,7 +232,7 @@ checkAll(ev) {
                        fecha_fin: this.fechafin
                      }]
 
-                      console.log(this.Cabecera);
+
   this._MateriasDocentesServices.GeneraPDFaltas(this.DatoPDF).subscribe(
         (res) => {
             saveAs(res, `Asist_${this.Cabecera[0].curso}_${this.Cabecera[0].paralelo}.pdf`); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver

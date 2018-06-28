@@ -40,6 +40,7 @@ export class UserService{
       localStorage.setItem('e_mail',  datos.e_mail);
       localStorage.setItem('username',  datos.username);
       localStorage.setItem('bandera',  datos.bandera);
+      localStorage.setItem('cod_emp',  '1');
        this.getToken();
    }
    logout() {

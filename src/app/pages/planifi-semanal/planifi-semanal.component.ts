@@ -5,7 +5,9 @@ import { NgForm } from '@angular/forms'
 import { PlanificacionServices  } from '../../services/planificacion.services';
 import { MateriasDocenteService } from '../../services/materiasDocentes.services'
 import * as moment from 'moment';
+import { extendMoment } from 'moment-range';
 import { Planificacion  } from '../../models/planificacion';
+import {LeccionarioServices} from '../../services/leccionario.services'
 //import {DetallePlanAdmin} from '../models/DetallePlanAdmin.models';
 import * as $ from 'jquery';
 import { saveAs } from 'file-saver/FileSaver';
@@ -15,12 +17,12 @@ import { SweetAlert } from 'sweetalert/typings/core';
   selector: 'app-planifi-semanal',
   templateUrl: './planifi-semanal.component.html',
   styleUrls: ['./planifi-semanal.component.scss'],
-   providers :[PlanificacionServices,MateriasDocenteService, DatePipe]
+   providers :[PlanificacionServices,MateriasDocenteService, DatePipe,LeccionarioServices]
 })
 export class PlanifiSemanalComponent implements OnInit {
   @ViewChild("guardarModal") guardarModal: ElementRef;
   @ViewChild("guardaTodo") guardaTodo: ElementRef;
-    @ViewChild("guardaDuplica") guardaDuplica: ElementRef;
+  //  @ViewChild("guardaDuplica") guardaDuplica: ElementRef;
     @ViewChild("modal") modal: ElementRef;
   ///  public DetallePlanAdminModel:  DetallePlanAdmin;
   public planificacionCabeceraModel: PlanificacionCabeceraModel;
@@ -31,6 +33,7 @@ export class PlanifiSemanalComponent implements OnInit {
   ObservacionAdmin:string;
   bandera:string;
   itemsPlan: Array<any>;
+    ArregloFechas: Array<any>=[];
   tablaAministrador: Array<any>;
   accion:string;
   index:number;
@@ -48,10 +51,13 @@ export class PlanifiSemanalComponent implements OnInit {
   Paralelos: Array<any>;
   todosPlanes: Array<any>;
    swal: SweetAlert = _swal as any;
+   cod_paralelo_duplicado:string;
+   cod_deta_dias;
   constructor(public _PlanificacionServices: PlanificacionServices,
               private _MateriasDocentesServices: MateriasDocenteService,
               private renderer: Renderer2,
             private datePipe: DatePipe,
+                private _LeccionarioServices:LeccionarioServices,
             )
               {
       this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0);
@@ -74,12 +80,13 @@ export class PlanifiSemanalComponent implements OnInit {
      this.IniciaCabcera();
   }
 
-  fecha(){
+  /*fecha(){
+    this.fechain=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    this.fechafin=this.datePipe.transform(new Date(), 'yyyy-MM-dd');
+    //this.fechain  =this.datePipe.transform(this.fechain, 'yyyy-MM-dd');
+    //this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
 
-    this.fechain  =this.datePipe.transform(this.fechain, 'yyyy-MM-dd');
-    this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
-
-  }
+  }*/
   IniciaCabcera(){
     this.planificacionCabeceraModel.cod_per =localStorage.getItem('cod_per');
     this.planificacionCabeceraModel.let_per = localStorage.getItem('let_per');
@@ -87,36 +94,43 @@ export class PlanifiSemanalComponent implements OnInit {
     this.planificacionCabeceraModel.cod_profesor = localStorage.getItem('cod_profesor');
     this.fechain  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    /*this.planificacionCabeceraModel.fecha_ini =moment().format('L');
-      this.planificacionCabeceraModel.fecha_fin =moment().format('L');*/
-    this.planificacionCabeceraModel.cod_emp=1;
+
+    this.planificacionCabeceraModel.cod_emp= parseInt(localStorage.getItem('cod_emp'));
+
   }
 
   Cambiamodal(i){
 
+    this.ArregloFechas=[];
     this.visible=false;
     this.materia=i.Dm;
     this.paralelo=i.Dp;
     this.curso=i.Dca;
     this.planificacionCabeceraModel.cod_curso= (this.bandera==='A')?i.cod_curso[0]:i.cod_curso;
     this.planificacionCabeceraModel.cod_paralelo= i.cod_paralelo;
+  //  this.planificacionCabeceraModel.cod_paralelo_duplicado= i.cod_paralelo;
     this.planificacionCabeceraModel.cod_mat= i.cod_materia;
+   this.planificacionCabeceraModel.cod_paralelo_duplicado=this.planificacionCabeceraModel.cod_paralelo;
+    this.cod_paralelo_duplicado=i.cod_paralelo;
+         this.cod_deta_dias=  i.cod_paralelo;
 ///////////////////////////Hacer la consulta al sps de los paralelos y llenarlo////////
         this._PlanificacionServices.ConsultaParalelo(this.planificacionCabeceraModel).subscribe(
                          response=>{
                               this.Paralelos=response;
-                              if(this.Paralelos.length>0){
+                            /*  if(this.Paralelos.length>0){
                                  this.renderer.removeAttribute(this.guardaDuplica.nativeElement, "disabled");///Habilita boton de guardas
-                              }
+                              }*/
 
                                },
                          error=>{
+
                               console.log(error);
                             }
                       );
   }
 
       Duplica(){
+
        if(this.planificacionCabeceraModel.cod_paralelo_duplicado>0)
         {
           this.GuardaTodo()
@@ -126,6 +140,7 @@ export class PlanifiSemanalComponent implements OnInit {
 
                                    },
                            error=>{
+                               swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
                                 console.log(error);
                               }
                         );
@@ -148,6 +163,118 @@ export class PlanifiSemanalComponent implements OnInit {
       this.resetForm();
   }
 
+      CreaDias(cod_deta){
+
+        /**********************Fechas**************************************************/
+        
+           this.cod_deta_dias=  cod_deta ;
+
+           this.ArregloFechas=[];
+            moment.locale('es');//español
+            const momentrange = extendMoment(moment);
+
+            let startfecha = moment(this.fechain);
+            let endfecha = moment(this.fechafin);
+            let range = momentrange.range(startfecha, endfecha);
+
+            const dias = Array.from(range.by('days'));
+            let arrfechas=dias.filter(m => m.format('dddd')!="domingo" && m.format('dddd')!="sábado");
+
+
+           this._LeccionarioServices.HorariosDocentes();
+        /*****************************Datos para consultar***************************************/
+        let datos= new Object();
+            datos=this.planificacionCabeceraModel
+            datos["cod_detalle"]=cod_deta;
+            datos["date_ini"]= this.fechain;
+            datos["date_fin"]= this.fechafin;
+            datos["cod_paralelo_nuevo"]=this.cod_paralelo_duplicado;
+          /****************************************************************/
+
+          this._PlanificacionServices.ConsultaPlanificacionDiaria(datos).subscribe(
+                     response=>{
+                              if(response.length>0){
+                                   this.ArregloFechas=response;
+
+                                   this.ArregloFechas.map((elem)=>{
+                                     elem["cod_plan"]=this.planificacionCabeceraModel.cod_plan
+                                     elem["cod_detalle"]=cod_deta;
+                                     elem["cod_paralelo"]= this.planificacionCabeceraModel.cod_paralelo
+                                     elem["dias"]=moment(elem.fecha_hora).format('dddd')
+                                     elem["paralelo_nuevo"]=this.cod_paralelo_duplicado
+                                     elem["cod_materia"]=this.planificacionCabeceraModel.cod_mat
+                                     elem["fecha_ini"]=this.fechain
+                                     elem["fecha_fin"]=this.fechafin
+                                     elem.estado=(elem.estado==='A')? true: false;
+                                   })
+                                     console.log(`cod detalle :${cod_deta}`);
+                                    console.log(this.ArregloFechas);
+                              }
+                             else{
+                                arrfechas.map(m =>{
+                                        this.ArregloFechas.push({
+                                          "cod_emp":this.planificacionCabeceraModel.cod_emp,
+                                          "cod_per":this.planificacionCabeceraModel.cod_per,
+                                          "let_per":this.planificacionCabeceraModel.let_per ,
+                                          "cod_plan":this.planificacionCabeceraModel.cod_plan,
+                                          "cod_detalle":cod_deta,
+                                          "codhorario":0,/////todo la columna cambiar par consultar
+                                          "unidad":this.planificacionCabeceraModel.unidad,
+                                          "curso":this.planificacionCabeceraModel.cod_curso,
+                                          "cod_paralelo": this.planificacionCabeceraModel.cod_paralelo,
+                                          "cod_hora":0,
+                                          "cod_materia":this.planificacionCabeceraModel.cod_mat,
+                                          "cod_profe":this.planificacionCabeceraModel.cod_profesor,
+                                          "usuario":  this.planificacionCabeceraModel.usuario,
+                                          "dias" :m.format('dddd'),
+                                          "estado":false,
+                                          "fecha_ini": this.fechain,
+                                          "fecha_fin": this.fechafin,
+                                          "fecha_hora": m.format('YYYY-MM-DD'),
+                                          "paralelo_nuevo":  this.cod_paralelo_duplicado
+
+                                          })
+                                      })
+                             }
+
+                     },
+                     error=>{
+                         console.log(error);
+                      }
+                  );
+
+      }
+
+      /**********************Duplica el dia y la hora para el leccionario *************************************/
+      DuplicaHora(posicion,item){
+          console.log(item);
+            let objetoduplicar= new Object();
+            objetoduplicar= Object.assign({}, objetoduplicar , item );
+            objetoduplicar["codhorario"]=0;
+            console.log(objetoduplicar);
+           this.ArregloFechas.splice(posicion+1,0,objetoduplicar)
+      }
+   /****************************************************************/
+ /********************************Guarda Dias de leccionario *********************************************************/
+       GuardaDiaLeccionario(){
+
+        this.ArregloFechas.map((elem)=>{elem.paralelo_nuevo=this.cod_paralelo_duplicado});
+        console.log(this.ArregloFechas);
+
+        this._PlanificacionServices.InsertaPlanificacionDiaria(this.ArregloFechas).subscribe(
+                   response=>{
+
+                     swal("Planificación", "Cambios Guardados correctamente :)!", "success")
+                   },
+                   error=>{
+                       console.log(error);
+                      swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                            console.log(error);
+
+                    }
+                );
+       }
+   /****************************************************************/
 
     ConsultaAdmin(){
       if(this.planificacionCabeceraModel.unidad===0)
@@ -237,7 +364,11 @@ export class PlanifiSemanalComponent implements OnInit {
                      this._PlanificacionServices.ListPlanificacion.splice(i, 1);
                      swal("Eliminado!", "El detalle de Planificación se ah eliminado con exito!", "success");
                  },
-                 error=>{ console.log(error);});
+                 error=>{
+                        swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                        console.log(error);
+
+                      });
     }
   });
 
@@ -246,7 +377,7 @@ export class PlanifiSemanalComponent implements OnInit {
 
 
 EditAdmin(Itemplan,i) {
-console.log(Itemplan.observaciones);
+
   this.ObservacionAdmin=Itemplan.observaciones;
    //this._PlanificacionServices.ListDetallePlanAdmin[i].observaciones=Itemplan;
 
@@ -272,6 +403,7 @@ this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetal
                   if (response.ok) swal("Planificación", "Cambios Guardados con Exito!", "success");//warning
            },
            error=>{
+                  swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
                   console.log(error);
               }
         );
@@ -284,7 +416,7 @@ GeneraPDF(i){
   }
 
 let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i].usuario:this.planificacionCabeceraModel.usuario;
-console.log(ususario);
+
   this._PlanificacionServices.GeneraPDFAdmin(
       (this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i]:this.planificacionCabeceraModel
       ).subscribe(
@@ -303,6 +435,7 @@ console.log(ususario);
     this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");///Habilita boton de guardas
       this.accion="u";/// u de update
       this.planificacionDetalleModel =Itemplan;
+      console.log(this.planificacionDetalleModel);
       this.index=i;
     }
     guardar(form: NgForm){
@@ -321,9 +454,13 @@ console.log(ususario);
 
                   this.planificacionCabeceraModel.cod_plan=response;
                   this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
+
                   this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
                              response=>{},
-                             error=>{console.log(`Error al inserta cabecera ${error}`);});
+                             error=>{
+                                  swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                               console.log(`Error al inserta cabecera ${error}`);
+                             });
                  });
         }
 
@@ -332,12 +469,13 @@ console.log(ususario);
                      response=>{
                                  if(this.accion==="u")
                                  {
-                                   this._PlanificacionServices.ListPlanificacion[this.index] =response[0] ;
+                                       this.ConsultaAdmin();
                                     this.resetForm();
                                      swal("Planificación", "Detalle de Planificación Actulizado :)!", "success");//warning
                                  }
                                  else{
-                                     this._PlanificacionServices.ListPlanificacion.push(response[0]);
+
+                                       this.ConsultaAdmin();
                                      this.resetForm();
                                         swal("Planificación", "Detalle de Planificación Guardado :)!", "success");//warning
 
@@ -345,6 +483,7 @@ console.log(ususario);
 
                      },
                      error=>{
+                         swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
                               console.log(error);
                         }
                   );
@@ -352,7 +491,7 @@ console.log(ususario);
 
 
     insertaCabcera(GuardTo=false){
-     //console.log(this.planificacionCabeceraModel);
+
         if(this.planificacionCabeceraModel.unidad===0)
         {
           this.renderer.setAttribute(this.guardarModal.nativeElement, "disabled", "true");//Desabilita
@@ -364,13 +503,24 @@ console.log(ususario);
 
                 ///habilita la pnatalla para ingresar los detalles
                 this.bloquedoModal=true;
+
                 ///Habilita boton de guardas
+
                 this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");
                 if(this.planificacionCabeceraModel.cod_plan===0) this.GenerarCodigo();
                 else{
+                    console.log(this.planificacionCabeceraModel);
                    this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
-                              response=>{if(response.ok && GuardTo) swal("Planificación", "Cabecera de Planificacion guarda :)!", "success");},
-                               error=>{console.log(`Error al inserta cabecera ${error}`);});
+                              response=>{
+
+                                if(response.ok && GuardTo ){
+                                 swal("Planificación", "Planificacion guardada exitosamente :D !", "success")
+                                 };
+                              },
+                               error=>{
+                                   swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                                 console.log(`Error al inserta cabecera ${error}`);
+                               });
 
                     }
           }
@@ -380,7 +530,7 @@ console.log(ususario);
     }
 
       GuardaTodo(){
-        //this.insertaCabcera();
+
         if(this.bandera==="A")
           {    if(this._PlanificacionServices.ListDetallePlanAdmin.length>0)
               {
@@ -403,6 +553,7 @@ console.log(ususario);
                                        if (response.ok) swal("Planificación", "Cambios Guardados correctamente :)!", "success")
                                  },
                                  error=>{
+                                     swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
                                         console.log(error);
                                     }
                               );
@@ -411,6 +562,7 @@ console.log(ususario);
             }
             else
             {
+
               this.insertaCabcera(true);
             }
       }
@@ -425,11 +577,12 @@ console.log(ususario);
                     (this.bandera==="A")? this._PlanificacionServices.ListDetallePlanAdmin[i]:this.planificacionCabeceraModel
                 ).subscribe(
                     response=>{
-                          console.log(response.message);
+
                           swal("Planificación", response.message, "success")
 
                           },
                     error=>{
+                        swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
                          console.log(error);
                        }
                  );
@@ -460,13 +613,16 @@ console.log(ususario);
         })
         .then(willDelete => {
           if (willDelete) {
-                console.log(this.planificacionCabeceraModel);
+
               this._PlanificacionServices.deletePlan(this.planificacionCabeceraModel).subscribe(
                           response=>{
-                          
+                          swal("Planificación", "La Planificación ha sido eliminada", "success")
                             this.ConsultaAdmin();
                           },
-                          error=>{ console.log(error);});
+                          error=>{
+                      swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                            console.log(error);
+                          });
           }
         });
         }

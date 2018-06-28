@@ -21,7 +21,7 @@ const pagesRoutes: Routes =[
           { path: 'dashboard',      component: DashboardComponent },
           { path: 'user-profile',   component: UserProfileComponent },
           { path: 'Asistencias',  component: TableListComponent },
-          { path: 'Lecionario',      component: LeccionarioComponent },
+          { path: 'Leccionario',      component: LeccionarioComponent },
           { path: 'Planificacion',   component: PlanifiSemanalComponent },
           { path: 'typography',     component: TypographyComponent },
           { path: 'icons',          component: IconsComponent },

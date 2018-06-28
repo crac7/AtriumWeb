@@ -26,7 +26,7 @@ export class LeccionarioServices {
 
   HorariosDocentes(){
      let datos={
-                    cod_emp:      1,
+                    cod_emp:      localStorage.getItem('cod_emp'),
                     cod_per:     localStorage.getItem('cod_per'),
                     let_per:       localStorage.getItem('let_per'),
 
@@ -48,7 +48,7 @@ export class LeccionarioServices {
 
     ConsultaLeccionario(datos){
       const ConLeccionarioDo = {
-            cod_emp:1,
+            cod_emp:localStorage.getItem('cod_emp'),
             cod_per: localStorage.getItem('cod_per'),
             let_per:  localStorage.getItem('let_per'),
             cod_curso  :datos.cod_curso,
@@ -95,7 +95,7 @@ export class LeccionarioServices {
 
     ConsultaLeccionarioInspector(datos){
       const ConLeccionarioDo = {
-            cod_emp:1,
+            cod_emp:localStorage.getItem('cod_emp'),
             cod_per: localStorage.getItem('cod_per'),
             let_per:  localStorage.getItem('let_per'),
             cod_curso  :datos.cod_curso,

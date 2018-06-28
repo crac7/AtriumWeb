@@ -5,6 +5,7 @@ export class ModelAlumnCursos{
     tipo_falta: number;
     justifica: boolean;//boolean
     observacion: string;
+    registro: string;
 
     /*"cod_alum": 2011070049,
            "nombre": "ALBAN ALAVA DAVID ERNESTO",
