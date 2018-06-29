@@ -166,7 +166,7 @@ export class PlanifiSemanalComponent implements OnInit {
       CreaDias(cod_deta){
 
         /**********************Fechas**************************************************/
-        
+
            this.cod_deta_dias=  cod_deta ;
 
            this.ArregloFechas=[];
@@ -454,7 +454,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
 
                   this.planificacionCabeceraModel.cod_plan=response;
                   this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
-
+                   console.log(this.planificacionCabeceraModel);
                   this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
                              response=>{},
                              error=>{
