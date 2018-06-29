@@ -37,7 +37,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                 private datePipe: DatePipe) { }
 
   ngOnInit() {
-  this.MLeccionarioDocente= new ModelLeccionarioDocente(0,0,0,'',0,0,0,0,'','','',false,'','','',0,'', 0,'','','','','','','');
+  this.MLeccionarioDocente= new ModelLeccionarioDocente(0,0,0,'',0,0,0,0,'','','',false,'','','',0,'', 0,'','','','','','','','');
 
 
       this.fecha  =this.datePipe.transform(new Date(), 'yyyy-MM-dd');

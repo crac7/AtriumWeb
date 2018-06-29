@@ -135,7 +135,7 @@
                             <tbody>
 
                                 <tr *ngFor="let item of _LeccionarioServices.LeccionarioDocenteList; let i=index ">
-                                    <td>{{item.des_hora}}</td>
+                                    <td>{{item.descripcion}}</td>
                                     <td>
                                      {{item.destrezas}}
                                     </td>
@@ -219,7 +219,7 @@
    <div class="col-6 col-sm-3">
        <p class="category">Selecione Un Horario:
          <select #hora="ngModel" name="hora"  [(ngModel)]="MLeccionarioDocente.cod_hora"  >
-         <option *ngFor="let horario of _LeccionarioServices.HorariosList" [value]="horario.cod_horario">{{horario.descripcion}}</option>
+         <option *ngFor="let horario of _LeccionarioServices.HorariosList" [value]="horario.cod_horario">{{horario.horas}}</option>
          </select>
    </div>
     </div>
