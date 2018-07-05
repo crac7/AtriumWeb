@@ -108,7 +108,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
                  this._LeccionarioServices.LeccionarioDocenteList[i].estado="E";
                 this._LeccionarioServices.InsertaLeccionario(this._LeccionarioServices.LeccionarioDocenteList[i]).subscribe(
                             response=>{
-                                this._LeccionarioServices.LeccionarioDocenteList.splice(i, 1);
+                                 this.ConsultaLecionario(this.bandera);
                             },
                             error=>{ console.log(error);});
             }
@@ -149,8 +149,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
         this._LeccionarioServices.InsertaLeccionario(this.MLeccionarioDocente).subscribe(
                    response=>{
 
-                     if(response.length>0)
-                      {  if(this.accionDocente==="u")
+
+                         if(this.accionDocente==="u")
                          {
                          this.ConsultaLecionario(this.bandera);
 
@@ -162,7 +162,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
                          }
 
-                      }
+
 
                    },
                    error=>{ console.log(error);});

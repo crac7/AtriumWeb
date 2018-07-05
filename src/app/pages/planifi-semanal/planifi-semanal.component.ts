@@ -22,7 +22,7 @@ import { SweetAlert } from 'sweetalert/typings/core';
 export class PlanifiSemanalComponent implements OnInit {
   @ViewChild("guardarModal") guardarModal: ElementRef;
   @ViewChild("guardaTodo") guardaTodo: ElementRef;
-  //  @ViewChild("guardaDuplica") guardaDuplica: ElementRef;
+    @ViewChild("guardaDuplica") guardaDuplica: ElementRef;
     @ViewChild("modal") modal: ElementRef;
   ///  public DetallePlanAdminModel:  DetallePlanAdmin;
   public planificacionCabeceraModel: PlanificacionCabeceraModel;
@@ -60,7 +60,7 @@ export class PlanifiSemanalComponent implements OnInit {
                 private _LeccionarioServices:LeccionarioServices,
             )
               {
-      this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0);
+      this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0,'');
     this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
     //this.DetallePlanAdminModel=
               }
@@ -88,6 +88,7 @@ export class PlanifiSemanalComponent implements OnInit {
 
   }*/
   IniciaCabcera(){
+
     this.planificacionCabeceraModel.cod_per =localStorage.getItem('cod_per');
     this.planificacionCabeceraModel.let_per = localStorage.getItem('let_per');
     this.planificacionCabeceraModel.usuario= localStorage.getItem('username');
@@ -96,6 +97,7 @@ export class PlanifiSemanalComponent implements OnInit {
     this.fechafin =this.datePipe.transform(new Date(), 'yyyy-MM-dd');
 
     this.planificacionCabeceraModel.cod_emp= parseInt(localStorage.getItem('cod_emp'));
+
 
   }
 
@@ -117,9 +119,9 @@ export class PlanifiSemanalComponent implements OnInit {
         this._PlanificacionServices.ConsultaParalelo(this.planificacionCabeceraModel).subscribe(
                          response=>{
                               this.Paralelos=response;
-                            /*  if(this.Paralelos.length>0){
+                             if(this.Paralelos.length>0){
                                  this.renderer.removeAttribute(this.guardaDuplica.nativeElement, "disabled");///Habilita boton de guardas
-                              }*/
+                              }
 
                                },
                          error=>{
@@ -152,15 +154,14 @@ export class PlanifiSemanalComponent implements OnInit {
 
   Atras()
   {
-     this._PlanificacionServices.ListDetallePlanAdmin=[];
-    this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0);
-     this.IniciaCabcera();
+       this._PlanificacionServices.ListDetallePlanAdmin=[];
+       this.planificacionCabeceraModel=  new PlanificacionCabeceraModel(0,0,'','',0,0,0,'',0,'','','','',0,'','','',false,'','',false,'','',0,'');
+       this.IniciaCabcera();
        this.planificacionDetalleModel= new Planificacion(0,0,'','','','','','','','','');
-    this.visible=true;
-
-    this._PlanificacionServices.ListPlanificacion =[];
-      this.bloquedoModal=false;
-      this.resetForm();
+       this.visible=true;
+       this._PlanificacionServices.ListPlanificacion =[];
+       this.bloquedoModal=false;
+       this.resetForm();
   }
 
       CreaDias(cod_deta){
@@ -244,7 +245,12 @@ export class PlanifiSemanalComponent implements OnInit {
                   );
 
       }
-
+      /**********************Elimina Dias**************************************/
+    /* no lo puse por que falta funcionalidad
+    DeleteDias(i){
+      console.log(i);
+         this.ArregloFechas.splice(i, 1);
+      }*
       /**********************Duplica el dia y la hora para el leccionario *************************************/
       DuplicaHora(posicion,item){
           console.log(item);
@@ -279,7 +285,7 @@ export class PlanifiSemanalComponent implements OnInit {
     ConsultaAdmin(){
       if(this.planificacionCabeceraModel.unidad===0)
       {
-       swal(`No ha seleccionado la unida -.-`,"", "warning")//
+       swal(`No ha seleccionado la unidad -.-`,"", "warning")//
       }
       else
      {
@@ -363,6 +369,7 @@ export class PlanifiSemanalComponent implements OnInit {
                  response=>{
                      this._PlanificacionServices.ListPlanificacion.splice(i, 1);
                      swal("Eliminado!", "El detalle de Planificación se ah eliminado con exito!", "success");
+
                  },
                  error=>{
                         swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
@@ -397,10 +404,10 @@ GuardarModalAdmin(){
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].cod_profesor =localStorage.getItem('cod_profesor')
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
-
+ //this._PlanificacionServices.ListPlanificacion[this.indexAdmin].estado="A";
 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
            response=>{
-                  if (response.ok) swal("Planificación", "Cambios Guardados con Exito!", "success");//warning
+                  swal("Planificación", "Cambios Guardados con Exito!", "success");//warning
            },
            error=>{
                   swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
@@ -447,7 +454,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
 
       }
 
-    GenerarCodigo(){
+  /*  GenerarCodigo(){
 
           this._PlanificacionServices.GeneraCodigo().subscribe(
                response=>{
@@ -455,6 +462,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                   this.planificacionCabeceraModel.cod_plan=response;
                   this.planificacionDetalleModel.cod_plan=this.planificacionCabeceraModel.cod_plan;
                    console.log(this.planificacionCabeceraModel);
+                    this.planificacionCabeceraModel.estado ="A";
                   this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
                              response=>{},
                              error=>{
@@ -462,7 +470,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                                console.log(`Error al inserta cabecera ${error}`);
                              });
                  });
-        }
+        }*/
 
     GuardarDetalle(){
       this._PlanificacionServices.InsertDetalle(this.planificacionDetalleModel).subscribe(
@@ -507,22 +515,26 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                 ///Habilita boton de guardas
 
                 this.renderer.removeAttribute(this.guardarModal.nativeElement, "disabled");
-                if(this.planificacionCabeceraModel.cod_plan===0) this.GenerarCodigo();
-                else{
-                    console.log(this.planificacionCabeceraModel);
+                //if(this.planificacionCabeceraModel.cod_plan===0) this.GenerarCodigo();
+
+
+                     this.planificacionCabeceraModel.estado="A";
+                      console.log(this.planificacionCabeceraModel);
                    this._PlanificacionServices.InsertCabecera(this.planificacionCabeceraModel).subscribe(
                               response=>{
+                                    console.log(response.cod_plan);
+                                     this.planificacionCabeceraModel.cod_plan=response.cod_plan;
 
-                                if(response.ok && GuardTo ){
+                                  if(GuardTo){
                                  swal("Planificación", "Planificacion guardada exitosamente :D !", "success")
                                  };
                               },
                                error=>{
-                                   swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
+                                  // swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :( plan", "error");
                                  console.log(`Error al inserta cabecera ${error}`);
                                });
 
-                    }
+
           }
 
      this.resetForm();
@@ -547,10 +559,12 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                           elemen.fecha_revisado=moment().format('L');
 
                       })
-
+                      console.log(this._PlanificacionServices.ListDetallePlanAdmin);
                       this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin).subscribe(
                                  response=>{
-                                       if (response.ok) swal("Planificación", "Cambios Guardados correctamente :)!", "success")
+                                  ///   console.log(response.cod_plan);
+                                       //this.planificacionCabeceraModel.cod_plan=response.cod_plan;
+                                       swal("Planificación", "Cambios Guardados correctamente :)!", "success")
                                  },
                                  error=>{
                                      swal("Opss... !", "Algo salio mal, vuelve intertar porfavor :(", "error");
@@ -628,6 +642,10 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
         }
 
 
-
+      ConsultaPlanes(item){
+        this.fechain  =moment(item.fecha_ini).format("YYYY-MM-DD");
+        this.fechafin  =moment(item.fecha_fin).format("YYYY-MM-DD");
+        this.ConsultaAdmin();
+      }
 
   }

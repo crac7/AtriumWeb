@@ -282,14 +282,14 @@
                                     <i class="material-icons">email</i>
                                 </a>
 
-                               <!---<div *ngIf="bandera==='P'" class="">
+                          <div *ngIf="bandera==='P'" class="">
                                  <p class="category">Duplicar en Paralelo :
                                    <select #Paralelo="ngModel" name="Paralelo"  [(ngModel)]="planificacionCabeceraModel.cod_paralelo_duplicado"  >
                                    <option *ngFor="let paralelo of Paralelos" [value]="paralelo.cod_paralelo">{{paralelo.des_paralelo}}</option>
                                    </select>
                                </div>
                                 <input  *ngIf="bandera==='P'" type="submit" #guardaDuplica value="Duplica"  (click)="Duplica()"   class="btn btn-success" disabled >
-                                  ----->
+
 
                                 <input  *ngIf="bandera==='P'" type="button"  value="Elimina Plan"   (click)="DeletePlan(bandera)" class="btn btn-warning"  >
                               </div>
@@ -342,6 +342,10 @@
                        <td>{{item.t_unidad}} </td>
                        <td>{{item.fecha_ini}}</td>
                        <td>{{item.fecha_fin}}</td>
+                       <td>
+                          <a  class="btn btn-info"   (click)="ConsultaPlanes(item)" data-dismiss="modal">
+                         <i class="material-icons">search</i> <span>Consulta</span>
+                       </a></td>
            </tr>
 
 
@@ -403,7 +407,9 @@
                                  <button type="button" rel="tooltip" title="View Profile" class="btn btn-info" (click)="DuplicaHora(i,item)">
                                            <i class="material-icons">add_box</i>
                                   </button>
+
                           </td>
+
               </tr>
             </tbody>
        </table>
