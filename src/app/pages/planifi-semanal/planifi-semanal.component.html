@@ -176,8 +176,8 @@
          <tr  *ngFor="let item of _PlanificacionServices.ListDetallePlanAdmin; let i=index "  >
 
                         <td>{{item.t_unidad}} </td>
-                        <td>{{item.fecha_ini}}</td>
-                        <td>{{item.fecha_fin}}</td>
+                        <td>{{item.fecha_ini | date:'yyyy-MM-dd'}}</td>
+                        <td>{{item.fecha_fin | date:'yyyy-MM-dd'}}</td>
                         <td>
                           <div class="checkbox">
                             <label>

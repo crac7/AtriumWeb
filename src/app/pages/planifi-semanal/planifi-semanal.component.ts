@@ -392,8 +392,8 @@ EditAdmin(Itemplan,i) {
   }
 GuardarModalAdmin(){
 
-  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_ini=this.fechain;
-  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_fin=this.fechafin;
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_ini=moment(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_ini).format("YYYY-MM-DD");
+  this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_fin=moment(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_fin).format("YYYY-MM-DD");
   if(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].revisado){
       this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].usuario_revisor =localStorage.getItem('username')
   }
@@ -404,7 +404,7 @@ GuardarModalAdmin(){
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].cod_profesor =localStorage.getItem('cod_profesor')
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].observaciones=this.ObservacionAdmin;
   this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin].fecha_revisado=moment().format('L');
- //this._PlanificacionServices.ListPlanificacion[this.indexAdmin].estado="A";
+ console.log(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]);
 this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetallePlanAdmin[this.indexAdmin]).subscribe(
            response=>{
                   swal("Planificación", "Cambios Guardados con Exito!", "success");//warning
@@ -547,6 +547,8 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
           {    if(this._PlanificacionServices.ListDetallePlanAdmin.length>0)
               {
                       this._PlanificacionServices.ListDetallePlanAdmin.map((elemen)=>{
+                        elemen.fecha_ini=moment(elemen.fecha_ini).format("YYYY-MM-DD");
+                        elemen.fecha_fin=moment(elemen.fecha_fin).format("YYYY-MM-DD");
                         if(elemen.revisado){
                             elemen.usuario_revisor =localStorage.getItem('username')
                         }
@@ -554,8 +556,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                             elemen.usuario_aprueba =localStorage.getItem('username')
                         }
                         elemen.cod_profesor =localStorage.getItem('cod_profesor');
-
-                          elemen.observaciones=this.ObservacionAdmin;
+                
                           elemen.fecha_revisado=moment().format('L');
 
                       })
