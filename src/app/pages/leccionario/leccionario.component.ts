@@ -85,11 +85,11 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
           if(accion==="P"){  this._LeccionarioServices.ConsultaLeccionario(datos);}
           if(accion==="A"){
             datos.fecha_fin=this.fechafin;
-          //  console.log(datos);
+
             this._LeccionarioServices.ConsultaLeccionarioInspector(datos);
 
           }
-        //  console.log(this._LeccionarioServices.LeccionarioDocenteList);
+
         }
 
         delete(i){
@@ -129,12 +129,6 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
           if(accion==="I") this.MLeccionarioDocente.firmado=false;
           this.indexEditLecionario=i;
           }
-
-
-
-
-
-
     GuardarLeccionario(modal:string="N"){
 
       this._LeccionarioServices.HorariosList.map((elemen)=>{
