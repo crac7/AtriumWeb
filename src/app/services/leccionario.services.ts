@@ -121,7 +121,7 @@ export class LeccionarioServices {
     }
 
     GeneraPDFLecionario(datos){
-
+swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this._usuarioService.token});
 

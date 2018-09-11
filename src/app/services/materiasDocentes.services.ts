@@ -93,7 +93,7 @@ export class MateriasDocenteService{
                        .map(res => res.json());
           }
 
-          
+
         InsFaltasAtrasos(curso){
 
                    let json = JSON.stringify(curso);
@@ -128,7 +128,7 @@ export class MateriasDocenteService{
   }
 
   GeneraPDFaltas(datos){
-
+swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
    let paramas =JSON.stringify(datos);
        let headers = new Headers({'Content-Type':'application/json',
                                    'Authorization': 'bearer '+this.getToken()});

@@ -59,7 +59,7 @@ export class PlanificacionServices{
                                      'Authorization': 'bearer '+this.getToken()});
        this._http.post(this.url+'DetallePlanAdmin', params ,{headers: headers})
                         .map((data : Response) =>{
-                    
+
                         return data.json() as DetallePlanAdmin[];
                         }).toPromise().then(x => {
                         this.ListDetallePlanAdmin = x;
@@ -104,7 +104,7 @@ export class PlanificacionServices{
 
     GeneraPDFAdmin(datos){
 
-
+swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this.getToken()});
 

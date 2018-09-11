@@ -15,7 +15,7 @@ export class LoginGuardGuard  implements CanActivate {
   canActivate(){
      this._usuarioService.getToken();
     if ( this._usuarioService.estaLogueado() ) {
-        console.log( 'PASO EL GUARD');
+        console.log( 'PASO EL GUARD a vel');
         return true;
       } else {
         console.log( 'Bloqueado por guard' );

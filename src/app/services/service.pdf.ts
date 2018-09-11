@@ -13,6 +13,7 @@ export class UserService{
    }
 
    GeneraPDFfaltas(){
+     swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
     let headers = new Headers({'Content-Type':'application/json',
                                 'Authorization': 'bearer '+this.getToken()});
 

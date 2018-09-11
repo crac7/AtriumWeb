@@ -186,7 +186,8 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
  GeneraPDF(i){
 
 //  this._LeccionarioServices.LeccionarioInspectorList[i].fecha =this.datePipe.transform(this._LeccionarioServices.LeccionarioInspectorList[i].fecha, 'yyyy-dd-MM');
-  console.log(this._LeccionarioServices.LeccionarioInspectorList[i]);
+  //console.log(this._LeccionarioServices.LeccionarioInspectorList[i]);
+  swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
    this._LeccionarioServices.GeneraPDFLecionario(this._LeccionarioServices.LeccionarioInspectorList[i]).subscribe(
          (res) => {
            saveAs(res, "Leccionario.pdf"); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver

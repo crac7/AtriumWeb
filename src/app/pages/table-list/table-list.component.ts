@@ -217,9 +217,14 @@ checkAll(ev) {
        this.estado="SIN CONSULTAR";
   }
 
+
+
+
+
+
   GeneraPDF(){
   //  this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
-
+    swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
     this.DatoPDF=[{
                        cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
                        let_per: this.letPeriodo,
@@ -231,7 +236,6 @@ checkAll(ev) {
                        cod_profesor:  this.codProfesor,
                        fecha_fin: this.fechafin
                      }]
-
 
   this._MateriasDocentesServices.GeneraPDFaltas(this.DatoPDF).subscribe(
         (res) => {

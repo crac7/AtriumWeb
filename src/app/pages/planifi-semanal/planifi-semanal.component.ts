@@ -417,7 +417,9 @@ this._PlanificacionServices.InsertCabecera(this._PlanificacionServices.ListDetal
 
 }
 GeneraPDF(i){
-  if(this.bandera==="P"){
+  console.log("Estamos en el PDF");
+  swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
+    if(this.bandera==="P"){
     this.planificacionCabeceraModel.fecha_ini =this.fechain;
     this.planificacionCabeceraModel.fecha_fin =this.fechafin;
   }
@@ -556,7 +558,7 @@ let ususario =(this.bandera==="A")? this._PlanificacionServices.ListDetallePlanA
                             elemen.usuario_aprueba =localStorage.getItem('username')
                         }
                         elemen.cod_profesor =localStorage.getItem('cod_profesor');
-                
+
                           elemen.fecha_revisado=moment().format('L');
 
                       })
