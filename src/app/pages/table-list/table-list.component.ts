@@ -103,7 +103,8 @@ export class TableListComponent implements OnInit {
           this.faltas =[  { name: "Falta", valor:1},
                           { name: "Atraso", valor:2},
                           { name: "Retirado",valor:3},
-                          { name: "Abandono", valor:4}];
+                          { name: "Abandono", valor:4},
+                          { name: "N/A", valor:5}];
 
         }
         else{
