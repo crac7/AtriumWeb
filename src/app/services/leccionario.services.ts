@@ -94,6 +94,7 @@ export class LeccionarioServices {
     }
 
     ConsultaLeccionarioInspector(datos){
+      console.log("datos de ConsultaLeccionarioInspector: ",datos);
       const ConLeccionarioDo = {
             cod_emp:localStorage.getItem('cod_emp'),
             cod_per: localStorage.getItem('cod_per'),
@@ -116,7 +117,7 @@ export class LeccionarioServices {
            }).toPromise().then(x => {
            this.LeccionarioInspectorList = x;
           })
-
+      console.log("ConsultaLeccionarioInspector variable--LeccionarioInspectorList: ",this.LeccionarioInspectorList);
 
     }
 
@@ -124,12 +125,13 @@ export class LeccionarioServices {
 swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
          let headers = new Headers({'Content-Type':'application/json',
                                      'Authorization': 'bearer '+this._usuarioService.token});
-
+                                     console.log("datos de GeneraPDFLecionario: ",datos);
     return this._http.post(this.url+'rpt/Leccionario',datos ,{headers: headers, responseType: ResponseContentType.Blob })
                       .map(
                             (res) => {
                                 return new Blob([res.blob()], { type: 'application/pdf' })
                         });
+    
     }
 }
 ///HorarioLecionario

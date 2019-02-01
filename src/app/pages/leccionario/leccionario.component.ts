@@ -89,7 +89,7 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
             this._LeccionarioServices.ConsultaLeccionarioInspector(datos);
 
           }
-
+          console.log("data de ConsultaLecionario: ",datos);
         }
 
         delete(i){
@@ -197,6 +197,9 @@ public MLeccionarioDocente:ModelLeccionarioDocente;
 
          }
      );
+
+     console.log("GeneraPDF variable i", i);
+     console.log("GeneraPDF variable", this._LeccionarioServices.LeccionarioInspectorList[i]);
  }
 
 
