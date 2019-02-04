@@ -94,7 +94,6 @@ export class LeccionarioServices {
     }
 
     ConsultaLeccionarioInspector(datos){
-      console.log("datos de ConsultaLeccionarioInspector: ",datos);
       const ConLeccionarioDo = {
             cod_emp:localStorage.getItem('cod_emp'),
             cod_per: localStorage.getItem('cod_per'),
@@ -103,7 +102,7 @@ export class LeccionarioServices {
             cod_paralelo  :datos.cod_paralelo,
             unidad  :datos.unidad,
             fecha_ini  :datos.fecha,
-            fecha_fin  :datos.fecha_fin,
+            fecha_fin  :datos.fecha_fin
         }
       let params =JSON.stringify(ConLeccionarioDo);
 
@@ -113,11 +112,14 @@ export class LeccionarioServices {
 
         this._http.post(this.url+'ConsultaLeccionarioInspector', params ,{headers: headers})
            .map((data : Response) =>{
+             console.log("response ", data);
            return data.json() as ModelLeccionarioInspector[];
+           
            }).toPromise().then(x => {
            this.LeccionarioInspectorList = x;
+           
           })
-      console.log("ConsultaLeccionarioInspector variable--LeccionarioInspectorList: ",this.LeccionarioInspectorList);
+          
 
     }
 
