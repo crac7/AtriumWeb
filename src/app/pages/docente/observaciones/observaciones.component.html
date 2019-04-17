@@ -1,95 +1,104 @@
 <div *ngIf="visible == false" class="main-content">
-  <div class="container-fluid">
-    <div class="card-content table-responsive">
-      <div class="row">
-        <div class="col-md-12">
+    <div class="container-fluid">
+        <div class="card-content table-responsive">
+            <div class="row">
+                <div class="col-md-12">
 
-          <div class="card-header ex1">
-            <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
-              <button class="btn btn-danger btn-block" (click)="Cambiamodal(i)">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
+                    <div class="card-header ex1">
+                        <div *ngFor="let i of _MateriasDocentesServices.MateriasDocentesList">
+                            <button class="btn btn-danger btn-block" (click)="Cambiamodal(i)">{{i.Dm}} {{i.Dca}} {{i.Dp}}</button>
 
+                        </div>
+                    </div>
+
+                </div>
             </div>
-          </div>
-
         </div>
-      </div>
     </div>
-  </div>
 </div>
 
 <div *ngIf="visible == true" class="main-content">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <!------------------------------------------------Cabecera de la tabla------------------------------------------------>
-          <!------------------------------------------------Cabecera de la tabla------------------------------------------------>
-          <div class="card-header">
-            <div class="row">
-              <div class="col-sm-12">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <!------------------------------------------------Cabecera de la tabla------------------------------------------------>
+                    <!------------------------------------------------Cabecera de la tabla------------------------------------------------>
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-12">
 
-                <div class="row no-gutters">
-                  <h4 *ngIf="content == false" class="title col-12 col-sm-6 col-md-8">Observaciones</h4>
-                  <h4 *ngIf="content == true" class="title col-12 col-sm-6 col-md-8">Registro Anecdóctico</h4>
-                  <div class="title col-6 col-md-4">REG 2.4.2.1</div>
-                </div>
-                <div class="row">
-                  <div class="col-md-4">
-                    <p class="category">Materia : <a class="contenido">{{Cabecera[0].materia}}</a>
-                      <p class="category">DOCENTE : <a class="contenido">{{nombre}}</a>
-                  </div>
-                  <div class="col-md-4">
-                    <p class="category">Curso : <a class="contenido">{{Cabecera[0].curso}}</a>
-                      <p class="category">Paralelo : <a class="contenido">{{Cabecera[0].paralelo}}</a>
-                  </div>
-                  <div class="col-md-4">
-                    <p class="category" *ngIf="this.bandera==='P'">Fecha : <a class="contenido">{{fecha}}</a>
-                      <p class="category">Inspectores : <a class="contenido">{{Cabecera[0].inspector}}</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+                                <div class="row no-gutters">
+                                    <h4 class="title col-12 col-sm-6 col-md-8">Observaciones</h4>
+                                    <div class="title col-6 col-md-4">REG 2.4.2.2</div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <p class="category">Materia: <a class="contenido">{{Cabecera[0].materia}}</a>
+                                            <p class="category">DOCENTE: <a class="contenido">{{nombre}}</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="category">Curso: <a class="contenido">{{Cabecera[0].curso}}</a>
+                                            <p class="category">Paralelo: <a class="contenido">{{Cabecera[0].paralelo}}</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <p class="category" *ngIf="this.bandera==='P'">Fecha: <a class="contenido">{{fecha}}</a>
+                                            <p class="category">Inspectores: <a class="contenido">{{Cabecera[0].inspector}}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-          <div class="card-content table-responsive">
-            <div class="row">
-              <div class="col-sm-3">
-                <a class="btn btn-success" (click)="Atras(content)">
-                  <i class="material-icons">keyboard_backspace</i> Atras
-                </a>
-              </div>
-            </div>
+                    <div class="card-content table-responsive">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <a class="btn btn-success" (click)="Atras(content)">
+                                    <i class="material-icons">keyboard_backspace</i> Atras
+                                </a>
+                            </div>
+                        </div>
 
-            <table *ngIf="content == false" class="table">
-              <thead class="text-danger">
-                <tr>
-                  <th></th>
-                  <th style="width: 50%;">Alumno</th>
-                  <th style="text-align:center;">Ingreso</th>
-                  <th style="text-align:center;">Observaciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let item of this._MateriasDocentesServices.AlumnList; let in = index">
-                  <td> {{in+1}} </td>
-                  <td> {{item.nomalum}} {{item.apealum}} </td>
-                  <td style="text-align:center;"> {{item.obser}} </td>
-                  <td style="text-align:center;">
-                    <a class="text-info" (click)="Agregar()">
+                        <table *ngIf="content == false" class="table">
+                            <thead class="text-danger">
+                                <tr>
+                                    <th></th>
+                                    <th style="width: 50%;">Alumno</th>
+                                    <th style="text-align:center;">Ingreso</th>
+                                    <th style="text-align:center;">Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of this._MateriasDocentesServices.AlumnList; let in = index">
+                                    <td> {{in+1}} </td>
+                                    <td> {{item.nomalum}} {{item.apealum}} </td>
+                                    <td style="text-align:center;"> {{item.obser}} </td>
+                                    <td style="text-align:center;">
+                                        <a class="text-info" (click)="Agregar()">
                       Ver o Agregar
                     </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-            <table *ngIf="content == true" class="table">
+                        <table *ngIf="content == true" class="table">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <h3>Hoja vida Estudiantil</h3>
+                                    <table>
+                                        <tr></tr>
+                                    </table>
+                                </div>
+                                <div class="col-sm-6">
+                                    <table></table>
+                                </div>
+                            </div>
+                        </table>
 
-            </table>
-
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </div>

@@ -1,4 +1,9 @@
-export var Global ={
-   url:'http://apiatrium.ecomundo.edu.ec/api/'
+export let Global = {
+   url: 'https://apiatrium.ecomundo.edu.ec/api/'
 };
-/////http://apiatrium.ecomundo.edu.ec/api/ producion-- http://192.168.0.195:3000/api/ ---desaroollo
+
+/* PRODUCCION
+https://apiatrium.ecomundo.edu.ec/api/
+
+DESARROLLO
+http://192.168.0.195:3000/api/ */

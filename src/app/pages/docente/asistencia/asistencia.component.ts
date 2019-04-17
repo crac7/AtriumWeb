@@ -1,17 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import * as moment from 'moment';
+/*import * as moment from 'moment';*/
 import { DatePipe } from '@angular/common';
-import { ModelMateriasDocentes } from  '../../../models/modelMaterias'
+/*import { ModelMateriasDocentes } from  '../../../models/modelMaterias'*/
 import { MateriasDocenteService } from 'app/services/service.index';
 import { saveAs } from 'file-saver/FileSaver';
-import * as _swal from 'sweetalert';
-import { SweetAlert } from 'sweetalert/typings/core';
+import Swal from 'sweetalert2'
+/*import * as _swal from 'sweetalert';
+import { SweetAlert } from 'sweetalert/typings/core';*/
 
 @Component({
   selector: 'app-asistencia',
-  templateUrl: './asistencia.component.html'
-  //styleUrls: ['./asistencia.component.css']
+  templateUrl: './asistencia.component.html'/*,
+  styleUrls: ['./asistencia.component.css']*/
 })
 
 export class AsistenciaComponent implements OnInit {
@@ -28,23 +29,21 @@ export class AsistenciaComponent implements OnInit {
   AlumnosCurso: Array<any>;
   bandera: string;
   codProfesor: string;
-  unidad: number = 0;
+  unidad = 0;
   fecha_ini: string;
   fechafin: string;
   detallesMaterias: Array<any>;
-  swal: SweetAlert = _swal as any;
+  /*swal: SweetAlert = _swal as any;*/
   estado: string;
-  ////
   prueba: Array<any>;
 
-  constructor(private _MateriasDocentesServices: MateriasDocenteService, private datePipe: DatePipe, ) {
+  constructor(private _MateriasDocentesServices: MateriasDocenteService, private datePipe: DatePipe ) {
   }
 
   ngOnInit() {
     this.fecha = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.fecha_ini = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.fechafin = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-
     this._MateriasDocentesServices.MateriasDocentes();
     this._MateriasDocentesServices.UnidadesDocentes();
     this.nombre = localStorage.getItem('nombre');
@@ -53,19 +52,18 @@ export class AsistenciaComponent implements OnInit {
     this.user = localStorage.getItem('username');
     this.bandera = localStorage.getItem('bandera');
     this.codProfesor = localStorage.getItem('cod_profesor');
-    this.prueba = [{ name: "Falta", valor: 1 },
-    { name: "Atraso", valor: 2 },
-    { name: "Retirado", valor: 3 },
-    { name: "Abandono", valor: 4 }];
-
-    this.estado = "SIN CONSULTAR";
-
+    this.prueba = [
+      { name: 'Falta', valor: 1 },
+      { name: 'Atraso', valor: 2 },
+      { name: 'Retirado', valor: 3 },
+      { name: 'Abandono', valor: 4 }
+    ];
+    this.estado = 'SIN CONSULTAR';
   }
 
   GuardaFaltas() {
-
     this.faltasAtraso = this._MateriasDocentesServices.AlumnCursosList
-    for (let i in this.faltasAtraso) {
+    for (let i = 0 ; i <= this.faltasAtraso.length ; i ++) {
       this.faltasAtraso[i].cod_per = this.codigoPeriodo;
       this.faltasAtraso[i].let_per = this.letPeriodo;
       this.faltasAtraso[i].cod_curso = this.Cabecera[0].codCurso;
@@ -77,14 +75,15 @@ export class AsistenciaComponent implements OnInit {
       this.faltasAtraso[i].usuario = this.user.trim();
       this.faltasAtraso[i].justifica = (this.faltasAtraso[i].justifica) ? 1 : 0;
       this.faltasAtraso[i].asistencia = (this.faltasAtraso[i].asistencia) ? 1 : 0;
-      if (this.faltasAtraso[i].tipo_falta == 5) { this.faltasAtraso[i].tipo_falta = 0; }
+      if (this.faltasAtraso[i].tipo_falta === 5) {
+        this.faltasAtraso[i].tipo_falta = 0;
+      }
     }
 
     this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
       response => {
-        //alert("Guardado exitosamente");
         this.ConsultarAlumnos();
-        swal("Asistencias", "Guardado exitosamente!", "success");
+        Swal.fire('Asistencias', 'Guardado exitosamente!', 'success');
       },
       error => {
         console.log(error);
@@ -92,25 +91,21 @@ export class AsistenciaComponent implements OnInit {
     );
   }
 
-  Cambiamodal(i) {
+  Cambiamodal(i: any) {
     this.unidad = 0;
-    if (this.bandera === "A") {
-      this.faltas = [{ name: "Falta", valor: 1 },
-      { name: "Atraso", valor: 2 },
-      { name: "Retirado", valor: 3 },
-      { name: "Abandono", valor: 4 },
-      { name: "N/A", valor: 5 }];
-
+    if (this.bandera === 'A') {
+      this.faltas = [{ name: 'Falta', valor: 1 },
+      { name: 'Atraso', valor: 2 },
+      { name: 'Retirado', valor: 3 },
+      { name: 'Abandono', valor: 4 },
+      { name: 'N/A', valor: 5 }];
+    } else {
+      this.faltas = [{ name: 'Falta', valor: 1 },
+      { name: 'Atraso', valor: 2 },
+      { name: 'Retirado', valor: 3 },
+      { name: 'Abandono', valor: 4 },
+      { name: 'N/A', valor: 5 }];
     }
-    else {
-      this.faltas = [{ name: "Falta", valor: 1 },
-      { name: "Atraso", valor: 2 },
-      { name: "Retirado", valor: 3 },
-      { name: "Abandono", valor: 4 },
-      { name: "N/A", valor: 5 }];
-    }
-
-
     this.Cabecera = [{
       materia: i.Dm,
       tipo: i.Dn,
@@ -127,9 +122,8 @@ export class AsistenciaComponent implements OnInit {
     this.visible = false;
   }
   ConsultarAlumnos(): void {
-
     this.AlumnosCurso = [{
-      cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
+      cod_per: this.codigoPeriodo, /*this.codigoPeriodo,<---------------------------------canmbiar*/
       let_per: this.letPeriodo,
       cod_curso: this.Cabecera[0].codCurso,
       cod_paralelo: this.Cabecera[0].codParalelo,
@@ -137,27 +131,19 @@ export class AsistenciaComponent implements OnInit {
       unidad: this.unidad,
       fecha: this.fecha,
       cod_profesor: this.codProfesor
-    }]
-
-
+    }];
     this._MateriasDocentesServices.AlumnosCurso(this.AlumnosCurso[0]);
-    // console.log(this._MateriasDocentesServices.AlumnCursosList);
-
-    this._MateriasDocentesServices.ConsultaRegistrado(this.AlumnosCurso[0]).subscribe(response => {
-      this.estado = response[0].registro;
-    },
+    this._MateriasDocentesServices.ConsultaRegistrado(this.AlumnosCurso[0]).subscribe(
+      response => {
+        this.estado = response[0].registro;
+      },
       error => {
-        var body = JSON.parse(error);
-
+        // let body = JSON.parse(error);
         console.log(error);
-      })
-
+      });
   }
 
-
-  DetalleAlum(codAlumno) {
-
-
+  DetalleAlum(codAlumno: any) {
     const detalle = {
       cod_per: this.codigoPeriodo,
       let_per: this.letPeriodo,
@@ -168,35 +154,28 @@ export class AsistenciaComponent implements OnInit {
       unidad: this.unidad,
       fecha: this.fecha,
       cod_profesor: this.codProfesor
-    }
-
-
+    };
     this._MateriasDocentesServices.DetalleFalta(detalle)
-      .subscribe(response => {
-
-        this.detallesMaterias = response;
-
-      },
+      .subscribe(
+        response => {
+          this.detallesMaterias = response;
+        },
         error => {
-          var erroMessage = <any>error;
+          const erroMessage = <any>error;
           if (erroMessage != null) {
-            var body = JSON.parse(error);
+            const body = JSON.parse(error);
             // this.aletErrorRegister=body.error;
             console.log(error);
           }
-        })
+        });
   }
 
-
-  checkAll(ev) {
+  checkAll(ev: any) {
     if (this._MateriasDocentesServices.AlumnCursosList[ev].asistencia) {
       this._MateriasDocentesServices.AlumnCursosList[ev].tipo_falta = 0;
-    }
-    else {
+    } else {
       this._MateriasDocentesServices.AlumnCursosList[ev].tipo_falta = 1;
     }
-
-
   }
 
   Atras() {
@@ -207,14 +186,14 @@ export class AsistenciaComponent implements OnInit {
     this.fecha_ini = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.fechafin = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
     this.unidad = 0;
-    this.estado = "SIN CONSULTAR";
+    this.estado = 'SIN CONSULTAR';
   }
 
   GeneraPDF() {
     //  this.fechafin  =this.datePipe.transform(this.fechafin, 'yyyy-MM-dd');
-    swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
+    Swal.fire('Hey!', 'Espera unos segundo hasta que la descarga empiece', 'warning');
     this.DatoPDF = [{
-      cod_per: this.codigoPeriodo,///this.codigoPeriodo,<---------------------------------canmbiar
+      cod_per: this.codigoPeriodo, /// this.codigoPeriodo,<---------------------------------canmbiar
       let_per: this.letPeriodo,
       cod_curso: this.Cabecera[0].codCurso,
       cod_paralelo: this.Cabecera[0].codParalelo,
@@ -223,13 +202,10 @@ export class AsistenciaComponent implements OnInit {
       fecha_ini: this.fecha_ini,
       cod_profesor: this.codProfesor,
       fecha_fin: this.fechafin
-    }]
-
+    }];
     this._MateriasDocentesServices.GeneraPDFaltas(this.DatoPDF).subscribe(
       (res) => {
-        saveAs(res, `Asist_${this.Cabecera[0].curso}_${this.Cabecera[0].paralelo}.pdf`); //if you want to save it - you need file-saver for this : https://www.npmjs.com/package/file-saver
-        /*    var fileURL = URL.createObjectURL(res);
-            window.open(fileURL);*/
+        saveAs(res, `Asist_${this.Cabecera[0].curso}_${this.Cabecera[0].paralelo}.pdf`);
       }
     );
   }

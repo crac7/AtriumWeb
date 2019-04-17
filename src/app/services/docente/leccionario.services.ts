@@ -7,7 +7,7 @@ import { Global } from '../global'
 import { ModelLeccionarioDocente } from '../../models/leccionario.docente.models';
 import { ModelLeccionarioInspector } from '../../models/LeccionaInspec.models';
 import { ResponseContentType } from '@angular/http';
-
+import Swal from 'sweetalert2';
 
 @Injectable()
 export class LeccionarioServices {
@@ -16,8 +16,7 @@ export class LeccionarioServices {
   LeccionarioDocenteList: ModelLeccionarioDocente[];
   selectedLeccionarioDocenteList: ModelLeccionarioDocente;
   LeccionarioInspectorList: ModelLeccionarioInspector[];
-
-  ModelLeccionarioInspector
+  ModelLeccionarioInspector: any;
   public url: string;
   constructor(
     public _usuarioService: UserService,
@@ -27,20 +26,16 @@ export class LeccionarioServices {
   }
 
   HorariosDocentes() {
-    let datos = {
+    const datos = {
       cod_emp: localStorage.getItem('cod_emp'),
       cod_per: localStorage.getItem('cod_per'),
       let_per: localStorage.getItem('let_per'),
-
     };
-
-    let params = JSON.stringify(datos);
-
-    let headers = new Headers({
+    const params = JSON.stringify(datos);
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
-
     this._http.post(this.url + 'HorarioLecionario', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelHorarios[];
@@ -49,7 +44,7 @@ export class LeccionarioServices {
       })
   }
 
-  ConsultaLeccionario(datos) {
+  ConsultaLeccionario(datos: any) {
     const ConLeccionarioDo = {
       cod_emp: localStorage.getItem('cod_emp'),
       cod_per: localStorage.getItem('cod_per'),
@@ -61,38 +56,34 @@ export class LeccionarioServices {
       fecha: datos.fecha,
       cod_profesor: localStorage.getItem('cod_profesor')
     }
-    let params = JSON.stringify(ConLeccionarioDo);
-
-    let headers = new Headers({
+    const params = JSON.stringify(ConLeccionarioDo);
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
-
     this._http.post(this.url + 'ConsultaLeccionario', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelLeccionarioDocente[];
       }).toPromise().then(x => {
         this.LeccionarioDocenteList = x;
       })
-
   }
 
-  InsertaLeccionario(lecionario) {
-    let json = JSON.stringify(lecionario);
-    let params = json;
-
-    let headers = new Headers({
+  InsertaLeccionario(lecionario: any) {
+    const json = JSON.stringify(lecionario);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
     return this._http.post(this.url + 'InsertaLeccionario', params, { headers: headers })
       .map(res => res.json());
-  }//
-  InsertaLeccionarioArreglo(lecionario) {
-    let json = JSON.stringify(lecionario);
-    let params = json;
+  }
 
-    let headers = new Headers({
+  InsertaLeccionarioArreglo(lecionario: any) {
+    const json = JSON.stringify(lecionario);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
@@ -100,7 +91,7 @@ export class LeccionarioServices {
       .map(res => res.json());
   }
 
-  ConsultaLeccionarioInspector(datos) {
+  ConsultaLeccionarioInspector(datos: any) {
     const ConLeccionarioDo = {
       cod_emp: localStorage.getItem('cod_emp'),
       cod_per: localStorage.getItem('cod_per'),
@@ -111,29 +102,22 @@ export class LeccionarioServices {
       fecha_ini: datos.fecha,
       fecha_fin: datos.fecha_fin
     }
-    let params = JSON.stringify(ConLeccionarioDo);
-
-    let headers = new Headers({
+    const params = JSON.stringify(ConLeccionarioDo);
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
-
-
     this._http.post(this.url + 'ConsultaLeccionarioInspector', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelLeccionarioInspector[];
-
       }).toPromise().then(x => {
         this.LeccionarioInspectorList = x;
-
-      })
-
-
+      });
   }
 
-  GeneraPDFLecionario(datos) {
-    swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
-    let headers = new Headers({
+  GeneraPDFLecionario(datos: any) {
+    Swal.fire('Hey!', 'Espera unos segundo hasta que la descarga empiece', 'warning');
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this._usuarioService.token
     });
@@ -142,7 +126,5 @@ export class LeccionarioServices {
         (res) => {
           return new Blob([res.blob()], { type: 'application/pdf' })
         });
-
   }
 }
-///HorarioLecionario

@@ -73,7 +73,7 @@ export class UserService {
     this.getToken();
   }
 
-  guardarStorageR(token, datos) {
+  guardarStorageR(token: any, datos: any) {
     localStorage.setItem('token', token);
     localStorage.setItem('cod_alum', datos.cod_alum);
     localStorage.setItem('cod_per', datos.cod_per);

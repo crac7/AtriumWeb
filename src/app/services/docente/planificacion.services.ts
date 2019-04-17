@@ -6,23 +6,23 @@ import { Global } from '../global'
 import { Planificacion } from '../../models/planificacion';
 import { DetallePlanAdmin } from '../../models/DetallePlanAdmin.models';
 import { ResponseContentType } from '@angular/http';
-@Injectable()//para utilizar en otra Clases
+import Swal from 'sweetalert2';
+
+@Injectable() // para utilizar en otra Clases
 export class PlanificacionServices {
   public url: string;
   public token: string;
   ListPlanificacion: Planificacion[];
   selectedPlanificacion: Planificacion;
-
   ListDetallePlanAdmin: DetallePlanAdmin[];
   selectedDetallePlanAdmin: DetallePlanAdmin;
   constructor(private _http: Http) {
     this.url = Global.url;
   }
 
-
   GeneraCodigo() {
-    let datos;
-    let headers = new Headers({
+    let datos: any;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -33,12 +33,10 @@ export class PlanificacionServices {
       });
   }
 
-  InsertCabecera(Cabecera) {
-
-    let json = JSON.stringify(Cabecera);
-    let params = json;
-
-    let headers = new Headers({
+  InsertCabecera(Cabecera: any) {
+    const json = JSON.stringify(Cabecera);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -46,22 +44,20 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  InsertDetalle(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
-
-    let headers = new Headers({
+  InsertDetalle(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
     return this._http.post(this.url + 'InsertaDetallePlan', params, { headers: headers })
       .map(res => res.json());
   }
-  ConsultaPlanAdmin(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
-
-    let headers = new Headers({
+  ConsultaPlanAdmin(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -73,11 +69,11 @@ export class PlanificacionServices {
         this.ListDetallePlanAdmin = x;
       })
   }
-  ConsultaPlanDocente(detalle) {
-    let cod_plan
-    let json = JSON.stringify(detalle);
-    let params = json;
-    let headers = new Headers({
+  ConsultaPlanDocente(detalle: any) {
+    let cod_plan: any[]
+    const json = JSON.stringify(detalle);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -87,33 +83,31 @@ export class PlanificacionServices {
         if (res.json().length > 0) {
           cod_plan = res.json();
           if (Object.keys(cod_plan[0]).length > 1) {
-            //console.log(cod_plan[0]);
+            // console.log(cod_plan[0]);
             return cod_plan[0];
           }
-        }
-        else
+        } else {
           return null
+        }
       });
   }
 
-  ConsultaPlanDocenteDetalle(cod_plan) {
-    let params = { cod_plan: cod_plan };
-    let headers = new Headers({
+  async ConsultaPlanDocenteDetalle(cod_plan: any) {
+    const params = { cod_plan: cod_plan };
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
-    return this._http.post(this.url + 'DetallePlanDocente', params, { headers: headers })
+    const x = await this._http.post(this.url + 'DetallePlanDocente', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as Planificacion[];
-      }).toPromise().then(x => {
-        this.ListPlanificacion = x;
-      })
+      }).toPromise();
+    this.ListPlanificacion = x;
   }
 
-  GeneraPDFAdmin(datos) {
-
-    swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
-    let headers = new Headers({
+  GeneraPDFAdmin(datos: any) {
+    Swal.fire('Hey!', 'Espera unos segundo hasta que la descarga empiece', 'warning');
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -125,11 +119,11 @@ export class PlanificacionServices {
         });
   }
 
-  SendEmail(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
+  SendEmail(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -137,11 +131,11 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  ConsultaParalelo(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
+  ConsultaParalelo(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -149,11 +143,11 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  InsertDuplica(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
+  InsertDuplica(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -161,10 +155,10 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  ConsultaPlanTodos(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
-    let headers = new Headers({
+  ConsultaPlanTodos(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -174,11 +168,11 @@ export class PlanificacionServices {
       });
   }
 
-  deletePlan(detalle) {
-    let json = JSON.stringify(detalle);
-    let params = json;
+  deletePlan(detalle: any) {
+    const json = JSON.stringify(detalle);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -186,11 +180,11 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  InsertaPlanificacionDiaria(datos) {
-    let json = JSON.stringify(datos);
-    let params = json;
+  InsertaPlanificacionDiaria(datos: any) {
+    const json = JSON.stringify(datos);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -198,21 +192,21 @@ export class PlanificacionServices {
       .map(res => res.json());
   }
 
-  ConsultaPlanificacionDiaria(datos) {
-    let json = JSON.stringify(datos);
-    let params = json;
+  ConsultaPlanificacionDiaria(datos: any) {
+    const json = JSON.stringify(datos);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
     return this._http.post(this.url + 'ConsultaPlanificacionDiaria', params, { headers: headers })
       .map(res => res.json());
   }
-  ///Accede a local Sotrage y devuele los datos ya procesados
+  /// Accede a local Sotrage y devuele los datos ya procesados
   getToken() {
-    let token = localStorage.getItem('token');
-    if (token != "undefined") {
+    const token = localStorage.getItem('token');
+    if (token !== 'undefined') {
       this.token = token;
     } else {
       this.token = null;

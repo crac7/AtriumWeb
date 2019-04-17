@@ -40,11 +40,11 @@ export class ObservacionesComponent implements OnInit {
     this.bandera = localStorage.getItem('bandera');
 
 
-    console.log("nombre ", this.nombre);
-    console.log("letPeriodo ", this.letPeriodo);
-    console.log("codigoPeriodo ", this.codigoPeriodo);
-    console.log("codProfesor ", this.codProfesor);
-    console.log("bandera ", this.bandera);
+    console.log('nombre ', this.nombre);
+    console.log('letPeriodo ', this.letPeriodo);
+    console.log('codigoPeriodo ', this.codigoPeriodo);
+    console.log('codProfesor ', this.codProfesor);
+    console.log('bandera ', this.bandera);
   }
 
   Cambiamodal(i) {
@@ -73,19 +73,19 @@ export class ObservacionesComponent implements OnInit {
 
   }
 
-  Atras(verificador) {
-    if(verificador == true){
+  Atras(verificador: any) {
+    if (verificador === true) {
       this.Cabecera = null;
       this.visible = false;
       this.content = false;
       this._MateriasDocentesServices.AlumnCursosList = [];
       this.fecha = this.datePipe.transform(new Date(), 'yyyy-MM-dd');
-    }else if(verificador == false){
-      verificador == true
+    } else if (verificador === false) {
+      verificador = true;
     }
   }
 
-  Agregar(){
+  Agregar() {
     this.content = true;
   }
 

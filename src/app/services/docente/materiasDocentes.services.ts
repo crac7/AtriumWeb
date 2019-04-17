@@ -4,27 +4,26 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Global } from '../global';
 import { ResponseContentType } from '@angular/http';
-
 import { ModelMateriasDocentes } from '../../models/modelMaterias';
 import { ModelUnidades } from '../../models/unidades';
 import { ModelAlumnCursos } from '../../models/ModelAlumCursos';
 import { ModelAlumList } from '../../models/ModelAlumList';
+import Swal from 'sweetalert2';
 
-@Injectable()//para utilizar en otra Clases
+@Injectable()// para utilizar en otra Clases
 export class MateriasDocenteService {
   public url: string;
   public token: string;
   selectedMateriasDocentes: ModelMateriasDocentes;
   MateriasDocentesList: ModelMateriasDocentes[];
-  /////Unidades///////
+  ///// Unidades///////
   selectedUnidades: ModelUnidades;
   UnidadesList: ModelUnidades[];
-  /////Alumnos Curso////
+  ///// Alumnos Curso////
   selectedAlumnCursos: ModelAlumnCursos;
   AlumnCursosList: ModelAlumnCursos[];
   AlumnList: ModelAlumList[];
   /****/
-
   bandera: string;
   public datosDocentes: any;
   /*public cod_per:number;
@@ -36,33 +35,26 @@ export class MateriasDocenteService {
   }
 
   MateriasDocentes(lec: string = null) {
-    let json = JSON.stringify(this.GetDatosdocentes(lec));
-
-    let params = json;
-
-    let headers = new Headers({
+    const json = JSON.stringify(this.GetDatosdocentes(lec));
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
-
     this._http.post(this.url + 'Docentesmaterias', params, { headers: headers })
       .map((data: Response) => {
-
         return data.json() as ModelMateriasDocentes[];
       }).toPromise().then(x => {
         this.MateriasDocentesList = x;
-      })
+      });
   }
-  
+
   UnidadesDocentes() {
-    let json = JSON.stringify(this.GetDatosdocentes());
-
-    let params = json;
-
-    let headers = new Headers({
+    const json = JSON.stringify(this.GetDatosdocentes());
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json', 'Authorization': 'bearer ' + this.getToken()
     });
-
     this._http.post(this.url + 'Unidades', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelUnidades[];
@@ -71,16 +63,13 @@ export class MateriasDocenteService {
       })
   }
 
-  AlumnosCurso(cursoDatos) {
-    let json = JSON.stringify(cursoDatos);
-
-    let params = json;
-
-    let headers = new Headers({
+  AlumnosCurso(cursoDatos: any) {
+    const json = JSON.stringify(cursoDatos);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
-
     this._http.post(this.url + 'AlumnosCurso', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelAlumnCursos[];
@@ -89,15 +78,13 @@ export class MateriasDocenteService {
       })
   }
 
-  AlumnosLista(cursoDatos) {
-    let json = JSON.stringify(cursoDatos);
-    let params = json;
-
-    let headers = new Headers({
+  AlumnosLista(cursoDatos: any) {
+    const json = JSON.stringify(cursoDatos);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
-
     this._http.post(this.url + 'AlumnosLista', params, { headers: headers })
       .map((data: Response) => {
         return data.json() as ModelAlumList[];
@@ -106,12 +93,10 @@ export class MateriasDocenteService {
       })
   }
 
-  ConsultaRegistrado(cursoDatos) {
-    let json = JSON.stringify(cursoDatos);
-
-    let params = json;
-
-    let headers = new Headers({
+  ConsultaRegistrado(cursoDatos: any) {
+    const json = JSON.stringify(cursoDatos);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -121,12 +106,10 @@ export class MateriasDocenteService {
   }
 
 
-  InsFaltasAtrasos(curso) {
-
-    let json = JSON.stringify(curso);
-    let params = json;
-
-    let headers = new Headers({
+  InsFaltasAtrasos(curso: any) {
+    const json = JSON.stringify(curso);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -134,10 +117,10 @@ export class MateriasDocenteService {
       .map(res => res.json());
   }
 
-  DetalleFalta(dataAlumn) {
-    let json = JSON.stringify(dataAlumn);
-    let params = json;
-    let headers = new Headers({
+  DetalleFalta(dataAlumn: any) {
+    const json = JSON.stringify(dataAlumn);
+    const params = json;
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -146,7 +129,6 @@ export class MateriasDocenteService {
   }
 
   GetDatosdocentes(lec: string = null) {
-
     this.datosDocentes = [{
       cod_per: localStorage.getItem('cod_per'),
       let_per: localStorage.getItem('let_per'),
@@ -157,10 +139,10 @@ export class MateriasDocenteService {
     return this.datosDocentes[0];
   }
 
-  GeneraPDFaltas(datos) {
-    swal("Hey!", "Espera unos segundo hasta que la descarga empiece", "warning");
-    let paramas = JSON.stringify(datos);
-    let headers = new Headers({
+  GeneraPDFaltas(datos: any) {
+    Swal.fire('Hey!', 'Espera unos segundo hasta que la descarga empiece', 'warning');
+    const paramas = JSON.stringify(datos);
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -168,18 +150,16 @@ export class MateriasDocenteService {
       .map(
         (res) => {
           return new Blob([res.blob()], { type: 'application/pdf' })
-        });
+      });
   }
 
   getToken() {
-    let token = localStorage.getItem('token');
-    if (token != "undefined") {
+    const token = localStorage.getItem('token');
+    if (token !== 'undefined') {
       this.token = token;
     } else {
       this.token = null;
     }
     return this.token;
   }
-
-
 }
