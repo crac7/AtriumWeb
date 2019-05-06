@@ -63,7 +63,24 @@ export class AsistenciaComponent implements OnInit {
 
   GuardaFaltas() {
     this.faltasAtraso = this._MateriasDocentesServices.AlumnCursosList
-    for (let i = 0 ; i <= this.faltasAtraso.length ; i ++) {
+    console.log(this.faltasAtraso);
+    this.faltasAtraso.map((elem) => {
+      elem.cod_per = this.codigoPeriodo;
+      elem.let_per = this.letPeriodo;
+      elem.cod_curso = this.Cabecera[0].codCurso;
+      elem.cod_paralelo = this.Cabecera[0].codParalelo;
+      elem.cod_materia = this.Cabecera[0].codMateria;
+      elem.unidad = this.AlumnosCurso[0].unidad;
+      elem.fecha = this.fecha;
+      elem.cod_profesor = this.AlumnosCurso[0].cod_profesor;
+      elem.usuario = this.user.trim();
+      elem.justifica = (elem.justifica) ? 1 : 0;
+      elem.asistencia = (elem.asistencia) ? 1 : 0;
+      if (elem.tipo_falta === 5) {
+        elem.tipo_falta = 0;
+      }
+    });
+    /*for (let i = 0 ; i <= this.faltasAtraso.length ; i ++) {
       this.faltasAtraso[i].cod_per = this.codigoPeriodo;
       this.faltasAtraso[i].let_per = this.letPeriodo;
       this.faltasAtraso[i].cod_curso = this.Cabecera[0].codCurso;
@@ -78,7 +95,7 @@ export class AsistenciaComponent implements OnInit {
       if (this.faltasAtraso[i].tipo_falta === 5) {
         this.faltasAtraso[i].tipo_falta = 0;
       }
-    }
+    }*/
 
     this._MateriasDocentesServices.InsFaltasAtrasos(this.faltasAtraso).subscribe(
       response => {
