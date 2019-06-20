@@ -19,10 +19,10 @@ export class PagoOnlineService {
   }
 
   DeudaLista(alumDatos) {
-    let json = JSON.stringify(alumDatos);
-    let params = json;
+    const json = JSON.stringify(alumDatos);
+    const params = json;
 
-    let headers = new Headers({
+    const headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()
     });
@@ -57,7 +57,7 @@ export class PagoOnlineService {
     console.log(alumDatos);
     let json = JSON.stringify(alumDatos);
     let params = json;
-    console.log("entra DatosFacActu 2");
+    console.log('entra DatosFacActu 2');
     let headers = new Headers({
       'Content-Type': 'application/json',
       'Authorization': 'bearer ' + this.getToken()

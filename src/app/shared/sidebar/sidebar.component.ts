@@ -12,14 +12,14 @@ declare const $: any;
 })
 export class SidebarComponent implements OnInit {
   menuItems: any[];
-  username:string;
-  email:string;
-  nombre:string;
-  constructor(private _userService:UserService, public _sidebar: SidebarService) { }
+  username: string;
+  email: string;
+  nombre: string;
+  constructor(private _userService: UserService, public _sidebar: SidebarService) { }
 
   ngOnInit() {
         if(localStorage.getItem('type') ===  'D'){
-          this.username=  localStorage.getItem('username');
+          this.username =  localStorage.getItem('username');
           this.email   =  localStorage.getItem('e_mail');
           this.nombre  =  localStorage.getItem('nombre');
           this.menuItems = this._sidebar.menuD.filter(menuItem => menuItem);
