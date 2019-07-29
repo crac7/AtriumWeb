@@ -1,5 +1,5 @@
 export let Global = {
-   url: 'http://apiatrium.ecomundo.edu.ec/api/'
+   url: 'https://apiatrium.ecomundo.edu.ec/api/'
 };
 
 /* PRODUCCION
