@@ -22,18 +22,16 @@ export class UserService {
   }
 
   signupD(user_to_login) {
-    let json = JSON.stringify(user_to_login);
-    let params = json;
-    let datos;
+    const json = JSON.stringify(user_to_login);
+    const params = json;
+    let datos: any[];
 
     console.log(user_to_login);
 
-      let headers = new Headers({ 'Content-Type': 'application/json' });
+      const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Docentes', params, { headers: headers })
         .map(res => {
-  
           datos = res.json();
-          console.log(datos);
           this.guardarStorageD(datos[0].token, datos[1])
           return true;
         });
@@ -41,18 +39,16 @@ export class UserService {
   }
 
   signupR(user_to_login) {
-    let json = JSON.stringify(user_to_login);
-    let params = json;
-    let datos;
+    const json = JSON.stringify(user_to_login);
+    const params = json;
+    let datos: any[];
 
     console.log(user_to_login);
 
-      let headers = new Headers({ 'Content-Type': 'application/json' });
+      const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Representantes', params, { headers: headers })
         .map(res => {
-  
           datos = res.json();
-          console.log(datos);
           this.guardarStorageR(datos[0].token, datos[1])
           return true;
         });
@@ -102,7 +98,7 @@ export class UserService {
 
 
 
-  ///Accede a local Sotrage y devuele los datos ya procesados
+  // Accede a local Sotrage y devuele los datos ya procesados
   getToken() {
 
     if (localStorage.getItem('token')) {
