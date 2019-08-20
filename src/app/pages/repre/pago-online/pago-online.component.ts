@@ -1,20 +1,20 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { PagoOnlineService } from 'app/services/service.index';
 import * as $ from 'jquery';
 import Swal from 'sweetalert2';
 import { ModelFacConsul } from 'app/models/repre/datosFacConsul.models';
 import { ModelRepreConsul } from 'app/models/repre/datosRepreConsul.models';
-import * as postscribe from 'postscribe'
+import * as postscribe from 'postscribe';
 
 @Component({
   selector: 'app-pago-online',
   templateUrl: './pago-online.component.html',
   styleUrls: ['./pago-online.component.scss'],
 })
-export class PagoOnlineComponent implements OnInit, AfterViewInit {
+export class PagoOnlineComponent implements OnInit {
   public ModelFacConsul: ModelFacConsul;
   public ModelRepreConsul: ModelRepreConsul;
-  dl =  false;
+  dl = false;
   total = 0;
   letivoPeriodo: string;
   codigoPeriodo: string;
@@ -24,70 +24,10 @@ export class PagoOnlineComponent implements OnInit, AfterViewInit {
   repreDatoConsul: Array<any>;
   content = false;
   pr = false;
+  reference = '';
+  descrip = '';
 
-  constructor(public _pagoOnlineService: PagoOnlineService) {}
-
-  ngAfterViewInit() {
-    postscribe('#response', `<script>
-    var paymentezCheckout = new PaymentezCheckout.modal({
-        client_app_code: 'ECOMUNDO-EC-CLIENT', // Client Credentials Provied by Paymentez
-        client_app_key: '8Hf6bFAitUDv5NC66SQAruhJpCIrV0', // Client Credentials Provied by Paymentez
-        locale: 'es', // User's preferred language (es, en, pt). English will be used by default.
-        env_mode: 'stg', // 'prod', 'stg', 'dev', 'local' to change environment. Default is 'stg'
-        onOpen: function() {
-            console.log('modal open');
-        },
-        onClose: function() {
-            console.log('modal closed');
-        },
-        onResponse: function(response) { // The callback to invoke when the Checkout process is completed
-
-            /*
-                  In Case of an error, this will be the response.
-                  response = {
-                    "error": {
-                      "type": "Server Error",
-                      "help": "Try Again Later",
-                      "description": "Sorry, there was a problem loading Checkout."
-                    }
-                  }
-
-                  When the User completes all the Flow in the Checkout, this will be the response.
-                  response = {
-                    "transaction":{
-                        "status":"success", // success or failure
-                        "id":"CB-81011", // transaction_id
-                        "status_detail":3 // for the status detail please refer to: https://paymentez.github.io/api-doc/#status-details
-                    }
-                  }
-                */
-            console.log('modal response');
-            document.getElementById('response').innerHTML = JSON.stringify(response);
-        }
-    });
-
-    var btnOpenCheckout = document.querySelector('.js-paymentez-checkout');
-    btnOpenCheckout.addEventListener('click', function() {
-        // Open Checkout with further options:
-        paymentezCheckout.open({
-            user_id: '1234',
-            user_email: '', //optional
-            user_phone: '', //optional
-            order_description: '1 Licencia Estándar (IVA y gastos adm. incluidos)',
-            order_taxable_amount: 1,
-            order_tax_percentage: 12,
-            order_amount: ${this.total},
-            order_vat: 0.12,
-            order_reference: '#234323411',
-        });
-    });
-
-    // Close Checkout on page navigation:
-    window.addEventListener('popstate', function() {
-        paymentezCheckout.close();
-    });
-</script>`)
-  }
+  constructor(public _pagoOnlineService: PagoOnlineService, ) { }
 
   ngOnInit() {
     this.letivoPeriodo = localStorage.getItem('let_per');
@@ -122,13 +62,11 @@ export class PagoOnlineComponent implements OnInit, AfterViewInit {
   }
 
   checkAll(ck: any) {
+    console.log(this._pagoOnlineService.deudasList[0]);
     if (this._pagoOnlineService.deudasList[ck].ACCEPT === true) {
       if (ck !== 0) {
         this._pagoOnlineService.deudasList[ck - 1].ACTIVE = false;
-        if (ck === this._pagoOnlineService.deudasList.length - 1) {
-          this.total += this._pagoOnlineService.deudasList[ck].CFAC_VALOR;
-        }
-      }if (ck < this._pagoOnlineService.deudasList.length - 1 ) {
+      } if (ck < this._pagoOnlineService.deudasList.length - 1) {
         this._pagoOnlineService.deudasList[ck + 1].ACTIVE = true;
         this.total += this._pagoOnlineService.deudasList[ck].CFAC_VALOR;
       }
@@ -136,20 +74,17 @@ export class PagoOnlineComponent implements OnInit, AfterViewInit {
       if (ck !== 0) {
         this._pagoOnlineService.deudasList[ck - 1].ACTIVE = true;
         this.total -= this._pagoOnlineService.deudasList[ck].CFAC_VALOR;
-      }if (ck < this._pagoOnlineService.deudasList.length - 1) {
+      } if (ck < this._pagoOnlineService.deudasList.length - 1) {
         this._pagoOnlineService.deudasList[ck + 1].ACTIVE = false;
-        if (ck === 0) {
-          this.total -= this._pagoOnlineService.deudasList[ck].CFAC_VALOR;
-        }
       }
     }
   }
 
   actualizar() {
     if ((this._pagoOnlineService.datoFacConsul[0].representante === '' || this._pagoOnlineService.datoFacConsul[0].representante == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].direccion === '' || this._pagoOnlineService.datoFacConsul[0].direccion == null)) {
+      (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
+      (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
+      (this._pagoOnlineService.datoFacConsul[0].direccion === '' || this._pagoOnlineService.datoFacConsul[0].direccion == null)) {
       Swal.fire('Hey... !', 'Parece que has dejado algún campo vacio', 'warning');
     } else {
       this.datoActuFac = [{
@@ -172,22 +107,165 @@ export class PagoOnlineComponent implements OnInit, AfterViewInit {
           Swal.fire('Opss... !', 'Algo salio mal, vuelve intertar porfavor :(', 'error');
           console.log(error);
         }
-        );
+      );
     }
   }
 
   pagar() {
+    this.referencia();
+    postscribe('#response',
+    `<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+    var paymentezCheckout = new PaymentezCheckout.modal({
+        client_app_code: 'ECOMUNDO-EC-CLIENT', // Client Credentials Provied by Paymentez
+        client_app_key: '8Hf6bFAitUDv5NC66SQAruhJpCIrV0', // Client Credentials Provied by Paymentez
+        locale: 'es', // User's preferred language (es, en, pt). English will be used by default.
+        env_mode: 'stg', // 'prod', 'stg', 'dev', 'local' to change environment. Default is 'stg'
+        onOpen: function() {
+            console.log('modal open');
+        },
+        onClose: function() {
+            console.log('modal closed');
+        },
+        onResponse: function(response) { // The callback to invoke when the Checkout process is completed
+          console.log(response);
+          const estado = response.transaction.status;
+          const id_tran = response.transaction.id;
+          let tran = true;
+          if (estado == 'success') {
+              Swal.fire({
+                  type: 'success',
+                  title: '!Exito!',
+                  text: 'Su pago se realiza con éxito',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+              });
+          } else if (estado == 'failure') {
+              Swal.fire({
+                  type: 'error',
+                  title: '!Opss...!',
+                  text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+              });
+          } else if (estado == 'pending') {
+              
+              (async() => {
+                  const {
+                      value: otp
+                  } = await Swal.fire({
+                      title: 'OTP',
+                      text: 'Favor ingresar el Código que le llegó a su email o SMS del Banco emisor de su tarjeta.',
+                      input: 'text',
+                      allowOutsideClick: false,
+                      allowEscapeKey: false,
+                      inputAttributes: {
+                          maxlength: 6,
+                          style: 'text-align:center',
+                          onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
+                      },
+                      inputValidator: (value) => {
+                          if (value.length < 6) {
+                              return 'El código OTP no puede contener menos de 6 dígitos'
+                          }
+                      }
+                  })
+                  if (otp) {
+                      $.ajax({
+                          type: 'post',
+                          url: 'https://apiatrium.ecomundo.edu.ec/api/verifyCreditCart',
+                          data: {
+                              user_id: '${localStorage.getItem('cod_repre')}',
+                              transaction_id: id_tran,
+                              type: 'BY_OTP',
+                              value: otp
+                          },
+                          success: function(data) {
+                              if(data.status == 1) {
+                                  Swal.fire({
+                                      type: 'success',
+                                      title: '!Exito!',
+                                      text: 'Su pago se realiza con éxito',
+                                      allowOutsideClick: false,
+                                      allowEscapeKey: false
+                                  });
+                                  tran = false
+                              } else if (data.status == 4) {
+                                  Swal.fire({
+                                      type: 'error',
+                                      title: '!Opss...!',
+                                      text: 'El Código ingresado es inválido, por favor vuelva a intentarlo',
+                                      allowOutsideClick: false,
+                                      allowEscapeKey: false
+                                  });
+                                  tran = true;
+                              }
+                          }
+                      });
+                      Swal.fire('Your IP address is' + otp)
+                  }
+              })()
+      }
+          //document.getElementById('response').innerHTML = JSON.stringify(response);
+      }
+    });
+
+    var btnOpenCheckout = document.querySelector('.js-paymentez-checkout');
+
+    btnOpenCheckout.addEventListener('click', function() {
+        // Open Checkout with further options:
+        paymentezCheckout.open({
+            user_id: '${localStorage.getItem('cod_repre')}',
+            user_email: '', //optional
+            user_phone: '', //optional
+            order_description: '${this.descrip}',
+            order_taxable_amount: 1,
+            order_tax_percentage: 12,
+            order_amount: ${this.total},
+            order_vat: 0.12,
+            order_reference: '${this.reference}',
+        });
+    });
+
+    // Close Checkout on page navigation:
+    window.addEventListener('popstate', function() {
+        paymentezCheckout.close();
+    });
+  </script>`);
     if ((this._pagoOnlineService.datoFacConsul[0].representante === '' || this._pagoOnlineService.datoFacConsul[0].representante == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
-    (this._pagoOnlineService.datoFacConsul[0].direccion === '' || this._pagoOnlineService.datoFacConsul[0].direccion == null)) {
+      (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
+      (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
+      (this._pagoOnlineService.datoFacConsul[0].direccion === '' || this._pagoOnlineService.datoFacConsul[0].direccion == null)) {
       Swal.fire('Hey... !', 'Parece que has dejado algún campo vacio', 'warning');
     } else {
-    //this.pr = true
     }
   }
 
   aceptar() {
     return null;
   }
+
+  referencia() {
+    this.reference = '';
+    this.total = 0;
+    for (let i = 0; i < this._pagoOnlineService.deudasList.length; i++) {
+      if (this._pagoOnlineService.deudasList[i].ACCEPT === true) {
+        if (this.reference === '' || this.total === 0) {
+          this.reference = `${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
+          this.total = this._pagoOnlineService.deudasList[i].CFAC_VALOR;
+          this.descrip = `${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
+        } else {
+          this.reference = `${this.reference};${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
+          this.total = this.total + this._pagoOnlineService.deudasList[i].CFAC_VALOR;
+          this.descrip = `${this.descrip};${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
+        }
+      }
+    }
+  }
+
+  transaccion() {
+    console.log('sdfs');
+  }
+
 }
