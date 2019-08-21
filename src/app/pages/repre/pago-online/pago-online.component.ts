@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { ModelFacConsul } from 'app/models/repre/datosFacConsul.models';
 import { ModelRepreConsul } from 'app/models/repre/datosRepreConsul.models';
 import * as postscribe from 'postscribe';
+import { Global } from '../../../services/global';
 
 @Component({
   selector: 'app-pago-online',
@@ -14,6 +15,8 @@ import * as postscribe from 'postscribe';
 export class PagoOnlineComponent implements OnInit {
   public ModelFacConsul: ModelFacConsul;
   public ModelRepreConsul: ModelRepreConsul;
+
+  public url: string;
   dl = false;
   total = 0;
   letivoPeriodo: string;
@@ -27,7 +30,9 @@ export class PagoOnlineComponent implements OnInit {
   reference = '';
   descrip = '';
 
-  constructor(public _pagoOnlineService: PagoOnlineService, ) { }
+  constructor(public _pagoOnlineService: PagoOnlineService, ) {
+    this.url = Global.url;
+  }
 
   ngOnInit() {
     this.letivoPeriodo = localStorage.getItem('let_per');
@@ -114,7 +119,7 @@ export class PagoOnlineComponent implements OnInit {
   pagar() {
     this.referencia();
     postscribe('#response',
-    `<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
+      `<script src="https://cdn.jsdelivr.net/npm/sweetalert2@8"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
     var paymentezCheckout = new PaymentezCheckout.modal({
@@ -135,22 +140,21 @@ export class PagoOnlineComponent implements OnInit {
           let tran = true;
           if (estado == 'success') {
               Swal.fire({
-                  type: 'success',
-                  title: '!Exito!',
-                  text: 'Su pago se realiza con éxito',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
+                type: 'success',
+                title: '!Exito!',
+                text: 'Su pago se realiza con éxito',
+                allowOutsideClick: false,
+                allowEscapeKey: false
               });
           } else if (estado == 'failure') {
               Swal.fire({
-                  type: 'error',
-                  title: '!Opss...!',
-                  text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
+                type: 'error',
+                title: '!Opss...!',
+                text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
+                allowOutsideClick: false,
+                allowEscapeKey: false
               });
           } else if (estado == 'pending') {
-              
               (async() => {
                   const {
                       value: otp
@@ -168,13 +172,33 @@ export class PagoOnlineComponent implements OnInit {
                       inputValidator: (value) => {
                           if (value.length < 6) {
                               return 'El código OTP no puede contener menos de 6 dígitos'
+                          } else if (value.length == 6){
+                            mens
+                            $.ajax({
+                              type: 'post',
+                              headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
+                              url: '${this.url}verifyCreditCart',
+                              data: {
+                                  user_id: '${localStorage.getItem('cod_repre')}',
+                                  transaction_id: id_tran,
+                                  type: 'BY_OTP',
+                                  value: value
+                              },
+                              success: function(data) {
+                                console.log(data);
+                                  if (data.status == 4) {
+                                    return 'El Código ingresado es inválido, por favor vuelva a intentarlo';
+                                  }
+                              }
+                            })
                           }
                       }
                   })
-                  if (otp) {
+                  /*if (otp) {
                       $.ajax({
                           type: 'post',
-                          url: 'https://apiatrium.ecomundo.edu.ec/api/verifyCreditCart',
+                          headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
+                          url: '${this.url}verifyCreditCart',
                           data: {
                               user_id: '${localStorage.getItem('cod_repre')}',
                               transaction_id: id_tran,
@@ -182,32 +206,40 @@ export class PagoOnlineComponent implements OnInit {
                               value: otp
                           },
                           success: function(data) {
+                            console.log(data);
                               if(data.status == 1) {
                                   Swal.fire({
-                                      type: 'success',
-                                      title: '!Exito!',
-                                      text: 'Su pago se realiza con éxito',
-                                      allowOutsideClick: false,
-                                      allowEscapeKey: false
+                                    type: 'success',
+                                    title: '!Exito!',
+                                    text: 'Su pago se realiza con éxito',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
                                   });
-                                  tran = false
+                                  tran = false;
                               } else if (data.status == 4) {
                                   Swal.fire({
-                                      type: 'error',
-                                      title: '!Opss...!',
-                                      text: 'El Código ingresado es inválido, por favor vuelva a intentarlo',
-                                      allowOutsideClick: false,
-                                      allowEscapeKey: false
+                                    type: 'warning',
+                                    title: '!Opss...!',
+                                    text: 'El Código ingresado es inválido, por favor vuelva a intentarlo',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false
                                   });
-                                  tran = true;
+                              } else {
+                                Swal.fire({
+                                  type: 'error',
+                                  title: '!Opss...!',
+                                  text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
+                                  allowOutsideClick: false,
+                                  allowEscapeKey: false
+                              });
+                              tran = false;
                               }
                           }
                       });
-                      Swal.fire('Your IP address is' + otp)
-                  }
+                  }*/
+                
               })()
       }
-          //document.getElementById('response').innerHTML = JSON.stringify(response);
       }
     });
 
