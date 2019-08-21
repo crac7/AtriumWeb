@@ -155,91 +155,81 @@ export class PagoOnlineComponent implements OnInit {
                 allowEscapeKey: false
               });
           } else if (estado == 'pending') {
-              (async() => {
-                  const {
+            Swal.fire({
+              title: 'OTP',
+              input: 'text',
+              text: 'Favor ingresar el Código que le llegó a su email o SMS del Banco emisor de su tarjeta.',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              inputValidator: (login) => {
+                if (login.length < 6) {
+                  return 'El código OTP no puede contener menos de 6 dígitos'
+                }
+              },
+              inputAttributes: {
+                  maxlength: 6,
+                  style: 'text-align:center',
+                  onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
+              },
+              showLoaderOnConfirm: true,
+              preConfirm: (otp) => {
+                  const url = '${this.url}verifyCreditCart';
+                  const data = {
+                      user_id: '${localStorage.getItem('cod_repre')}',
+                      transaction_id: id_tran,
+                      type: 'BY_OTP',
                       value: otp
-                  } = await Swal.fire({
-                      title: 'OTP',
-                      text: 'Favor ingresar el Código que le llegó a su email o SMS del Banco emisor de su tarjeta.',
-                      input: 'text',
-                      allowOutsideClick: false,
-                      allowEscapeKey: false,
-                      inputAttributes: {
-                          maxlength: 6,
-                          style: 'text-align:center',
-                          onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
+                  };
+
+                  return fetch(url,{
+                      method: 'post',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'Authorization': 'Bearer ${localStorage.getItem('token')}'
                       },
-                      inputValidator: (value) => {
-                          if (value.length < 6) {
-                              return 'El código OTP no puede contener menos de 6 dígitos'
-                          } else if (value.length == 6){
-                            mens
-                            $.ajax({
-                              type: 'post',
-                              headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
-                              url: '${this.url}verifyCreditCart',
-                              data: {
-                                  user_id: '${localStorage.getItem('cod_repre')}',
-                                  transaction_id: id_tran,
-                                  type: 'BY_OTP',
-                                  value: value
-                              },
-                              success: function(data) {
-                                console.log(data);
-                                  if (data.status == 4) {
-                                    return 'El Código ingresado es inválido, por favor vuelva a intentarlo';
-                                  }
-                              }
-                            })
-                          }
-                      }
+                      body: JSON.stringify(data)
+                      //mode:'no-cors',
                   })
-                  /*if (otp) {
-                      $.ajax({
-                          type: 'post',
-                          headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
-                          url: '${this.url}verifyCreditCart',
-                          data: {
-                              user_id: '${localStorage.getItem('cod_repre')}',
-                              transaction_id: id_tran,
-                              type: 'BY_OTP',
-                              value: otp
-                          },
-                          success: function(data) {
-                            console.log(data);
-                              if(data.status == 1) {
-                                  Swal.fire({
-                                    type: 'success',
-                                    title: '!Exito!',
-                                    text: 'Su pago se realiza con éxito',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false
-                                  });
-                                  tran = false;
-                              } else if (data.status == 4) {
-                                  Swal.fire({
-                                    type: 'warning',
-                                    title: '!Opss...!',
-                                    text: 'El Código ingresado es inválido, por favor vuelva a intentarlo',
-                                    allowOutsideClick: false,
-                                    allowEscapeKey: false
-                                  });
-                              } else {
-                                Swal.fire({
-                                  type: 'error',
-                                  title: '!Opss...!',
-                                  text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
-                                  allowOutsideClick: false,
-                                  allowEscapeKey: false
-                              });
-                              tran = false;
-                              }
-                          }
-                      });
-                  }*/
-                
-              })()
-      }
+                  .then(response => {
+                      if (!response.ok) {
+                      throw new Error(response.statusText)
+                      }
+                      return response.json()
+                  })
+                  .then(resul => {
+                    console.log(resul);
+                      if(resul.status == 4) {
+                          throw new Error('El código es invalido, escriba correctamente el código')
+                      }
+                      return resul
+                  })
+                  .catch(error => {
+                      Swal.showValidationMessage(
+                      error
+                      )
+                  })
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+              }).then((result) => {
+              if (result.value.status == 1) {
+                  Swal.fire({
+                      type: 'success',
+                      title: '!Exito!',
+                      text: 'Su pago se realiza con éxito',
+                      allowOutsideClick: false,
+                      allowEscapeKey: false
+                  })
+              }else if(result.value.status != 4){
+                  Swal.fire({
+                      type: 'error',
+                      title: '!Opss...!',
+                      text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
+                      allowOutsideClick: false,
+                      allowEscapeKey: false
+                  })
+              }
+          })
+        }
       }
     });
 
