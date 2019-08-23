@@ -1,5 +1,5 @@
 export let Global = {
-   url: 'http://localhost:3000/api/'
+   url: 'https://apiatrium.ecomundo.edu.ec/api/'
 };
 
 /* PRODUCCION
