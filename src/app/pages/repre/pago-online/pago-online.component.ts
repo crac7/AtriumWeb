@@ -18,7 +18,7 @@ export class PagoOnlineComponent implements OnInit {
 
   public url: string;
   dl = false;
-  total = 0;
+  total: any = '';
   letivoPeriodo: string;
   codigoPeriodo: string;
   codigoAlumno: string;
@@ -139,23 +139,68 @@ export class PagoOnlineComponent implements OnInit {
             const id_tran = response.transaction.id;
             let tran = true;
             if (estado == 'success') {
-                Swal.fire({
-                  type: 'success',
-                  title: '!Exito!',
-                  text: 'Su pago se realiza con éxito',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-                });
+                const subdatos = {
+                    cod_alum: '${this.codigoAlumno}',
+                    total: '${this.total}'
+                };
+                $.ajax({
+                type: 'post',
+                url: '${this.url}debitDebtBase',
+                async: true,
+                contentType: 'application/json',
+                headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
+                data: JSON.stringify(subdatos),
+                success: function(data){
+                    if(data.estado == 0){
+                    Swal.fire({
+                        type: 'success',
+                        title: '!Exito!',
+                        text: 'Su pago se realiza con éxito',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        onAfterClose: () => {
+                          location.reload();
+                        }
+                    });
+                    } else if(data.estado == 04 || data.estado == 28){
+                    Swal.fire({
+                        type: 'warning',
+                        title: '!Hey!',
+                        text: 'Tuvimos un inconveniente con el pago, por favor comunicarse con el departamento financiero.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        onAfterClose: () => {
+                          location.reload();
+                        }
+                    });
+                }
+            },
+                error: function(data){
+                    Swal.fire({
+                    type: 'warning',
+                    title: '!Hey!',
+                    text: 'Tuvimos un inconveniente con el pago, por favor comunicarse con el departamento financiero.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    onAfterClose: () => {
+                      location.reload();
+                    }
+                    });
+                }
+            })
             } else if (estado == 'failure') {
                 Swal.fire({
                   type: 'error',
                   title: '!Opss...!',
                   text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
                   allowOutsideClick: false,
-                  allowEscapeKey: false
+                  allowEscapeKey: false,
+                  onAfterClose: () => {
+                    location.reload();
+                  }
                 });
             } else if (estado == 'pending') {
-  
+
               (async () => {
                 const { value: estado } = await Swal.fire({
                   title: 'OTP',
@@ -166,37 +211,80 @@ export class PagoOnlineComponent implements OnInit {
                     style: 'text-align:center',
                     onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
                   },
+                  confirmButtonText: 'Enviar',
+                  showLoaderOnConfirm: true,
                   allowOutsideClick: false,
                   allowEscapeKey: false,
                   inputValidator: (value) => {
                     return new Promise((resolve) => {
-  
+
                       if (value.length < 6){
                         resolve('El código OTP no puede contener menos de 6 dígitos');
                       } else {
+                        const datos = {
+                          user_id: '${localStorage.getItem('cod_repre')}',
+                          transaction_id: id_tran,
+                          type: 'BY_OTP',
+                          value: value
+                      };
                         $.ajax({
                           type: 'post',
                           url: '${this.url}verifyCreditCart',
-                          cors: true,
-                          headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': 'Bearer ${localStorage.getItem('token')}'
-                          },
-                          data: {
-                            user_id: '${localStorage.getItem('cod_repre')}',
-                            transaction_id: id_tran,
-                            type: 'BY_OTP',
-                            value: value
-                          },
+                          async: true,
+                          contentType: 'application/json',
+                          headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
+                          data: JSON.stringify(datos),
                           success: function(data){
                             if(data.status == 1){
-                              Swal.fire({
-                                type: 'success',
-                                title: '!Exito!',
-                                text: 'Su pago se realiza con éxito',
-                                allowOutsideClick: false,
-                                allowEscapeKey: false
-                              });
+                              const subdatos = {
+                                cod_alum: '${this.codigoAlumno}',
+                                total: ${this.total}
+                            };
+                              $.ajax({
+                                type: 'post',
+                                url: '${this.url}debitDebtBase',
+                                async: true,
+                                contentType: 'application/json',
+                                headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
+                                data: JSON.stringify(subdatos),
+                                success: function(data){
+                                  if(data.estado == 0){
+                                    Swal.fire({
+                                      type: 'success',
+                                      title: '!Exito!',
+                                      text: 'Su pago se realiza con éxito',
+                                      allowOutsideClick: false,
+                                      allowEscapeKey: false,
+                                      onAfterClose: () => {
+                                        location.reload();
+                                      }
+                                    });
+                                  } else if(data.estado == 04 || data.estado == 28){
+                                    Swal.fire({
+                                      type: 'warning',
+                                      title: '!Hey!',
+                                      text: 'Tuvimos un inconveniente con el pago, por favor comunicarse con el departamento financiero.',
+                                      allowOutsideClick: false,
+                                      allowEscapeKey: false,
+                                      onAfterClose: () => {
+                                        location.reload();
+                                      }
+                                    });
+                                }
+                            },
+                                error: function(data){
+                                  Swal.fire({
+                                    type: 'warning',
+                                    title: '!Hey!',
+                                    text: 'Tuvimos un inconveniente con el pago, por favor comunicarse con el departamento financiero.',
+                                    allowOutsideClick: false,
+                                    allowEscapeKey: false,
+                                    onAfterClose: () => {
+                                      location.reload();
+                                    }
+                                  });
+                                }
+                            })
                             } else if (data.status == 4){
                               resolve('El código es invalido, escriba correctamente el código')
                             } else {
@@ -205,155 +293,43 @@ export class PagoOnlineComponent implements OnInit {
                                 title: '!Opss...!',
                                 text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
                                 allowOutsideClick: false,
-                                allowEscapeKey: false
+                                allowEscapeKey: false,
+                                onAfterClose: () => {
+                                  location.reload();
+                                }
                             })
                             }
                           },
                           error: function(){
-                              Swal.fire({
-                                type: 'error',
-                                title: '!Opss...!',
-                                text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
-                                allowOutsideClick: false,
-                                allowEscapeKey: false
+                            Swal.fire({
+                              type: 'error',
+                              title: '!Opss...!',
+                              text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
+                              allowOutsideClick: false,
+                              allowEscapeKey: false,
+                              onAfterClose: () => {
+                                location.reload();
+                              }
                             })
                           }
                         });
                       }
-  
-  
-                      /*if (value === 'oranges') {
-                        resolve()
-                      } else {
-                        resolve('You need to select oranges :)')
-                      }*/
                     })
                   }
                 })
-                /*if (estado) {
-                  Swal.fire('You selected: ' + estado)
-                }*/
                 })()
               }
-              
-              /*(async () => {
-              Swal.fire({
-                title: 'OTP',
-                input: 'text',
-                text: 'Favor ingresar el Código que le llegó a su email o SMS del Banco emisor de su tarjeta.',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                inputValidator: (login) => {
-                  if (login.length < 6) {
-                    return 'El código OTP no puede contener menos de 6 dígitos'
-                  } else {
-                    console.log('entra');
-                    const url = '${this.url}verifyCreditCart';
-                    const data = {
-                        user_id: '${localStorage.getItem('cod_repre')}',
-                        transaction_id: id_tran,
-                        type: 'BY_OTP',
-                        value: login
-                    };
-                    return fetch(url,{
-                      method: 'post',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': 'Bearer ${localStorage.getItem('token')}'
-                      },
-                      body: JSON.stringify(data)
-                      //mode:'no-cors',
-                  })
-                  .then(response => {
-                      if (!response.ok) {
-                      return(response.statusText)
-                      }
-                      return response.json()
-                  })
-                  .then(resul => {
-                    console.log(resul);
-                      if(resul.status == 4) {
-                          return('El código es invalido, escriba correctamente el código')
-                      }
-                      return response.json();
-                  })
-                  .catch(error => {
-                    Swal.showValidationMessage(
-                    error
-                    )
-                })
-                  }
-                },
-                inputAttributes: {
-                    maxlength: 6,
-                    style: 'text-align:center',
-                    onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
-                },
-                showLoaderOnConfirm: true,
-                preConfirm: (otp) => {
-                  console.log('preConfirm');
-                    const url = '${this.url}verifyCreditCart';
-                    const data = {
-                        user_id: '${localStorage.getItem('cod_repre')}',
-                        transaction_id: id_tran,
-                        type: 'BY_OTP',
-                        value: otp
-                    };
-                    return fetch(url,{
-                      method: 'post',
-                      headers: {
-                          'Content-Type': 'application/json',
-                          'Authorization': 'Bearer ${localStorage.getItem('token')}'
-                      },
-                      body: JSON.stringify(data)
-                      //mode:'no-cors',
-                  })
-                  .then(response => {
-                      if (!response.ok) {
-                      throw new Error(response.statusText)
-                      }
-                      return response.json()
-                  })
-                  .catch(error => {
-                      Swal.showValidationMessage(
-                      error
-                      )
-                  })
-                },
-                allowOutsideClick: () => !Swal.isLoading()
-                }).then((result) => {
-                if (result.value.status == 1) {
-                  console.log('aletar de todo ok');
-                    Swal.fire({
-                        type: 'success',
-                        title: '!Exito!',
-                        text: 'Su pago se realiza con éxito',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    })
-                }else if(result.value.status != 4 && result.value.status != 1){
-                    console.log('aletar de error');
-                    Swal.fire({
-                        type: 'error',
-                        title: '!Opss...!',
-                        text: 'Tuvimos problemas al realizar el pago, intenta nuevamente en unos minutos',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    })
-                }
-            })
-          }*/
         }
       });
-          
+
       var btnOpenCheckout = document.querySelector('.js-paymentez-checkout');
-  
+
       btnOpenCheckout.addEventListener('click', function() {
           // Open Checkout with further options:
           paymentezCheckout.open({
-              user_id: '',//'${localStorage.getItem('cod_repre')}',
-              user_email: '', //optional
-              user_phone: '', //optional
+              user_id: '${localStorage.getItem('cod_repre')}',
+              user_email: '',
+              user_phone: '',
               order_description: '${this.descrip}',
               order_taxable_amount: 1,
               order_tax_percentage: 12,
@@ -362,7 +338,7 @@ export class PagoOnlineComponent implements OnInit {
               order_reference: '${this.reference}',
           });
       });
-  
+
       // Close Checkout on page navigation:
       window.addEventListener('popstate', function() {
           paymentezCheckout.close();
@@ -390,10 +366,12 @@ export class PagoOnlineComponent implements OnInit {
           this.reference = `${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
           this.total = this._pagoOnlineService.deudasList[i].CFAC_VALOR;
           this.descrip = `${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
+          console.log(this.total);
         } else {
           this.reference = `${this.reference};${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
           this.total = this.total + this._pagoOnlineService.deudasList[i].CFAC_VALOR;
           this.descrip = `${this.descrip};${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
+          console.log(this.total);
         }
       }
     }
