@@ -14,7 +14,7 @@ export class PagoOnlineService {
   datoRepreConsul: ModelRepreConsul[] = [];
   deudasList: ModelDeudas[];
 
-  constructor(private _http: Http) { 
+  constructor(private _http: Http) {
     this.url = Global.url;
   }
 

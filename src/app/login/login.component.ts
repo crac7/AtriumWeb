@@ -44,7 +44,6 @@ export class LoginComponent implements OnInit {
     if (this.log === 'd') {
       this._userService.signupD(this.user).subscribe(
         ok => {
-          console.log('ok' + ok)
           this.user = new User('', '');
           this._router.navigate(['/dashboard']);
         },
@@ -56,7 +55,6 @@ export class LoginComponent implements OnInit {
     } else if (this.log === 'r') {
       this._userService.signupR(this.user).subscribe(
         ok => {
-          console.log('ok' + ok)
           this.user = new User('', '');
           this._router.navigate(['/pago_online']);
         },
