@@ -221,7 +221,6 @@ export class PagoOnlineComponent implements OnInit {
                   confirmButtonText: 'Enviar',
                   allowOutsideClick: false,
                   allowEscapeKey: false,
-                  showLoaderOnConfirm: true,
                   inputValidator: (value) => {
                     return new Promise((resolve) => {
 
