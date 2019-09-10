@@ -4,7 +4,7 @@ import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 import { Global } from './global'
 import { Router } from '@angular/router';
-@Injectable()//para utilizar en otra Clases
+@Injectable()// para utilizar en otra Clases
 export class UserService {
 
   public url: string;
@@ -26,7 +26,7 @@ export class UserService {
     const params = json;
     let datos: any[];
 
-    console.log(user_to_login);
+    console.log('si? ', user_to_login);
 
       const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Docentes', params, { headers: headers })
@@ -35,27 +35,26 @@ export class UserService {
           this.guardarStorageD(datos[0].token, datos[1])
           return true;
         });
-
   }
 
-  signupR(user_to_login) {
+  signupR(user_to_login:any) {
     const json = JSON.stringify(user_to_login);
     const params = json;
     let datos: any[];
 
-    console.log(user_to_login);
+    console.log('si?: ', user_to_login);
 
       const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Representantes', params, { headers: headers })
         .map(res => {
           datos = res.json();
           this.guardarStorageR(datos[0].token, datos[1])
+          console.log('datos: ', datos)
           return true;
         });
-
   }
 
-  guardarStorageD(token, datos) {
+  guardarStorageD(token: any, datos: any) {
     localStorage.setItem('token', token);
     localStorage.setItem('cod_per', datos.cod_per);
     localStorage.setItem('let_per', datos.let_per);
@@ -80,6 +79,7 @@ export class UserService {
     localStorage.setItem('parentesco_est', datos.parentesco_est);
     localStorage.setItem('telefono', datos.telefono);
     localStorage.setItem('celular', datos.celular);
+    localStorage.setItem('hijos', datos.hijos);
     localStorage.setItem('tipo_representante', datos.tipo_representante);
     localStorage.setItem('type', 'R');
     this.getToken();

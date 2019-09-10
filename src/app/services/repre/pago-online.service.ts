@@ -36,7 +36,6 @@ export class PagoOnlineService {
   }
 
   DatosFacConsul(alumDatos) {
-    console.log(alumDatos);
     let json = JSON.stringify(alumDatos);
     let params = json;
 
@@ -87,8 +86,8 @@ export class PagoOnlineService {
 
 
   getToken() {
-    let token = localStorage.getItem('token');
-    if (token != "undefined") {
+    const token = localStorage.getItem('token');
+    if (token !== 'undefined') {
       this.token = token;
     } else {
       this.token = null;

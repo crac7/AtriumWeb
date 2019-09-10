@@ -140,9 +140,16 @@ export class PagoOnlineComponent implements OnInit {
             let tran = true;
             if (estado == 'success') {
                 const subdatos = {
+                    descr: '${this.descrip}',
+                    refe: '${this.reference}',
                     cod_alum: '${this.codigoAlumno}',
-                    total: '${this.total}'
+                    total: '${this.total}',
+                    cliente: '${localStorage.getItem('nomrepre')}',
+                    email: '${this._pagoOnlineService.datoFacConsul[0].email}',
+                    authorization_code: response.transaction.authorization_code,
+                    id: response.transaction.id
                 };
+                console.log(subdatos);
                 $.ajax({
                 type: 'post',
                 url: '${this.url}debitDebtBase',
@@ -212,9 +219,9 @@ export class PagoOnlineComponent implements OnInit {
                     onkeypress: 'return event.charCode >= 48 && event.charCode <= 57',
                   },
                   confirmButtonText: 'Enviar',
-                  showLoaderOnConfirm: true,
                   allowOutsideClick: false,
                   allowEscapeKey: false,
+                  showLoaderOnConfirm: true,
                   inputValidator: (value) => {
                     return new Promise((resolve) => {
 
@@ -235,11 +242,20 @@ export class PagoOnlineComponent implements OnInit {
                           headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
                           data: JSON.stringify(datos),
                           success: function(data){
-                            if(data.status == 1){
+                            console.log(data);
+                            if(data.transaction.status_detail == 3){
+                              console.log(data);
                               const subdatos = {
+                                descr: '${this.descrip}',
+                                refe: '${this.reference}',
                                 cod_alum: '${this.codigoAlumno}',
-                                total: ${this.total}
-                            };
+                                total: '${this.total}',
+                                cliente: '${localStorage.getItem('nomrepre')}',
+                                email: '${this._pagoOnlineService.datoFacConsul[0].email}',
+                                authorization_code: data.transaction.authorization_code,
+                                id: data.transaction.id
+                              };
+                              console.log(subdatos);
                               $.ajax({
                                 type: 'post',
                                 url: '${this.url}debitDebtBase',
@@ -270,8 +286,8 @@ export class PagoOnlineComponent implements OnInit {
                                         location.reload();
                                       }
                                     });
-                                }
-                            },
+                                  }
+                                },
                                 error: function(data){
                                   Swal.fire({
                                     type: 'warning',
@@ -285,9 +301,10 @@ export class PagoOnlineComponent implements OnInit {
                                   });
                                 }
                             })
-                            } else if (data.status == 4){
+                            } else if (data.transaction.status_detail == 33){
                               resolve('El código es invalido, escriba correctamente el código')
                             } else {
+                              console.log('else');
                               Swal.fire({
                                 type: 'error',
                                 title: '!Opss...!',
@@ -301,6 +318,7 @@ export class PagoOnlineComponent implements OnInit {
                             }
                           },
                           error: function(){
+                            console.log('error');
                             Swal.fire({
                               type: 'error',
                               title: '!Opss...!',
@@ -360,6 +378,7 @@ export class PagoOnlineComponent implements OnInit {
   referencia() {
     this.reference = '';
     this.total = 0;
+    this.descrip = '';
     for (let i = 0; i < this._pagoOnlineService.deudasList.length; i++) {
       if (this._pagoOnlineService.deudasList[i].ACCEPT === true) {
         if (this.reference === '' || this.total === 0) {
