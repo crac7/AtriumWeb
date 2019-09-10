@@ -241,9 +241,7 @@ export class PagoOnlineComponent implements OnInit {
                           headers: {'Authorization': 'Bearer ${localStorage.getItem('token')}'},
                           data: JSON.stringify(datos),
                           success: function(data){
-                            console.log(data);
                             if(data.transaction.status_detail == 3){
-                              console.log(data);
                               const subdatos = {
                                 descr: '${this.descrip}',
                                 refe: '${this.reference}',

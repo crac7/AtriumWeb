@@ -26,8 +26,6 @@ export class UserService {
     const params = json;
     let datos: any[];
 
-    console.log('si? ', user_to_login);
-
       const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Docentes', params, { headers: headers })
         .map(res => {
@@ -42,14 +40,12 @@ export class UserService {
     const params = json;
     let datos: any[];
 
-    console.log('si?: ', user_to_login);
 
       const headers = new Headers({ 'Content-Type': 'application/json' });
       return this._http.post(this.url + 'Representantes', params, { headers: headers })
         .map(res => {
           datos = res.json();
           this.guardarStorageR(datos[0].token, datos[1])
-          console.log('datos: ', datos)
           return true;
         });
   }
@@ -103,10 +99,8 @@ export class UserService {
 
     if (localStorage.getItem('token')) {
       this.token = localStorage.getItem('token');
-      //  console.log("token verdadero"+this.token);
     } else {
       this.token = null;
-      ///   this.menu=[];
     }
   }
 
