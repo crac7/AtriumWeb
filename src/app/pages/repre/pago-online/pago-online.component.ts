@@ -346,10 +346,10 @@ export class PagoOnlineComponent implements OnInit {
               user_email: '',
               user_phone: '',
               order_description: '${this.descrip}',
-              order_taxable_amount: 1,
-              order_tax_percentage: 12,
+              order_taxable_amount: 0,
+              order_tax_percentage: 0,
               order_amount: ${this.total},
-              order_vat: 0.12,
+              order_vat: 0,
               order_reference: '${this.reference}',
           });
       });
