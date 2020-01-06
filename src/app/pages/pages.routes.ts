@@ -20,7 +20,7 @@ const pagesRoutes: Routes = [
       { path: 'asistencias', component: AsistenciaComponent },
       { path: 'leccionario', component: LeccionarioComponent },
       { path: 'planificacion', component: PlanifiSemanalComponent },
-      // { path: 'observaciones', component: ObservacionesComponent },
+      { path: 'observaciones', component: ObservacionesComponent },
       { path: 'pago_online', component: PagoOnlineComponent },
       { path: '', redirectTo: '/dashboard', pathMatch: 'full' }
     ],

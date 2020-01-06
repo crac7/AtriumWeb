@@ -138,6 +138,7 @@ export class AsistenciaComponent implements OnInit {
 
     this.visible = false;
   }
+
   ConsultarAlumnos(): void {
     this.AlumnosCurso = [{
       cod_per: this.codigoPeriodo, /*this.codigoPeriodo,<---------------------------------canmbiar*/

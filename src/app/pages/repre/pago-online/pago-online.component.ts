@@ -12,11 +12,12 @@ import { Global } from '../../../services/global';
   templateUrl: './pago-online.component.html',
   styleUrls: ['./pago-online.component.scss'],
 })
+
 export class PagoOnlineComponent implements OnInit {
   public ModelFacConsul: ModelFacConsul;
   public ModelRepreConsul: ModelRepreConsul;
-
   public url: string;
+
   dl = false;
   total: any = '';
   letivoPeriodo: string;
@@ -67,7 +68,6 @@ export class PagoOnlineComponent implements OnInit {
   }
 
   checkAll(ck: any) {
-    console.log(this._pagoOnlineService.deudasList[0]);
     if (this._pagoOnlineService.deudasList[ck].ACCEPT === true) {
       if (ck !== 0) {
         this._pagoOnlineService.deudasList[ck - 1].ACTIVE = false;
@@ -86,7 +86,8 @@ export class PagoOnlineComponent implements OnInit {
   }
 
   actualizar() {
-    if ((this._pagoOnlineService.datoFacConsul[0].representante === '' || this._pagoOnlineService.datoFacConsul[0].representante == null) ||
+    if (
+      (this._pagoOnlineService.datoFacConsul[0].representante === '' || this._pagoOnlineService.datoFacConsul[0].representante == null) ||
       (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
       (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
       (this._pagoOnlineService.datoFacConsul[0].direccion === '' || this._pagoOnlineService.datoFacConsul[0].direccion == null)) {
@@ -359,6 +360,7 @@ export class PagoOnlineComponent implements OnInit {
           paymentezCheckout.close();
       });
     </script>`);
+
     if ((this._pagoOnlineService.datoFacConsul[0].representante === '' || this._pagoOnlineService.datoFacConsul[0].representante == null) ||
       (this._pagoOnlineService.datoFacConsul[0].cedula === '' || this._pagoOnlineService.datoFacConsul[0].cedula == null) ||
       (this._pagoOnlineService.datoFacConsul[0].telefono === '' || this._pagoOnlineService.datoFacConsul[0].telefono == null) ||
@@ -366,10 +368,6 @@ export class PagoOnlineComponent implements OnInit {
       Swal.fire('Hey... !', 'Parece que has dejado algún campo vacio', 'warning');
     } else {
     }
-  }
-
-  aceptar() {
-    return null;
   }
 
   referencia() {
@@ -391,10 +389,6 @@ export class PagoOnlineComponent implements OnInit {
         }
       }
     }
-  }
-
-  transaccion() {
-    console.log('sdfs');
   }
 
 }
