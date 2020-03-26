@@ -107,7 +107,7 @@ export class PagoOnlineComponent implements OnInit {
       this._pagoOnlineService.DatosFacActu(this.datoActuFac[0]).subscribe(
         response => {
           Swal.fire('Actualizado', 'Cambios Guardados con Exito!', 'success'); // warning
-          console.log(response);
+       // console.log(response);
         },
         error => {
           Swal.fire('Opss... !', 'Algo salio mal, vuelve intertar porfavor :(', 'error');
@@ -135,7 +135,6 @@ export class PagoOnlineComponent implements OnInit {
               console.log('modal closed');
           },
           onResponse: function(response) {
-            console.log(response);
             const estado = response.transaction.status;
             const id_tran = response.transaction.id;
             let tran = true;
@@ -150,7 +149,6 @@ export class PagoOnlineComponent implements OnInit {
                     authorization_code: response.transaction.authorization_code,
                     id: response.transaction.id
                 };
-                console.log(subdatos);
                 $.ajax({
                 type: 'post',
                 url: '${this.url}debitDebtBase',
@@ -253,7 +251,7 @@ export class PagoOnlineComponent implements OnInit {
                                 authorization_code: data.transaction.authorization_code,
                                 id: data.transaction.id
                               };
-                              console.log(subdatos);
+                              
                               $.ajax({
                                 type: 'post',
                                 url: '${this.url}debitDebtBase',
@@ -380,12 +378,12 @@ export class PagoOnlineComponent implements OnInit {
           this.reference = `${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
           this.total = this._pagoOnlineService.deudasList[i].CFAC_VALOR;
           this.descrip = `${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
-          console.log(this.total);
+         // console.log(this.total);
         } else {
           this.reference = `${this.reference};${this._pagoOnlineService.deudasList[i].CFAC_COD}`;
           this.total = this.total + this._pagoOnlineService.deudasList[i].CFAC_VALOR;
           this.descrip = `${this.descrip};${this._pagoOnlineService.deudasList[i].DESCRIPCION}`;
-          console.log(this.total);
+          //console.log(this.total);
         }
       }
     }
