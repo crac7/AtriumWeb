@@ -61,11 +61,13 @@ export class SidebarComponent implements OnInit {
   }
 
   cambio() {
+    console.log('antes', this.cam);
     if ( this.cam === 'collapse') {
       this.cam = 'collapse show';
     } else {
       this.cam = 'collapse';
     }
+    console.log('despues', this.cam);
   }
 
   change(cod_alum: any) {
